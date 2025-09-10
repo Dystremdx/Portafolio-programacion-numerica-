@@ -638,40 +638,113 @@
     </div>
 
     <script>
-        // Variables globales
-        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    // Variables globales
+    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    let editIndex = null; // Para saber si estamos editando o agregando
 
-        // Mostrar proyectos
-        function displayProjects() {
-            const grid = document.getElementById('projectsGrid');
-            const noProjects = document.getElementById('noProjects');
-            
-            if (projects.length === 0) {
-                grid.style.display = 'none';
-                noProjects.style.display = 'block';
-                return;
-            }
-            
-            grid.style.display = 'grid';
-            noProjects.style.display = 'none';
-            
-            grid.innerHTML = projects.map((project, index) => `
-                <div class="project-card">
-                    <h3 class="project-title">${project.title}</h3>
-                    <div class="project-category">${project.category}</div>
-                    <p>${project.description}</p>
-                    <p><strong>Tecnologías:</strong> ${project.technologies}</p>
-                    <p><strong>Estado:</strong> ${project.status}</p>
-                    <div class="project-actions">
-                        <button class="btn-small btn-edit" onclick="editProject(${index})">Editar</button>
-                        <button class="btn-small btn-delete" onclick="deleteProject(${index})">Eliminar</button>
-                    </div>
+    // Mostrar proyectos
+    function displayProjects() {
+        const grid = document.getElementById('projectsGrid');
+        const noProjects = document.getElementById('noProjects');
+        
+        if (projects.length === 0) {
+            grid.style.display = 'none';
+            noProjects.style.display = 'block';
+            return;
+        }
+        
+        grid.style.display = 'grid';
+        noProjects.style.display = 'none';
+        
+        grid.innerHTML = projects.map((project, index) => `
+            <div class="project-card">
+                <h3 class="project-title">${project.title}</h3>
+                <div class="project-category">${project.category}</div>
+                <p>${project.description}</p>
+                <p><strong>Tecnologías:</strong> ${project.technologies}</p>
+                <p><strong>Estado:</strong> ${project.status}</p>
+                <div class="project-actions">
+                    <button class="btn-small btn-edit" onclick="editProject(${index})">Editar</button>
+                    <button class="btn-small btn-delete" onclick="deleteProject(${index})">Eliminar</button>
                 </div>
-            `).join('');
-            
-            updateStats();
+            </div>
+        `).join('');
+        
+        updateStats();
+    }
+
+    // Abrir modal
+    function openModal(index = null) {
+        const modal = document.getElementById('projectModal');
+        const form = document.getElementById('projectForm');
+        modal.style.display = 'block';
+
+        if (index !== null) {
+            // Editar
+            editIndex = index;
+            const project = projects[index];
+            form.title.value = project.title;
+            form.category.value = project.category;
+            form.description.value = project.description;
+            form.technologies.value = project.technologies;
+            form.status.value = project.status;
+        } else {
+            // Nuevo proyecto
+            editIndex = null;
+            form.reset();
+        }
+    }
+
+    // Cerrar modal
+    function closeModal() {
+        document.getElementById('projectModal').style.display = 'none';
+    }
+
+    // Guardar proyecto
+    function saveProject(event) {
+        event.preventDefault();
+        const form = document.getElementById('projectForm');
+        const project = {
+            title: form.title.value,
+            category: form.category.value,
+            description: form.description.value,
+            technologies: form.technologies.value,
+            status: form.status.value
+        };
+
+        if (editIndex !== null) {
+            projects[editIndex] = project; // Editar
+        } else {
+            projects.push(project); // Agregar nuevo
         }
 
-        // Abrir modal
-        function openModal() {
-            documen
+        localStorage.setItem('projects', JSON.stringify(projects));
+        closeModal();
+        displayProjects();
+    }
+
+    // Editar
+    function editProject(index) {
+        openModal(index);
+    }
+
+    // Eliminar
+    function deleteProject(index) {
+        if (confirm("¿Seguro que quieres eliminar este proyecto?")) {
+            projects.splice(index, 1);
+            localStorage.setItem('projects', JSON.stringify(projects));
+            displayProjects();
+        }
+    }
+
+    // Actualizar estadísticas (ejemplo simple: cantidad de proyectos)
+    function updateStats() {
+        const stats = document.getElementById('stats');
+        if (stats) {
+            stats.textContent = `Total de proyectos: ${projects.length}`;
+        }
+    }
+
+    // Mostrar al cargar
+    window.onload = displayProjects;
+</script>
