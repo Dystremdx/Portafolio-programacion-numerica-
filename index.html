@@ -484,26 +484,146 @@
             </div>
         </div>
     </section>
-
-    <!-- Projects Section -->
+<!-- Projects Section -->
 <section id="projects" class="projects">
+  <div class="container">
+    <h2 class="section-title">Mis Proyectos</h2>
+
+    <div class="units-grid">
+      <div class="unit-card" onclick="openUnit('unidad1.html')">
+        <h3>📘 Unidad 1</h3>
+        <p>Ver proyectos de la Unidad 1</p>
+      </div>
+
+      <div class="unit-card" onclick="openUnit('unidad2.html')">
+        <h3>📗 Unidad 2</h3>
+        <p>Ver proyectos de la Unidad 2</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function openUnit(url) {
+    window.open(url, "_blank");
+  }
+</script>
+
+<style>
+  .units-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 30px;
+  }
+  .unit-card {
+    background: #f4f4f4;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .unit-card:hover {
+    transform: scale(1.05);
+    background: #e0e0e0;
+  }
+  .unit-card h3 {
+    margin-bottom: 10px;
+  }
+</style>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
     <div class="container">
-        <h2 class="section-title">Mis Proyectos</h2>
-        
-        <div class="add-project">
-            <button class="btn-add" onclick="openModal()">➕ Añadir Proyecto</button>
-        </div>
-
-        <div id="projectsGrid" class="projects-grid">
-            <!-- Los proyectos se añaden aquí -->
-        </div>
-
-        <div id="noProjects" class="text-center">
-            <h3>¡Añade tu primer proyecto!</h3>
-            <p>Usa el botón de arriba para comenzar</p>
+        <h2 class="section-title">Contacto</h2>
+        <div class="contact-content">
+            <div>
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div>
+                        <h4>Email</h4>
+                        <p>ronaldincacutipamunuico</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <div>
+                        <h4>Teléfono</h4>
+                        <p>+51 926452794</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">💻</div>
+                    <div>
+                        <h4>GitHub</h4>
+                        <p>github.com/tu-usuario</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3>Envíame un mensaje</h3>
+                <form onsubmit="sendMessage(event)">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje:</label>
+                        <textarea rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Enviar Mensaje</button>
+                </form>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div>
+                <h4>🎓 Información Académica</h4>
+                <p><strong>Estudiante:</strong> Ronald Wilder Incacutipa Muñuico</p>
+                <p><strong>Curso:</strong> Programación Numérica</p>
+                <p><strong>Docente:</strong> [Nombre del Profesor]</p>
+                <p><strong>Institución:</strong> Universidad Nacional del Altiplano Puno</p>
+            </div>
+            
+            <div>
+                <h4>🛠 Tecnologías</h4>
+                <p>• Python & NumPy</p>
+                <p>• MATLAB</p>
+                <p>• Métodos Numéricos</p>
+                <p>• Análisis de Algoritmos</p>
+            </div>
+            
+            <div>
+                <h4>📊 Estadísticas</h4>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="projectCount">0</span>
+                        <span>Proyectos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="completedCount">0</span>
+                        <span>Completados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <p>&copy; 2024 Ronald - Portafolio de Programación Numérica</p>
+        </div>
+    </div>
+</footer>
 
 <!-- Modal para añadir proyectos -->
 <div id="projectModal" class="modal">
@@ -596,7 +716,6 @@ function openModal(index = null) {
     modal.style.display = 'block';
 
     if (index !== null) {
-        // Editar
         editIndex = index;
         const project = projects[index];
         form.title.value = project.title;
@@ -606,7 +725,6 @@ function openModal(index = null) {
         form.technologies.value = project.technologies;
         form.status.value = project.status;
     } else {
-        // Nuevo
         editIndex = null;
         form.reset();
     }
