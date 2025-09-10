@@ -486,265 +486,202 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Mis Proyectos</h2>
-            
-            <div class="add-project">
-                <button class="btn-add" onclick="openModal()">➕ Añadir Proyecto</button>
-            </div>
-
-            <div id="projectsGrid" class="projects-grid">
-                <!-- Los proyectos se añaden aquí -->
-            </div>
-
-            <div id="noProjects" class="text-center">
-                <h3>¡Añade tu primer proyecto!</h3>
-                <p>Usa el botón de arriba para comenzar</p>
-            </div>
+<section id="projects" class="projects">
+    <div class="container">
+        <h2 class="section-title">Mis Proyectos</h2>
+        
+        <div class="add-project">
+            <button class="btn-add" onclick="openModal()">➕ Añadir Proyecto</button>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Contacto</h2>
-            <div class="contact-content">
-                <div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div>
-                            <h4>Email</h4>
-                            <p>ronaldincacutipamunuico</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>
-                            <h4>Teléfono</h4>
-                            <p>+51 926452794</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">💻</div>
-                        <div>
-                            <h4>GitHub</h4>
-                            <p>github.com/tu-usuario</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="contact-form">
-                    <h3>Envíame un mensaje</h3>
-                    <form onsubmit="sendMessage(event)">
-                        <div class="form-group">
-                            <label>Nombre:</label>
-                            <input type="text" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email:</label>
-                            <input type="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Mensaje:</label>
-                            <textarea rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Enviar Mensaje</button>
-                    </form>
-                </div>
-            </div>
+        <div id="projectsGrid" class="projects-grid">
+            <!-- Los proyectos se añaden aquí -->
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div>
-                    <h4>🎓 Información Académica</h4>
-                    <p><strong>Estudiante:</strong> Ronald Wilder Incacutipa Muñuico</p>
-                    <p><strong>Curso:</strong> Programación Numérica</p>
-                    <p><strong>Docente:</strong> [Nombre del Profesor]</p>
-                    <p><strong>Institución:</strong> Universidad Nacional del Altiplano Puno</p>
-                </div>
-                
-                <div>
-                    <h4>🛠 Tecnologías</h4>
-                    <p>• Python & NumPy</p>
-                    <p>• MATLAB</p>
-                    <p>• Métodos Numéricos</p>
-                    <p>• Análisis de Algoritmos</p>
-                </div>
-                
-                <div>
-                    <h4>📊 Estadísticas</h4>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="projectCount">0</span>
-                            <span>Proyectos</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="completedCount">0</span>
-                            <span>Completados</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <p>&copy; 2024 Ronald - Portafolio de Programación Numérica</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Modal para añadir proyectos -->
-    <div id="projectModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h3>Añadir Proyecto</h3>
-            <form onsubmit="addProject(event)">
-                <div class="form-group">
-                    <label>Título:</label>
-                    <input type="text" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label>Categoría:</label>
-                    <select id="category" required>
-                        <option value="">Selecciona</option>
-                        <option value="algoritmos">Algoritmos</option>
-                        <option value="ecuaciones">Ecuaciones</option>
-                        <option value="integracion">Integración</option>
-                        <option value="sistemas">Sistemas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Descripción:</label>
-                    <textarea id="description" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Tecnologías:</label>
-                    <input type="text" id="technologies" placeholder="Python, NumPy, etc.">
-                </div>
-                <div class="form-group">
-                    <label>Estado:</label>
-                    <select id="status" required>
-                        <option value="completado">✅ Completado</option>
-                        <option value="en-progreso">🔄 En Progreso</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Guardar Proyecto</button>
-            </form>
+        <div id="noProjects" class="text-center">
+            <h3>¡Añade tu primer proyecto!</h3>
+            <p>Usa el botón de arriba para comenzar</p>
         </div>
     </div>
+</section>
 
-    <script>
-    // Variables globales
-    let projects = JSON.parse(localStorage.getItem('projects')) || [];
-    let editIndex = null; // Para saber si estamos editando o agregando
-
-    // Mostrar proyectos
-    function displayProjects() {
-        const grid = document.getElementById('projectsGrid');
-        const noProjects = document.getElementById('noProjects');
-        
-        if (projects.length === 0) {
-            grid.style.display = 'none';
-            noProjects.style.display = 'block';
-            return;
-        }
-        
-        grid.style.display = 'grid';
-        noProjects.style.display = 'none';
-        
-        grid.innerHTML = projects.map((project, index) => `
-            <div class="project-card">
-                <h3 class="project-title">${project.title}</h3>
-                <div class="project-category">${project.category}</div>
-                <p>${project.description}</p>
-                <p><strong>Tecnologías:</strong> ${project.technologies}</p>
-                <p><strong>Estado:</strong> ${project.status}</p>
-                <div class="project-actions">
-                    <button class="btn-small btn-edit" onclick="editProject(${index})">Editar</button>
-                    <button class="btn-small btn-delete" onclick="deleteProject(${index})">Eliminar</button>
-                </div>
+<!-- Modal para añadir proyectos -->
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <h3>Añadir Proyecto</h3>
+        <form id="projectForm" onsubmit="saveProject(event)">
+            <div class="form-group">
+                <label>Título:</label>
+                <input type="text" name="title" required>
             </div>
-        `).join('');
-        
-        updateStats();
+            <div class="form-group">
+                <label>Unidad:</label>
+                <select name="unit" required>
+                    <option value="">Selecciona</option>
+                    <option value="Unidad 1">Unidad 1</option>
+                    <option value="Unidad 2">Unidad 2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select name="category" required>
+                    <option value="">Selecciona</option>
+                    <option value="algoritmos">Algoritmos</option>
+                    <option value="ecuaciones">Ecuaciones</option>
+                    <option value="integracion">Integración</option>
+                    <option value="sistemas">Sistemas</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea name="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Tecnologías:</label>
+                <input type="text" name="technologies" placeholder="Python, NumPy, etc.">
+            </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                <select name="status" required>
+                    <option value="completado">✅ Completado</option>
+                    <option value="en-progreso">🔄 En Progreso</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Guardar Proyecto</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Variables globales
+let projects = JSON.parse(localStorage.getItem('projects')) || [];
+let editIndex = null;
+
+// Mostrar proyectos
+function displayProjects() {
+    const grid = document.getElementById('projectsGrid');
+    const noProjects = document.getElementById('noProjects');
+    
+    if (projects.length === 0) {
+        grid.style.display = 'none';
+        noProjects.style.display = 'block';
+        return;
+    }
+    
+    grid.style.display = 'grid';
+    noProjects.style.display = 'none';
+    
+    grid.innerHTML = projects.map((project, index) => `
+        <div class="project-card">
+            <h3 class="project-title">${project.title}</h3>
+            <div class="project-category">${project.category}</div>
+            <p><strong>Unidad:</strong> ${project.unit}</p>
+            <p>${project.description}</p>
+            <p><strong>Tecnologías:</strong> ${project.technologies}</p>
+            <p><strong>Estado:</strong> ${project.status}</p>
+            <div class="project-actions">
+                <button class="btn-small btn-view" onclick="openProject(${index})">Ver</button>
+                <button class="btn-small btn-edit" onclick="editProject(${index})">Editar</button>
+                <button class="btn-small btn-delete" onclick="deleteProject(${index})">Eliminar</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Abrir modal
+function openModal(index = null) {
+    const modal = document.getElementById('projectModal');
+    const form = document.getElementById('projectForm');
+    modal.style.display = 'block';
+
+    if (index !== null) {
+        // Editar
+        editIndex = index;
+        const project = projects[index];
+        form.title.value = project.title;
+        form.unit.value = project.unit;
+        form.category.value = project.category;
+        form.description.value = project.description;
+        form.technologies.value = project.technologies;
+        form.status.value = project.status;
+    } else {
+        // Nuevo
+        editIndex = null;
+        form.reset();
+    }
+}
+
+// Cerrar modal
+function closeModal() {
+    document.getElementById('projectModal').style.display = 'none';
+}
+
+// Guardar proyecto
+function saveProject(event) {
+    event.preventDefault();
+    const form = document.getElementById('projectForm');
+    const project = {
+        title: form.title.value,
+        unit: form.unit.value,
+        category: form.category.value,
+        description: form.description.value,
+        technologies: form.technologies.value,
+        status: form.status.value
+    };
+
+    if (editIndex !== null) {
+        projects[editIndex] = project;
+    } else {
+        projects.push(project);
     }
 
-    // Abrir modal
-    function openModal(index = null) {
-        const modal = document.getElementById('projectModal');
-        const form = document.getElementById('projectForm');
-        modal.style.display = 'block';
+    localStorage.setItem('projects', JSON.stringify(projects));
+    closeModal();
+    displayProjects();
+}
 
-        if (index !== null) {
-            // Editar
-            editIndex = index;
-            const project = projects[index];
-            form.title.value = project.title;
-            form.category.value = project.category;
-            form.description.value = project.description;
-            form.technologies.value = project.technologies;
-            form.status.value = project.status;
-        } else {
-            // Nuevo proyecto
-            editIndex = null;
-            form.reset();
-        }
-    }
+// Editar
+function editProject(index) {
+    openModal(index);
+}
 
-    // Cerrar modal
-    function closeModal() {
-        document.getElementById('projectModal').style.display = 'none';
-    }
-
-    // Guardar proyecto
-    function saveProject(event) {
-        event.preventDefault();
-        const form = document.getElementById('projectForm');
-        const project = {
-            title: form.title.value,
-            category: form.category.value,
-            description: form.description.value,
-            technologies: form.technologies.value,
-            status: form.status.value
-        };
-
-        if (editIndex !== null) {
-            projects[editIndex] = project; // Editar
-        } else {
-            projects.push(project); // Agregar nuevo
-        }
-
+// Eliminar
+function deleteProject(index) {
+    if (confirm("¿Seguro que quieres eliminar este proyecto?")) {
+        projects.splice(index, 1);
         localStorage.setItem('projects', JSON.stringify(projects));
-        closeModal();
         displayProjects();
     }
+}
 
-    // Editar
-    function editProject(index) {
-        openModal(index);
-    }
+// Abrir en nueva pestaña
+function openProject(index) {
+    const project = projects[index];
+    const newWindow = window.open("", "_blank");
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>${project.title} - ${project.unit}</title>
+            <style>
+                body { font-family: Arial; padding: 20px; }
+                h2 { color: #333; }
+                .task { margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; cursor:pointer; }
+                .task:hover { background:#f0f0f0; }
+            </style>
+        </head>
+        <body>
+            <h2>${project.unit} - ${project.title}</h2>
+            <p><strong>Categoría:</strong> ${project.category}</p>
+            <p><strong>Descripción:</strong> ${project.description}</p>
+            <h3>Trabajos disponibles:</h3>
+            <div class="task">📘 Identificación de funciones</div>
+            <div class="task">📗 Otro trabajo opcional</div>
+        </body>
+        </html>
+    `);
+}
 
-    // Eliminar
-    function deleteProject(index) {
-        if (confirm("¿Seguro que quieres eliminar este proyecto?")) {
-            projects.splice(index, 1);
-            localStorage.setItem('projects', JSON.stringify(projects));
-            displayProjects();
-        }
-    }
-
-    // Actualizar estadísticas (ejemplo simple: cantidad de proyectos)
-    function updateStats() {
-        const stats = document.getElementById('stats');
-        if (stats) {
-            stats.textContent = `Total de proyectos: ${projects.length}`;
-        }
-    }
-
-    // Mostrar al cargar
-    window.onload = displayProjects;
+// Mostrar al cargar
+window.onload = displayProjects;
 </script>
