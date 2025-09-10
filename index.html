@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portafolio - Programación Numérica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* About Section */
+        .about {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3498db, #9b59b6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            margin: 0 auto;
+        }
+
+        .course-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .skill-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .add-project {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .btn-add {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .project-category {
+            background: #3498db;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .project-actions {
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #f39c12;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            width: 60px;
+            text-align: center;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer h4 {
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+            color: #bdc3c7;
+        }
+
+        .footer strong {
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(52, 152, 219, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .profile-img {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+        }
+
+        /* Utilities */
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 2rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">💻 Mi Portafolio</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Sobre Mí</a></li>
+                <li><a href="#projects">Proyectos</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div>
+            <h1>¡Hola! Mi nombre es Ronald</h1>
+            <p>Estudiante de Programación Numérica</p>
+            <a href="#about" class="btn">Conoce más sobre mí</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Sobre Mí</h2>
+            <div class="about-content">
+                <div>
+                    <div class="profile-img">👨‍💻</div>
+                </div>
+                <div>
+                    <h3>Apasionado por la Programación Numérica</h3>
+                    <p>Soy un estudiante dedicado al fascinante mundo de la programación numérica, donde las matemáticas y la programación se unen para resolver problemas complejos.</p>
+                    
+                    <div class="course-info">
+                        <h4>📚 Información del Curso</h4>
+                        <p><strong>Curso:</strong> Programación Numérica</p>
+                        <p><strong>Docente:</strong> [Nombre del Profesor]</p>
+                        <p><strong>Institución:</strong> Universidad Nacional Del Altiplano Puno</p>
+                        <p><strong>Período:</strong> Cuarto semestre 2025-2</p>
+                    </div>
+
+                    <div class="skills">
+                        <div class="skill-item">
+                            <div>🐍</div>
+                            <h4>Python</h4>
+                        </div>
+                        <div class="skill-item">
+                            <div>📊</div>
+                            <h4>NumPy</h4>
+                        </div>
+                        <div class="skill-item">
+                            <div>🔢</div>
+                            <h4>MATLAB</h4>
+                        </div>
+                        <div class="skill-item">
+                            <div>📈</div>
+                            <h4>Análisis</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Mis Proyectos</h2>
+            
+            <div class="add-project">
+                <button class="btn-add" onclick="openModal()">➕ Añadir Proyecto</button>
+            </div>
+
+            <div id="projectsGrid" class="projects-grid">
+                <!-- Los proyectos se añaden aquí -->
+            </div>
+
+            <div id="noProjects" class="text-center">
+                <h3>¡Añade tu primer proyecto!</h3>
+                <p>Usa el botón de arriba para comenzar</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-content">
+                <div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>ronaldincacutipamunuico</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+51 926452794</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💻</div>
+                        <div>
+                            <h4>GitHub</h4>
+                            <p>github.com/tu-usuario</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Envíame un mensaje</h3>
+                    <form onsubmit="sendMessage(event)">
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mensaje:</label>
+                            <textarea rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h4>🎓 Información Académica</h4>
+                    <p><strong>Estudiante:</strong> Ronald Wilder Incacutipa Muñuico</p>
+                    <p><strong>Curso:</strong> Programación Numérica</p>
+                    <p><strong>Docente:</strong> [Nombre del Profesor]</p>
+                    <p><strong>Institución:</strong> Universidad Nacional del Altiplano Puno</p>
+                </div>
+                
+                <div>
+                    <h4>🛠 Tecnologías</h4>
+                    <p>• Python & NumPy</p>
+                    <p>• MATLAB</p>
+                    <p>• Métodos Numéricos</p>
+                    <p>• Análisis de Algoritmos</p>
+                </div>
+                
+                <div>
+                    <h4>📊 Estadísticas</h4>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="projectCount">0</span>
+                            <span>Proyectos</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="completedCount">0</span>
+                            <span>Completados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <p>&copy; 2024 Ronald - Portafolio de Programación Numérica</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal para añadir proyectos -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3>Añadir Proyecto</h3>
+            <form onsubmit="addProject(event)">
+                <div class="form-group">
+                    <label>Título:</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoría:</label>
+                    <select id="category" required>
+                        <option value="">Selecciona</option>
+                        <option value="algoritmos">Algoritmos</option>
+                        <option value="ecuaciones">Ecuaciones</option>
+                        <option value="integracion">Integración</option>
+                        <option value="sistemas">Sistemas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea id="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tecnologías:</label>
+                    <input type="text" id="technologies" placeholder="Python, NumPy, etc.">
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <select id="status" required>
+                        <option value="completado">✅ Completado</option>
+                        <option value="en-progreso">🔄 En Progreso</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Guardar Proyecto</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+
+        // Mostrar proyectos
+        function displayProjects() {
+            const grid = document.getElementById('projectsGrid');
+            const noProjects = document.getElementById('noProjects');
+            
+            if (projects.length === 0) {
+                grid.style.display = 'none';
+                noProjects.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            noProjects.style.display = 'none';
+            
+            grid.innerHTML = projects.map((project, index) => `
+                <div class="project-card">
+                    <h3 class="project-title">${project.title}</h3>
+                    <div class="project-category">${project.category}</div>
+                    <p>${project.description}</p>
+                    <p><strong>Tecnologías:</strong> ${project.technologies}</p>
+                    <p><strong>Estado:</strong> ${project.status}</p>
+                    <div class="project-actions">
+                        <button class="btn-small btn-edit" onclick="editProject(${index})">Editar</button>
+                        <button class="btn-small btn-delete" onclick="deleteProject(${index})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateStats();
+        }
+
+        // Abrir modal
+        function openModal() {
+            documen
