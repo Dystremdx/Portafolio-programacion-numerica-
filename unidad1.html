@@ -11,6 +11,8 @@
     .btn:hover { background: #0056b3; }
     .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
     .modal-content { background:white; margin:10% auto; padding:20px; border-radius:10px; width:400px; }
+    a { color: #007bff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -34,6 +36,8 @@
           <option value="completado">✅ Completado</option>
           <option value="en-progreso">🔄 En Progreso</option>
         </select><br><br>
+        <!-- Campo para archivo -->
+        <input type="text" name="file" placeholder="Ruta o enlace del archivo (ej: archivos/tarea1.pdf)"><br><br>
         <button type="submit" class="btn">Guardar</button>
       </form>
     </div>
@@ -41,7 +45,6 @@
 
   <script>
     let projects = JSON.parse(localStorage.getItem('unidad1Projects')) || [];
-    let editIndex = null;
 
     function displayProjects() {
       const grid = document.getElementById('projectsGrid');
@@ -58,6 +61,7 @@
           <p>${p.description}</p>
           <p><b>Tecnologías:</b> ${p.technologies}</p>
           <p><b>Estado:</b> ${p.status}</p>
+          ${p.file ? `<p>📂 <a href="${p.file}" target="_blank">Ver archivo</a></p>` : ""}
           <button onclick="deleteProject(${i})">Eliminar</button>
         </div>
       `).join("");
@@ -76,12 +80,14 @@
         title: f.title.value,
         description: f.description.value,
         technologies: f.technologies.value,
-        status: f.status.value
+        status: f.status.value,
+        file: f.file.value
       };
       projects.push(project);
       localStorage.setItem('unidad1Projects', JSON.stringify(projects));
       closeModal();
       displayProjects();
+      f.reset(); // limpiar formulario
     }
     function deleteProject(i) {
       projects.splice(i,1);
