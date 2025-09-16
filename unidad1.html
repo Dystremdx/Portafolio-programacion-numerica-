@@ -2,99 +2,32 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Unidad 1 - Proyectos</title>
+  <title>Unidad 1</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .project-card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
-    .btn { background: #007bff; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
-    .btn:hover { background: #0056b3; }
-    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
-    .modal-content { background:white; margin:10% auto; padding:20px; border-radius:10px; width:400px; }
-    a { color: #007bff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    h2 { color: #333; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 10px 0; }
+    a {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a:hover { background: #0056b3; }
   </style>
 </head>
 <body>
-  <h2>📘 Unidad 1 - Mis Proyectos</h2>
+  <h2>📘 Unidad 1</h2>
 
-  <button class="btn" onclick="openModal()">➕ Añadir Proyecto</button>
-
-  <div id="projectsGrid" class="projects-grid"></div>
-  <div id="noProjects"><p>¡Añade tu primer proyecto!</p></div>
-
-  <!-- Modal -->
-  <div id="projectModal" class="modal">
-    <div class="modal-content">
-      <button onclick="closeModal()">✖</button>
-      <h3>Añadir Proyecto</h3>
-      <form id="projectForm" onsubmit="saveProject(event)">
-        <input type="text" name="title" placeholder="Título" required><br><br>
-        <textarea name="description" placeholder="Descripción" required></textarea><br><br>
-        <input type="text" name="technologies" placeholder="Tecnologías"><br><br>
-        <select name="status">
-          <option value="completado">✅ Completado</option>
-          <option value="en-progreso">🔄 En Progreso</option>
-        </select><br><br>
-        <!-- Campo para archivo -->
-        <input type="text" name="file" placeholder="Ruta o enlace del archivo (ej: archivos/tarea1.pdf)"><br><br>
-        <button type="submit" class="btn">Guardar</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    let projects = JSON.parse(localStorage.getItem('unidad1Projects')) || [];
-
-    function displayProjects() {
-      const grid = document.getElementById('projectsGrid');
-      const noProjects = document.getElementById('noProjects');
-      if (projects.length === 0) {
-        grid.innerHTML = "";
-        noProjects.style.display = "block";
-        return;
-      }
-      noProjects.style.display = "none";
-      grid.innerHTML = projects.map((p,i)=>`
-        <div class="project-card">
-          <h4>${p.title}</h4>
-          <p>${p.description}</p>
-          <p><b>Tecnologías:</b> ${p.technologies}</p>
-          <p><b>Estado:</b> ${p.status}</p>
-          ${p.file ? `<p>📂 <a href="${p.file}" target="_blank">Ver archivo</a></p>` : ""}
-          <button onclick="deleteProject(${i})">Eliminar</button>
-        </div>
-      `).join("");
-    }
-
-    function openModal() {
-      document.getElementById('projectModal').style.display = 'block';
-    }
-    function closeModal() {
-      document.getElementById('projectModal').style.display = 'none';
-    }
-    function saveProject(e) {
-      e.preventDefault();
-      const f = e.target;
-      const project = {
-        title: f.title.value,
-        description: f.description.value,
-        technologies: f.technologies.value,
-        status: f.status.value,
-        file: f.file.value
-      };
-      projects.push(project);
-      localStorage.setItem('unidad1Projects', JSON.stringify(projects));
-      closeModal();
-      displayProjects();
-      f.reset(); // limpiar formulario
-    }
-    function deleteProject(i) {
-      projects.splice(i,1);
-      localStorage.setItem('unidad1Projects', JSON.stringify(projects));
-      displayProjects();
-    }
-    window.onload = displayProjects;
-  </script>
+  <h3>Tareas</h3>
+  <ul>
+    <!-- Aquí agregas tus tareas manualmente -->
+    <li><a href="primera_tarea.html" target="_blank">Primera tarea</a></li>
+    <!-- Ejemplo para más tareas -->
+    <!-- <li><a href="segunda_tarea.html" target="_blank">Segunda tarea</a></li> -->
+  </ul>
 </body>
 </html>
