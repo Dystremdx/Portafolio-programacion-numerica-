@@ -71,11 +71,96 @@
     </div>
 
     <pre id="codigo">
-# Ejemplo de código (reemplázalo con el tuyo)
-def saludo():
-    print("Hola, mundo")
+import tkinter as tk
+from tkinter import ttk, messagebox
+import sympy as sp
+import re
 
-saludo()
+def analizar():
+    expresion = entrada.get().strip()
+
+    if not expresion:
+        messagebox.showwarning("Error", "Por favor ingresa una expresión matemática.")
+        return
+
+    # Reemplazar ^ por ** para potencias
+    expresion = expresion.replace("^", "**")
+
+    # 🔹 Agregar * cuando falta (ej: 5x -> 5*x, 2y -> 2*y, xy -> x*y)
+    expresion = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expresion)
+    expresion = re.sub(r'([a-zA-Z])(\d)', r'\1*\2', expresion)
+    expresion = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expresion)
+
+    try:
+        if "=" in expresion:
+            izquierda, derecha = expresion.split("=")
+            lhs = sp.sympify(izquierda.strip())
+            rhs = sp.sympify(derecha.strip())
+            eq = sp.Eq(lhs, rhs)
+        else:
+            lhs, rhs = sp.symbols("y"), sp.sympify(expresion)
+            eq = sp.Eq(lhs, rhs)
+
+        variables = list(eq.free_symbols)
+        num_vars = len(variables)
+
+        y = sp.Symbol("y")
+        if y in variables:
+            soluciones = sp.solve(eq, y)
+        else:
+            var_dep = variables[0]
+            soluciones = sp.solve(eq, var_dep)
+
+        operaciones = sum(expresion.count(op) for op in "+-*/**")
+
+        resultado_texto = f"Expresión: {expresion}\n"
+        resultado_texto += f"Variables encontradas: {', '.join(str(v) for v in variables)}\n"
+        resultado_texto += f"Número de variables: {num_vars}\n"
+        resultado_texto += f"Número de operaciones: {operaciones}\n"
+
+        if len(soluciones) == 1:
+            resultado_texto += f"✅ Es función: {soluciones[0]}"
+        elif len(soluciones) > 1:
+            resultado_texto += f"❌ NO es función (múltiples salidas: {soluciones})"
+        else:
+            resultado_texto += "❌ No se pudo determinar si es función."
+
+        resultado.set(resultado_texto)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo analizar la expresión.\n{e}")
+
+# ---------------------------
+ventana = tk.Tk()
+ventana.title("Analizador Avanzado de Funciones")
+ventana.geometry("500x400")
+ventana.configure(bg="#f4f6f7")
+
+estilo = ttk.Style()
+estilo.configure("TButton", font=("Arial", 12), padding=6)
+estilo.configure("TLabel", font=("Arial", 12))
+
+titulo = tk.Label(
+    ventana, text="🔎 Analizador Avanzado de Funciones", 
+    font=("Arial", 16, "bold"), bg="#f4f6f7", fg="#2c3e50"
+)
+titulo.pack(pady=10)
+
+entrada = ttk.Entry(ventana, font=("Consolas", 14))
+entrada.pack(pady=10, ipadx=20, ipady=5)
+
+btn = ttk.Button(ventana, text="Analizar", command=analizar)
+btn.pack(pady=10)
+
+resultado = tk.StringVar()
+label_resultado = tk.Label(
+    ventana, textvariable=resultado, 
+    font=("Consolas", 12), bg="#ecf0f1", fg="#2c3e50", 
+    relief="groove", justify="left", anchor="w"
+)
+label_resultado.pack(fill="both", expand=True, padx=20, pady=10)
+
+ventana.mainloop()
     </pre>
   </div>
 
