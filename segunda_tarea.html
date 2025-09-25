@@ -71,7 +71,61 @@
     </div>
 
     <pre id="codigo">
-import tkinter as tk
+import math
+
+def evaluar(expr, x):
+    try:
+        return eval(expr, {"x": x, "math": math})
+    except:
+        return None
+
+def graficar(f1, f2):
+    xs = list(range(-10, 11))   # valores de x de -10 a 10
+    ys1 = [evaluar(f1, x) for x in xs]
+    ys2 = [evaluar(f2, x) for x in xs]
+
+    # --- Mostrar tabla de valores ---
+    print("\nTabla de valores:")
+    print(" x | f1(x) | f2(x)")
+    print("-"*20)
+    for x, y1, y2 in zip(xs, ys1, ys2):
+        print(f"{x:2} | {y1:6} | {y2:6}")
+
+    # --- Gráfico en consola ---
+    vals = [v for v in ys1+ys2 if v is not None]
+    ymin, ymax = min(vals), max(vals)
+
+    alto = 20
+    ancho = len(xs)
+
+    def fila(y):
+        return int((ymax-y)*(alto-1)/(ymax-ymin))
+
+    grid = [[" "]*ancho for _ in range(alto)]
+
+    # Ejes
+    if ymin <= 0 <= ymax:
+        r0 = fila(0)
+        for c in range(ancho): grid[r0][c] = "-"
+    if 0 in xs:
+        c0 = xs.index(0)
+        for r in range(alto): grid[r][c0] = "|"
+
+    # Funciones
+    for i,(y1,y2) in enumerate(zip(ys1,ys2)):
+        if y1 is not None: grid[fila(y1)][i] = "x"
+        if y2 is not None: grid[fila(y2)][i] = "o"
+        if y1 is not None and y2 is not None and fila(y1)==fila(y2):
+            grid[fila(y1)][i] = "*"
+
+    print("\nGráfico:")
+    for fila_ in grid:
+        print("".join(fila_))
+
+# --- Programa principal ---
+f1 = input("Función 1: ")
+f2 = input("Función 2: ")
+graficar(f1,f2)import tkinter as tk
 
 def evaluar(expr, x):
     try:
