@@ -125,76 +125,7 @@ def graficar(f1, f2):
 # --- Programa principal ---
 f1 = input("Función 1: ")
 f2 = input("Función 2: ")
-graficar(f1,f2)import tkinter as tk
-
-def evaluar(expr, x):
-    try:
-        return eval(expr, {"x": x})
-    except:
-        return None
-
-def graficar():
-    f1, f2 = entrada1.get(), entrada2.get()
-    paso = int(entrada_paso.get())
-    canvas.delete("all")
-    salida.delete("1.0", tk.END)
-
-    w, h = 800, 600
-    cx, cy = w//2, h//2
-    esc = 30
-
-    canvas.create_line(0, cy, w, cy, fill="black")
-    canvas.create_line(cx, 0, cx, h, fill="black")
-
-    for i in range(-int(w/(2*esc)), int(w/(2*esc))+1):
-        x = cx + i*esc
-        canvas.create_line(x, cy-5, x, cy+5, fill="black")
-        canvas.create_text(x, cy+15, text=str(i), font=("Arial", 7))
-    for j in range(-int(h/(2*esc)), int(h/(2*esc))+1):
-        y = cy - j*esc
-        canvas.create_line(cx-5, y, cx+5, y, fill="black")
-        canvas.create_text(cx-15, y, text=str(j), font=("Arial", 7))
-
-    pts1 = []
-    salida.insert(tk.END, f"Valores de {f1}:\n")
-    for x in range(-1000, 1001, paso):
-        y = evaluar(f1, x)
-        if y is not None:
-            px, py = cx + x*esc/10, cy - y*esc/10
-            pts1.append((px, py))
-            salida.insert(tk.END, f"x={x}, y={y}\n")
-    for i in range(len(pts1)-1):
-        canvas.create_line(pts1[i], pts1[i+1], fill="red")
-
-  
-    pts2 = []
-    salida.insert(tk.END, f"\nValores de {f2}:\n")
-    for x in range(-1000, 1001, paso):
-        y = evaluar(f2, x)
-        if y is not None:
-            px, py = cx + x*esc/10, cy - y*esc/10
-            pts2.append((px, py))
-            salida.insert(tk.END, f"x={x}, y={y}\n")
-    for i in range(len(pts2)-1):
-        canvas.create_line(pts2[i], pts2[i+1], fill="blue")
-
-
-root = tk.Tk()
-root.title("Graficador Lineal")
-
-tk.Label(root, text="Función 1 (ej: 2*x+3):").pack()
-entrada1 = tk.Entry(root); entrada1.pack()
-tk.Label(root, text="Función 2 (ej: -3*x/4+2):").pack()
-entrada2 = tk.Entry(root); entrada2.pack()
-tk.Label(root, text="Paso (ej: 10):").pack()
-entrada_paso = tk.Entry(root); entrada_paso.insert(0,"10"); entrada_paso.pack()
-
-tk.Button(root, text="Graficar", command=graficar).pack()
-
-canvas = tk.Canvas(root, width=800, height=600, bg="white"); canvas.pack(side="left")
-salida = tk.Text(root, width=40, height=35); salida.pack(side="right")
-
-root.mainloop()
+graficar(f1,f2)
     </pre>
   </div>
 
