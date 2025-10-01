@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Graficador de funciones lineales y resolucion de ejercicios</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: #0f2027;  /* gradiente tipo informático */
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘  Graficador de funciones lineales y resolucion de ejercicios</h1>
+  <p>Este codigo grafica las funciones lineales y se usa para resolver ejercicios con restricciones</p>
+
+  <div class="code-container">
+    <div class="buttons">
+      <button onclick="copiarCodigo()">📋 Copiar Código</button>
+      <a href="tarea3.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+    </div>
+
+    <pre id="codigo">
+import numpy as np
+import matplotlib.pyplot as plt
+from itertools import combinations
+from scipy.spatial import ConvexHull
+
+def graficar_restricciones(restricciones, limites=(0, 20, 0, 20)):
+    """
+    Grafica restricciones lineales y su región factible.
+
+    restricciones : lista de tuplas (a, b, c, tipo)
+        a*x + b*y <= c ---> tipo = "<="
+        a*x + b*y >= c ---> tipo = ">="
+    limites : tupla (xmin, xmax, ymin, ymax)
+    """
+    xmin, xmax, ymin, ymax = limites
+    x = np.linspace(xmin, xmax, 400)
+    
+    plt.figure(figsize=(7, 7))
+
+    # Dibujar las rectas de las restricciones
+    for a, b, c, tipo in restricciones:
+        if b != 0:
+            y = (c - a * x) / b
+            plt.plot(x, y, label=f"{a}x + {b}y {tipo} {c}")
+        else:
+            x_line = np.full_like(x, c / a)
+            plt.plot(x_line, x, label=f"{a}x {tipo} {c}")
+
+    # Ejes
+    plt.axhline(0, color="black", linewidth=0.8)
+    plt.axvline(0, color="black", linewidth=0.8)
+
+    # Encontrar puntos de intersección
+    puntos = []
+    for (a1, b1, c1, _), (a2, b2, c2, _) in combinations(restricciones, 2):
+        det = a1 * b2 - a2 * b1
+        if det != 0:  # hay intersección
+            x_int = (c1 * b2 - c2 * b1) / det
+            y_int = (a1 * c2 - a2 * c1) / det
+            if xmin <= x_int <= xmax and ymin <= y_int <= ymax:
+                puntos.append((x_int, y_int))
+
+    # Agregar esquinas del gráfico
+    puntos += [(xmin, ymin), (xmin, ymax), (xmax, ymin), (xmax, ymax)]
+
+    # Filtrar puntos factibles
+    factibles = []
+    for px, py in puntos:
+        valido = True
+        for a, b, c, tipo in restricciones:
+            if tipo == "<=" and not (a * px + b * py <= c + 1e-6):
+                valido = False
+            if tipo == ">=" and not (a * px + b * py >= c - 1e-6):
+                valido = False
+        if valido:
+            factibles.append((px, py))
+
+    # Región factible
+    if factibles:
+        factibles = np.array(factibles)
+        hull = ConvexHull(factibles)
+        pts = factibles[hull.vertices]
+        plt.fill(pts[:, 0], pts[:, 1], "skyblue", alpha=0.4, label="Región factible")
+
+    # Configuración final
+    plt.xlim(xmin, xmax)
+    plt.ylim(ymin, ymax)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.title("Restricciones y Región Factible")
+    plt.show()
+
+
+# Ejemplo de uso:
+restricciones = [
+    (1, 1, 15, "<="),
+    (2, 1, 18, "<="),
+    (1, 2, 20, "<="),
+    (1, 0, 0, ">="),
+    (0, 1, 0, ">=")
+]
+
+graficar_restricciones(restricciones)
+
+    </pre>
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById("codigo").innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+</body>
+</html>
