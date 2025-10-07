@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Graficador de funciones lineales y resolucion de ejercicios</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: #0f2027;  /* gradiente tipo informático */
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘  Graficador de funciones lineales y resolucion de ejercicios</h1>
+  <p>Este codigo usa el metodo de Newton Raphson para  encontrar la raiz de una funcion</p>
+
+  <div class="code-container">
+    <div class="buttons">
+      <button onclick="copiarCodigo()">📋 Copiar Código</button>
+      <a href="tarea4.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+    </div>
+
+    <pre id="codigo">
+
+funcion = input("Ingrese la función f(x): ")       
+derivada = input("Ingrese la derivada f'(x): ")    
+x0 = float(input("Ingrese el valor inicial x0: "))
+
+tolerancia = 1e-12
+iteracion = 0
+
+while True:
+    x = x0   
+    f = eval(funcion)
+    df = eval(derivada)
+    x1 = x0 - f/df
+    iteracion += 1
+    
+
+    if abs(x1 - x0) < tolerancia:
+        break
+    
+    
+    if iteracion > 1000:
+        print("No converge después de muchas iteraciones.")
+        break
+    
+    x0 = x1
+
+print("Raíz aproximada:", x1)
+print("Iteraciones realizadas:", iteracion)
+
+    </pre>
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById("codigo").innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+</body>
+</html>
