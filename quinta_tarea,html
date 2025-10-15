@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Graficador de funciones lineales y resolucion de ejercicios</title>
+  <title>Graficador de funciones lineales y resolución de ejercicios</title>
   <style>
     body {
       font-family: "Consolas", monospace;
-      background: #0f2027;  /* gradiente tipo informático */
       background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
       color: #f1f1f1;
       margin: 0;
@@ -25,7 +24,6 @@
       background: #1e1e1e;
       border-radius: 10px;
       padding: 20px;
-      position: relative;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       max-width: 900px;
       margin: auto;
@@ -44,6 +42,7 @@
       justify-content: flex-end;
       gap: 10px;
       margin-bottom: 10px;
+      flex-wrap: wrap;
     }
     button, a.pdf-btn {
       background: #00eaff;
@@ -54,6 +53,7 @@
       cursor: pointer;
       font-weight: bold;
       text-decoration: none;
+      transition: background 0.3s;
     }
     button:hover, a.pdf-btn:hover {
       background: #00b3cc;
@@ -61,13 +61,14 @@
   </style>
 </head>
 <body>
-  <h1>📘  Graficador de funciones lineales y resolucion de ejercicios</h1>
-  <p>Este codigo usa el metodo de Newton Raphson para  encontrar la raiz de una funcion</p>
+  <h1>📘 Graficador de funciones lineales y resolución de ejercicios</h1>
+  <p>Este código usa el método de Newton-Raphson para encontrar la raíz de una función.</p>
 
   <div class="code-container">
     <div class="buttons">
       <button onclick="copiarCodigo()">📋 Copiar Código</button>
-      <a href="tarea4.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+      <a href="df_tarea5.html" target="_blank" class="pdf-btn">📊 Ver DataFrame</a>
+      <a href="tarea5_diapositivas.pdf" target="_blank" class="pdf-btn">📑 Ver Diapositivas</a>
     </div>
 
     <pre id="codigo">
@@ -86,10 +87,8 @@ while True:
     x1 = x0 - f/df
     iteracion += 1
     
-
     if abs(x1 - x0) < tolerancia:
         break
-    
     
     if iteracion > 1000:
         print("No converge después de muchas iteraciones.")
@@ -115,3 +114,4 @@ print("Iteraciones realizadas:", iteracion)
   </script>
 </body>
 </html>
+
