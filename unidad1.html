@@ -4,36 +4,115 @@
   <meta charset="UTF-8">
   <title>Unidad 1</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: #333; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 10px 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      margin: 0;
+      padding: 40px 20px;
+      color: #222;
+    }
+
+    .contenedor {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      padding: 30px 40px;
+      transition: transform 0.3s;
+    }
+
+    .contenedor:hover {
+      transform: scale(1.02);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0d47a1;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      color: #1565c0;
+      border-left: 5px solid #1976d2;
+      padding-left: 10px;
+      margin-top: 25px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 12px 0;
+    }
+
     a {
-      display: inline-block;
-      padding: 10px 15px;
-      background: #007bff;
+      display: block;
+      padding: 12px 18px;
+      background: #1976d2;
       color: white;
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: all 0.25s ease-in-out;
     }
-    a:hover { background: #0056b3; }
+
+    a:hover {
+      background: #0d47a1;
+      transform: translateX(5px);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    /* Para futuras unidades */
+    .unidad {
+      margin-top: 40px;
+    }
+
+    .unidad h2::before {
+      content: "📘 ";
+    }
   </style>
 </head>
 <body>
-  <h2>📘 Unidad 1</h2>
 
-  <h3>Tareas</h3>
-  <ul>
-    <!-- Aquí agregas tus tareas manualmente -->
-    <li><a href="primera_tarea.html" target="_blank">Identificacion de funciones</a></li>
-    
-    <li><a href="segunda_tarea.html" target="_blank">Graficador de funciones lineales</a></li>
+  <div class="contenedor">
+    <div class="unidad">
+      <h2>Unidad 1</h2>
 
-    <li><a href="tercera_tarea.html" target="_blank">Graficador de funciones lineales y resolucion de ejercicios</a></li>
+      <h3>Tareas</h3>
+      <ul>
+        <li><a href="primera_tarea.html" target="_blank">Identificación de funciones</a></li>
+        <li><a href="segunda_tarea.html" target="_blank">Graficador de funciones lineales</a></li>
+        <li><a href="tercera_tarea.html" target="_blank">Graficador de funciones lineales y resolución de ejercicios</a></li>
+        <li><a href="cuarta_tarea.html" target="_blank">Método de Newton Raphson</a></li>
+        <li><a href="quinta_tarea.html" target="_blank">Método de Regula Falsi</a></li>
+        <li><a href="sexta_tarea.html" target="_blank">Métodos restantes</a></li>
+      </ul>
+    </div>
 
-    <li><a href="cuarta_tarea.html" target="_blank">Metodo de Newton Raphson</a></li>
+    <!-- Ejemplo de cómo añadir otra unidad -->
+    <!--
+    <div class="unidad">
+      <h2>Unidad 2</h2>
+      <h3>Tareas</h3>
+      <ul>
+        <li><a href="unidad2_tarea1.html" target="_blank">Título de la tarea</a></li>
+      </ul>
+    </div>
+    -->
 
-    <li><a href="quinta_tarea.html" target="_blank">Metodo de Regula Falsi</a></li>
-  </ul>
+    <footer>© 2025 - Plataforma de Actividades</footer>
+  </div>
+
 </body>
 </html>
+
