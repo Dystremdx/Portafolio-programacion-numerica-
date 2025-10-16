@@ -1,1 +1,242 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Graficador de funciones lineales y resolución de ejercicios</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .tab {
+      background: #00eaff;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tab.active {
+      background: #00b3cc;
+    }
+    .content {
+      display: none;
+    }
+    .content.active {
+      display: block;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 Graficador de funciones lineales y resolución de ejercicios</h1>
+  <p>Selecciona un método y explora su código y PDF:</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab(1)">Biseccion</div>
+    <div class="tab" onclick="showTab(2)">Punto fijo</div>
+    <div class="tab" onclick="showTab(3)">Secante</div>
+  </div>
+
+  <!-- TAB 1 -->
+  <div id="tab1" class="content active">
+    <div class="code-container">
+      <div class="buttons">
+        <button onclick="copiarCodigo('codigo1')">📋 Copiar Código</button>
+        <a href="biseccion.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+      </div>
+      <pre id="codigo1">
+import math
+
+# Definición de la función
+def f(x):
+    return math.exp(3*x) - 4
+
+
+a = 0
+b = 1
+
+
+tolerancia = 0.1
+
+
+print(f"{'Iter':<6}{'a':<10}{'b':<10}{'m':<10}{'f(a)':<12}{'f(b)':<12}{'f(m)':<12}{'Error':<10}")
+print("-"*75)
+
+iteracion = 0
+while True:
+    iteracion += 1
+    m = (a + b) / 2
+    fa = f(a)
+    fb = f(b)
+    fm = f(m)
+    error = (b - a) / 2
+
+    print(f"{iteracion:<6}{a:<10.5f}{b:<10.5f}{m:<10.5f}{fa:<12.5f}{fb:<12.5f}{fm:<12.5f}{error:<10.5f}")
+
+    if abs(error) < tolerancia:
+        break
+
+
+    if fa * fm < 0:
+        b = m
+    else:
+        a = m
+
+print("\nRaíz aproximada: x =", round(m, 4))
+print("Error final:", round(error, 5))
+
+      </pre>
+    </div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div id="tab2" class="content">
+    <div class="code-container">
+      <div class="buttons">
+        <button onclick="copiarCodigo('codigo2')">📋 Copiar Código</button>
+        <a href="punto_fijo.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+      </div>
+      <pre id="codigo2">
+import math
+
+g = input("Ingrese la función g(x): ")
+x0 = float(input("Ingrese el valor inicial x0: "))
+tolerancia = 1e-12
+iteracion = 0
+
+while True:
+    x = x0
+    x1 = eval(g)
+    iteracion += 1
+    if abs(x1 - x0) < tolerancia:
+        break
+    if iteracion > 1000:
+        print("No converge después de muchas iteraciones.")
+        break
+    x0 = x1
+
+print("Raíz aproximada:", x1)
+print("Iteraciones realizadas:", iteracion)
+      </pre>
+    </div>
+  </div>
+
+  <!-- TAB 3 -->
+  <div id="tab3" class="content">
+    <div class="code-container">
+      <div class="buttons">
+        <button onclick="copiarCodigo('codigo3')">📋 Copiar Código</button>
+        <a href="secante.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+      </div>
+      <pre id="codigo3">
+import math
+
+def f(x):
+    return x**2 - 4
+
+x0 = 1
+x1 = 3
+tolerancia = 1e-6
+iteracion = 0
+max_iter = 100
+
+print(f"{'Iter':<6}{'x_n-1':<12}{'x_n':<12}{'x_{n+1}':<12}{'Error':<12}")
+print("-"*55)
+
+while True:
+    iteracion += 1
+    f0 = f(x0)
+    f1 = f(x1)
+    x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
+    error = abs(x2 - x1)
+    print(f"{iteracion:<6}{x0:<12.6f}{x1:<12.6f}{x2:<12.6f}{error:<12.6f}")
+    if error < tolerancia or iteracion >= max_iter:
+        break
+    x0, x1 = x1, x2
+
+print("\nRaíz aproximada:", round(x2, 6))
+print("Iteraciones realizadas:", iteracion)
+
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    function showTab(n) {
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content");
+      tabs.forEach((t, i) => {
+        t.classList.toggle("active", i === n - 1);
+        contents[i].classList.toggle("active", i === n - 1);
+      });
+    }
+
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+
+</body>
+</html>
