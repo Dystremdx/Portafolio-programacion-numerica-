@@ -1,1 +1,118 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Metodo de regula falsi</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Metodo de regula falsi</h1>
+  <p>Este metodo sirve para calcular la raiz de una funcion.</p>
+
+  <div class="code-container">
+    <div class="buttons">
+      <button onclick="copiarCodigo()">📋 Copiar Código</button>
+      <a href="tarea5.pdf" target="_blank" class="pdf-btn">📊 Ver teoria</a>
+      <a href="tarea5_diapositivas.pdf" target="_blank" class="pdf-btn">📑 Ver Diapositivas</a>
+    </div>
+
+    <pre id="codigo">
+
+f(x) = x^3 - 5x + 1  en el intervalo [0, 1]
+
+def f(x):
+    return x**3 - 5*x + 1
+
+def regula_falsi(a, b, tol=1e-6, max_iter=20):
+    if f(a) * f(b) >= 0:
+        print("El intervalo no es válido.")
+        return None
+
+    for i in range(max_iter):
+        c = b - (f(b) * (a - b)) / (f(a) - f(b))
+        print(f"Iter {i+1}: a={a:.6f}, b={b:.6f}, c={c:.6f}, f(c)={f(c):.6e}")
+        if abs(f(c)) < tol:
+            print(f"\nRaíz aproximada: x = {c:.6f}")
+            return c
+        if f(a) * f(c) < 0:
+            b = c
+        else:
+            a = c
+
+    print("\nNo se alcanzó la convergencia.")
+    return None
+
+a, b = 0, 1
+regula_falsi(a, b)
+
+    </pre>
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById("codigo").innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+</body>
+</html>
