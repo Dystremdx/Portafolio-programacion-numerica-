@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Método del Punto Fijo</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Método del Punto Fijo</h1>
+  <p>Este método busca aproximar una raíz reescribiendo la ecuación en la forma <b>x = g(x)</b> y aplicando iteraciones sucesivas.</p>
+
+  <div class="code-container">
+    <div class="buttons">
+      <button onclick="copiarCodigo()">📋 Copiar Código</button>
+      <a href="punto_fijo.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+    </div>
+
+    <pre id="codigo">
+import math
+
+# Método del Punto Fijo
+# g(x) = expresión ingresada por el usuario
+
+g = input("Ingrese la función g(x): ")
+x0 = float(input("Ingrese el valor inicial x0: "))
+tolerancia = 1e-12
+iteracion = 0
+
+while True:
+    x = x0
+    x1 = eval(g)
+    iteracion += 1
+    if abs(x1 - x0) < tolerancia:
+        break
+    if iteracion > 1000:
+        print("No converge después de muchas iteraciones.")
+        break
+    x0 = x1
+
+print("Raíz aproximada:", x1)
+print("Iteraciones realizadas:", iteracion)
+    </pre>
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById("codigo").innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+</body>
+</html>
 
