@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Índice H – Programación Numérica</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .tab {
+      background: #00eaff;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tab.active {
+      background: #00b3cc;
+    }
+    .content {
+      display: none;
+    }
+    .content.active {
+      display: block;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+    .table-container {
+  overflow-x: auto;
+  margin: 30px auto;
+  max-width: 950px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
+}
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 15px;
+  color: #d9e6ee;
+}
+
+th, td {
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+  color: #81d4fa;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+  border-bottom: 2px solid rgba(129, 212, 250, 0.6);
+}
+
+td a {
+  color: #aeeaff;
+  text-decoration: none;
+}
+
+td a:hover {
+  color: #80deea;
+  text-decoration: underline;
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.3s ease;
+}
+
+    img {
+      max-width: 85%;
+      border-radius: 10px;
+      display: block;
+      margin: 25px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Unidad II – Índice H</h1>
+  <p>Actividad del curso de Programación Numérica</p>
+  <div style="text-align: center; margin-bottom: 30px;">
+    <a href="PN_U2_Trabajo_6_Indice_H.pdf" target="_blank" class="pdf-btn">📄 Ver PDF</a>
+  </div>
+
+  <div class="code-container">
+    <h2>Creación de cuenta en CTI Vitae</h2>
+    <p style="text-align: justify;">
+      <strong>CTI Vitae</strong> es una plataforma del <strong>CONCYTEC</strong> (Consejo Nacional de Ciencia, Tecnología e 
+      Innovación Tecnológica del Perú) que funciona como un currículum virtual para investigadores, docentes y 
+      profesionales vinculados a la ciencia, tecnología e innovación (CTI). En esta plataforma, los usuarios pueden 
+      registrar su información académica, experiencia profesional, publicaciones, proyectos de investigación, patentes
+      y otros logros.
+    </p>
+
+    <img src="1.png" alt="Captura de CTI Vitae">
+
+    <h2>Autores con índice H con investigaciones en métodos numéricos</h2>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Autor</th>
+        <th>Investigación</th>
+        <th>Número de publicaciones</th>
+        <th>Índice H</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://www.scopus.com/authid/detail.uri?authorId=57191328360&origin=recordpage" target="_blank">Gusev, Alexander A.</a></td>
+        <td><a href="https://www.scopus.com/pages/publications/85146635331?origin=resultslist" target="_blank">ARSENY: A program for computing inelastic transitions via hidden crossings in one-electron atomic ion–ion collisions with classical description of nuclear motion</a></td>
+        <td>144</td>
+        <td>14</td>
+      </tr>
+      <tr>
+        <td><a href="https://www.scopus.com/authid/detail.uri?authorId=50662263300&origin=recordpage" target="_blank">Tran, Loc V.</a></td>
+        <td><a href="https://www.scopus.com/pages/publications/85053298695?origin=resultslist
+" target="_blank">Stability analysis of multi-layered plates subjected to partial edge compression with and without initial imperfection</a></td>
+        <td>28</td>
+        <td>22</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Índice H de docentes de la Facultad de Ingeniería Estadística e Informática</h2>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Docente</th>
+        <th>Índice H</th>
+        <th>Número de publicaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57224362115" target="_blank">Apaza-Tarqui, Alejandro</a></td><td>1</td><td>5</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57221112735" target="_blank">Carpio Vargas, Edgar Eloy</a></td><td>3</td><td>9</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58491331500" target="_blank">Choquejahua-Acero, Remo</a></td><td>1</td><td>2</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214094525" target="_blank">Canqui-Flores, Bernabé</a></td><td>3</td><td>8</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58930847700" target="_blank">Coyla-Idme, Leonel</a></td><td>1</td><td>5</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59325707300" target="_blank">Copari Romero, Fredy Gonzalo</a></td><td>0</td><td>2</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58308326900"
+target="_blank">Gonzales, Leonid Alemán</a></td><td>0</td><td>4</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58898481200"
+target="_blank">Herrera-Urtiaga, Alain Paul</a></td><td>0</td><td>3</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57571711100" target="_blank">Huata-Panca, Percy</a></td><td>2</td><td>3</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57201897173"
+target="_blank">Huamán, Beto Puma</a></td><td>1</td><td>1</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57223389447" 
+target="_blank">Ibañez-Quispe, Vladimiro</a></td><td>5</td><td>21</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=55865380000" target="_blank">Javier Quispe Carita, Angel</a></td><td>1</td><td>1</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284593600" target="_blank">Laura Murillo, Ramiro</a></td><td>1</td><td>2</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58671914800" target="_blank">López-Cueva, Milton Antonio</a></td><td>1</td><td>6</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58778725100" target="_blank">Melgarejo-Bolivar, Romel P.</a></td><td>3</td><td>6</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57562709900" target="_blank">Mendoza-Mollocondo, Charles Ignacio</a></td><td>3</td><td>8</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58088282100"
+target="_blank">Pari-Condori, Elqui Yeye</a></td><td>1</td><td>3</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284529900" 
+target="_blank">Quispe, Juan Reynaldo Paredes</a></td><td>0</td><td>1</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59359729500" 
+target="_blank">Tito Lipa, José Pánfilo</a></td><td>0</td><td>3</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57003617100" target="_blank">Tumi-Figueroa, Ernesto Nayer</a></td><td>3</td><td>6</td></tr>
+      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214066496" target="_blank">Torres-Cruz, Fred</a></td><td>4</td><td>40</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+</body>
+</html>
