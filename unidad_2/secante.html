@@ -1,1 +1,118 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Método de la Secante</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00eaff;
+    }
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: auto;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Método de la Secante</h1>
+  <p>El método de la secante aproxima la raíz de una función usando dos puntos cercanos y la pendiente de la línea secante entre ellos.</p>
+
+  <div class="code-container">
+    <div class="buttons">
+      <button onclick="copiarCodigo()">📋 Copiar Código</button>
+      <a href="secante.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+    </div>
+
+    <pre id="codigo">
+import math
+
+def f(x):
+    return x**2 - 4
+
+x0 = 1
+x1 = 3
+tolerancia = 1e-6
+iteracion = 0
+max_iter = 100
+
+print(f"{'Iter':<6}{'x_n-1':<12}{'x_n':<12}{'x_{n+1}':<12}{'Error':<12}")
+print("-"*55)
+
+while True:
+    iteracion += 1
+    f0 = f(x0)
+    f1 = f(x1)
+    x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
+    error = abs(x2 - x1)
+    print(f"{iteracion:<6}{x0:<12.6f}{x1:<12.6f}{x2:<12.6f}{error:<12.6f}")
+    if error < tolerancia or iteracion >= max_iter:
+        break
+    x0, x1 = x1, x2
+
+print("\nRaíz aproximada:", round(x2, 6))
+print("Iteraciones realizadas:", iteracion)
+    </pre>
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById("codigo").innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Código copiado al portapapeles");
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+  </script>
+</body>
+</html>
+
+      
