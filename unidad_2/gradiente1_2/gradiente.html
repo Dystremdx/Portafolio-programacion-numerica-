@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Gradiente de una Función</title>
+  <style>
+    body {
+      font-family: "Consolas", monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      padding: 30px 40px;
+      max-width: 950px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00eaff;
+      margin-bottom: 10px;
+    }
+
+    h2, h3 {
+      color: #00eaff;
+      text-align: center;
+      margin-top: 35px;
+    }
+
+    p {
+      text-align: justify;
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 15px auto;
+      color: #e5e5e5;
+    }
+
+    p.center {
+      text-align: center;
+    }
+
+    .code-container, pre {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      overflow-x: auto;
+      margin: 25px auto;
+      max-width: 900px;
+    }
+
+    pre {
+      color: #00ffcc;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    table {
+      width: 90%;
+      margin: 25px auto;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 15px;
+      color: #e5e5e5;
+    }
+
+    th, td {
+      border: 1px solid #00eaff44;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: rgba(0, 234, 255, 0.2);
+      color: #00eaff;
+    }
+
+    img {
+      display: block;
+      margin: 20px auto;
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+
+    .small {
+      font-size: 0.9em;
+      color: #bbb;
+      text-align: center;
+    }
+
+    .header-info {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #d5faff;
+    }
+
+    .header-info b {
+      color: #00eaff;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, a.pdf-btn {
+      background: #00eaff;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    button:hover, a.pdf-btn:hover {
+      background: #00b3cc;
+    }
+  </style>
+
+  <!-- MathJax -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- Highlight.js -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>La Gradiente de una Función</h1>
+    <div class="header-info">
+      <b>Alumno:</b> Ronald Wilder Incacutipa Muñuico<br>
+      <b>Docente:</b> Ing. Torres Cruz Fred<br>
+      Programación Numérica – FINESI<br>
+      Universidad Nacional del Altiplano
+    </div>
+
+    <h2>Definición de la Gradiente</h2>
+
+  <p>La <b>gradiente</b> de una función escalar \( f \) es un vector que contiene sus derivadas parciales.  
+  Si \( f: \mathbb{R}^n \rightarrow \mathbb{R} \), entonces su gradiente se define como:</p>
+
+  <p class="center">
+  \[
+  \nabla f(x_1, x_2, \dots, x_n) =
+  \left(
+  \frac{\partial f}{\partial x_1},
+  \frac{\partial f}{\partial x_2},
+  \dots,
+  \frac{\partial f}{\partial x_n}
+  \right)
+  \]
+  </p>
+
+  <p>Este vector apunta en la dirección de <b>mayor incremento</b> de la función.  
+  En métodos numéricos, se usa para el <i>descenso del gradiente</i>, donde los valores de las variables se actualizan de la siguiente forma:</p>
+
+  <p class="center">
+  \[
+  x_{i+1} = x_i - \eta \nabla f(x_i)
+  \]
+  </p>
+
+  <p>donde \( \eta \) es la <b>tasa de aprendizaje</b> o tamaño de paso.</p>
+
+  <h2>Ejemplo 1: Función de una variable</h2>
+
+  <p>Sea la función:</p>
+  <p class="center">\[ f(x) = x^2 \]</p>
+
+  <p>Por tanto:</p>
+  <p class="center">\[ \nabla f(x_i) = x_{i-1} - \eta \, \frac{df(x_{i-1})}{dx} \]</p>
+
+  <p>Con \( \eta = 0.1 \)</p>
+
+  <img src="g1.png" alt="Gráfica f(x)">
+
+  <p>Su derivada es:</p>
+  <p class="center">\[ f'(x) = 2x \]</p>
+
+  <h3>Código en R:</h3>
+
+  <pre><code class="language-r">
+# Definimos la función y su derivada
+f <- function(x) { x^2 }
+f_deriv <- function(x) { 2*x }
+
+# Parámetros
+x0 <- 5
+eta <- 0.1
+n_iter <- 15
+
+# Inicializamos vectores
+x_vals <- numeric(n_iter)
+f_vals <- numeric(n_iter)
+deriv_vals <- numeric(n_iter)
+
+# Asignamos el primer valor
+x_vals[1] <- x0
+f_vals[1] <- f(x0)
+deriv_vals[1] <- f_deriv(x0)
+
+# Calculamos iterativamente el gradiente
+for (i in 2:n_iter) {
+    x_new <- x_vals[i-1] - eta * f_deriv(x_vals[i-1])
+    x_vals[i] <- x_new
+    f_vals[i] <- f(x_new)
+    deriv_vals[i] <- f_deriv(x_new)
+}
+
+# Graficamos
+plot(x_vals, f_vals, type="l", col="blue", lwd=2,
+     xlab="Valores de x", ylab="Valor")
+  </code></pre>
+
+  <h3>Resultados de las iteraciones:</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Iteración</th><th>\(x_i\)</th><th>\(f(x_i)\)</th><th>\(df(x)/dx = 2x_i\)</th><th>\(x_{i+1}\)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>5.000</td><td>25.000</td><td>10.000</td><td>4.000</td></tr>
+      <tr><td>2</td><td>4.000</td><td>16.000</td><td>8.000</td><td>3.200</td></tr>
+      <tr><td>3</td><td>3.200</td><td>10.240</td><td>6.400</td><td>2.560</td></tr>
+      <tr><td>4</td><td>2.560</td><td>6.554</td><td>5.120</td><td>2.048</td></tr>
+      <tr><td>5</td><td>2.048</td><td>4.194</td><td>4.096</td><td>1.638</td></tr>
+      <tr><td>6</td><td>1.638</td><td>2.685</td><td>3.277</td><td>1.311</td></tr>
+      <tr><td>7</td><td>1.311</td><td>1.718</td><td>2.621</td><td>1.049</td></tr>
+      <tr><td>8</td><td>1.049</td><td>1.099</td><td>2.097</td><td>0.839</td></tr>
+      <tr><td>9</td><td>0.839</td><td>0.704</td><td>1.678</td><td>0.671</td></tr>
+      <tr><td>10</td><td>0.671</td><td>0.450</td><td>1.342</td><td>0.537</td></tr>
+    </tbody>
+  </table>
+
+  <img src="gradiente1.png" alt="Descenso del gradiente f(x)=x²">
+  <p class="small center">Figura 1. Descenso del gradiente para \( f(x) = x^2 \)</p>
+
+  <h2>Ejemplo 2: Función de dos variables</h2>
+
+  <p>Sea la función:</p>
+  <p class="center">\[ f(x, y) = x^2 + y^2 + 3\sin(x) + 2\cos(y) \]</p>
+
+  <img src="g2.png" alt="Gráfica f(x,y)">
+
+  <p>Las derivadas parciales son:</p>
+  <p class="center">\[
+  \frac{\partial f}{\partial x} = 2x + 3\cos(x), \qquad
+  \frac{\partial f}{\partial y} = 2y - 2\sin(y)
+  \]</p>
+
+  <p>Por tanto:</p>
+  <p class="center">\[
+  \nabla f(x, y) = (2x + 3\cos(x),\; 2y - 2\sin(y))
+  \]</p>
+
+  <h3>Código en R:</h3>
+
+ <pre><code class="language-r">
+# ======================================================
+# 💡 DESCENSO DEL GRADIENTE EN 3D CON PLOT3D 
+# f(x, y) = x^2 + y^2 + 3*sin(x) + 2*cos(y)
+# ======================================================
+
+library(plot3D)
+
+# Función y gradiente
+f <- function(x, y) { 
+  x^2 + y^2 + 3*sin(x) + 2*cos(y) 
+}
+
+grad <- function(x, y) {
+  df_dx <- 2*x + 3*cos(x)
+  df_dy <- 2*y - 2*sin(y)
+  c(df_dx, df_dy)
+}
+
+# Parámetros
+x0 <- 5
+y0 <- 3
+eta <- 0.1
+n_iter <- 25
+
+# Inicialización
+x_vals <- numeric(n_iter)
+y_vals <- numeric(n_iter)
+f_vals <- numeric(n_iter)
+dfx_vals <- numeric(n_iter)
+dfy_vals <- numeric(n_iter)
+
+x_vals[1] <- x0
+y_vals[1] <- y0
+f_vals[1] <- f(x0, y0)
+g <- grad(x0, y0)
+dfx_vals[1] <- g[1]
+dfy_vals[1] <- g[2]
+
+# Descenso del gradiente
+for (i in 2:n_iter) {
+  g <- grad(x_vals[i-1], y_vals[i-1])
+  x_vals[i] <- x_vals[i-1] - eta * g[1]
+  y_vals[i] <- y_vals[i-1] - eta * g[2]
+  f_vals[i] <- f(x_vals[i], y_vals[i])
+  dfx_vals[i] <- g[1]
+  dfy_vals[i] <- g[2]
+}
+
+# ======================================================
+# 📊 Tabla de iteraciones
+# ======================================================
+tabla_iteraciones <- data.frame(
+  Iteracion = 1:n_iter,
+  x_i = round(x_vals, 6),
+  y_i = round(y_vals, 6),
+  `f(x_i, y_i)` = round(f_vals, 6),
+  `∂f/∂x` = round(dfx_vals, 6),
+  `∂f/∂y` = round(dfy_vals, 6),
+  x_i1 = c(round(x_vals[-1], 6), NA),
+  y_i1 = c(round(y_vals[-1], 6), NA)
+)
+
+print(tabla_iteraciones)
+
+# ======================================================
+# 🌄 Superficie 3D 
+# ======================================================
+
+# Crear la malla correctamente (X, Y matrices)
+x_seq <- seq(-6, 6, length.out = 100)
+y_seq <- seq(-6, 6, length.out = 100)
+malla <- mesh(x_seq, y_seq)
+X <- malla$x
+Y <- malla$y
+Z <- f(X, Y)
+
+# Gráfica 3D de la superficie
+surf3D(
+  x = X, y = Y, z = Z,
+  colkey = FALSE,
+  theta = 45, phi = 25, expand = 0.6,
+  col = jet.col(100),
+  border = "gray40",
+  main = "Descenso del Gradiente - f(x, y)",
+  xlab = "x", ylab = "y", zlab = "f(x, y)"
+)
+
+# Trayectoria del descenso
+lines3D(
+  x_vals, y_vals, f_vals,
+  col = "blue", lwd = 2, add = TRUE
+)
+
+# Puntos del recorrido
+points3D(
+  x_vals, y_vals, f_vals,
+  col = "red", pch = 19, cex = 1.2, add = TRUE
+)
+
+# Punto inicial y final
+points3D(x_vals[1], y_vals[1], f_vals[1], col = "orange", pch = 17, cex = 2, add = TRUE)
+points3D(tail(x_vals, 1), tail(y_vals, 1), tail(f_vals, 1), col = "darkgreen", pch = 8, cex = 2, add = TRUE)
+
+# Leyenda
+legend("topright",
+       legend = c("Trayectoria", "Puntos", "Inicio", "Final"),
+       col = c("blue", "red", "orange", "darkgreen"),
+       pch = c(NA, 19, 17, 8),
+       lwd = 2, bg = "white")
+</code></pre>
+
+<h3>Resultados de las iteraciones:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Iteración</th>
+      <th>\( x_i \)</th>
+      <th>\( y_i \)</th>
+      <th>\( f(x_i, y_i) \)</th>
+      <th>\( \frac{\partial f}{\partial x} \)</th>
+      <th>\( \frac{\partial f}{\partial y} \)</th>
+      <th>\( x_{i+1}, y_{i+1} \)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>5.000</td><td>3.000</td><td>29.143</td><td>10.851</td><td>5.718</td><td>3.915, 2.428</td></tr>
+    <tr><td>2</td><td>3.915</td><td>2.428</td><td>17.615</td><td>5.683</td><td>3.548</td><td>3.347, 2.073</td></tr>
+    <tr><td>3</td><td>3.347</td><td>2.073</td><td>13.925</td><td>3.756</td><td>2.394</td><td>2.971, 1.834</td></tr>
+    <tr><td>4</td><td>2.971</td><td>1.834</td><td>12.179</td><td>2.986</td><td>1.737</td><td>2.672, 1.660</td></tr>
+    <tr><td>5</td><td>2.672</td><td>1.660</td><td>11.076</td><td>2.669</td><td>1.329</td><td>2.406, 1.527</td></tr>
+    <tr><td>6</td><td>2.406</td><td>1.527</td><td>10.221</td><td>2.588</td><td>1.057</td><td>2.147, 1.422</td></tr>
+    <tr><td>7</td><td>2.147</td><td>1.422</td><td>9.443</td><td>2.660</td><td>0.866</td><td>1.881, 1.335</td></tr>
+    <tr><td>8</td><td>1.881</td><td>1.335</td><td>8.644</td><td>2.846</td><td>0.726</td><td>1.596, 1.263</td></tr>
+    <tr><td>9</td><td>1.596</td><td>1.263</td><td>7.748</td><td>3.116</td><td>0.619</td><td>1.285, 1.201</td></tr>
+    <tr><td>10</td><td>1.285</td><td>1.201</td><td>6.693</td><td>3.416</td><td>0.537</td><td>0.943, 1.147</td></tr>
+  </tbody>
+</table>
+
+
+<img src="gradiente2.png" alt="Descenso del gradiente f(x,y)">
+<p class="small center">Figura 2. Descenso del gradiente para \( f(x,y) = x^2 + y^2 + 3\sin(x) + 2\cos(y) \)</p>
+
+</body>
+</html>
