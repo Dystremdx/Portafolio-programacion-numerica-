@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Método de la Secante</title>
+  <title>Trabajo 3: Método de Newton-Raphson</title>
   <style>
     body {
       font-family: "Consolas", monospace;
@@ -15,15 +15,17 @@
       text-align: center;
       color: #00eaff;
     }
-    p {
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-    }
     h2 {
       color: #00ffcc;
-      text-align: left;
-      margin-top: 40px;
+      margin-top: 35px;
+    }
+    p {
+      font-size: 18px;
+      text-align: justify;
+    }
+    ul, ol {
+      font-size: 16px;
+      margin-left: 40px;
     }
     .code-container {
       background: #1e1e1e;
@@ -31,7 +33,7 @@
       padding: 20px;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       max-width: 900px;
-      margin: auto;
+      margin: 30px auto;
     }
     pre {
       background: #1e1e1e;
@@ -63,92 +65,107 @@
     button:hover, a.pdf-btn:hover {
       background: #00b3cc;
     }
+    .autor {
+      text-align: center;
+      font-size: 16px;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-  <h1>📘 Método de la Secante</h1>
-  <p>El método de la secante permite hallar raíces de funciones sin necesidad de derivarlas, usando dos puntos iniciales.</p>
 
-  <h2>🧩 Definición</h2>
-  <div class="code-container">
-    <p>Se basa en aproximar la derivada por una recta secante entre dos puntos:</p>
-    <pre>
-f'(xₙ) ≈ (f(xₙ) - f(xₙ₋₁)) / (xₙ - xₙ₋₁)
+  <h1>📘 Trabajo 3: Método de Newton-Raphson</h1>
+  <p class="autor">
+    Alumno: <strong>Ronald Wilder Incacutipa Muñuico</strong><br>
+    Docente: <strong>Ing. Torres Cruz Fred</strong><br>
+    Curso: <em>Programación Numérica – FINESI</em><br>
+    Universidad Nacional del Altiplano
+  </p>
 
-xₙ₊₁ = xₙ - f(xₙ) * (xₙ - xₙ₋₁) / (f(xₙ) - f(xₙ₋₁))
-    </pre>
-  </div>
+  <h2>🧩 Descripción del Problema</h2>
+  <p>
+    Se requiere un programa en Python que implemente el <strong>método de Newton-Raphson</strong> para encontrar raíces de ecuaciones no lineales.
+    El sistema debe solicitar al usuario:
+  </p>
+  <ul>
+    <li>La función <code>f(x)</code>.</li>
+    <li>La derivada <code>f'(x)</code>.</li>
+    <li>Un valor inicial <code>x₀</code>.</li>
+  </ul>
+  <p>
+    El programa debe calcular de manera iterativa la raíz aproximada de la función, utilizando el criterio de convergencia:
+  </p>
+  <pre>|xₙ₊₁ − xₙ| < 10⁻¹²</pre>
 
-  <h2>⚙️ Procedimiento</h2>
-  <ol>
-    <li>Elegir dos valores iniciales <code>x₀</code> y <code>x₁</code> cercanos a la raíz.</li>
-    <li>Calcular <code>f(x₀)</code> y <code>f(x₁)</code>.</li>
-    <li>Aplicar la fórmula de la secante.</li>
-    <li>Calcular el error <code>e = |xₙ₊₁ - xₙ|</code>.</li>
-    <li>Repetir hasta que <code>e</code> sea menor que la tolerancia.</li>
-  </ol>
+  <h2>⚙️ Especificaciones</h2>
+  <ul>
+    <li><strong>Entrada:</strong> f(x), f'(x) y valor inicial x₀.</li>
+    <li><strong>Proceso:</strong> aplicar el método hasta cumplir la tolerancia.</li>
+    <li><strong>Salida:</strong> raíz aproximada e iteraciones realizadas.</li>
+  </ul>
+
+  <h2>🧮 Ejemplo</h2>
+  <pre>f(x) = x² - 10  
+f'(x) = 2x  
+x₀ = 3</pre>
 
   <h2>💻 Código en Python</h2>
   <div class="code-container">
     <div class="buttons">
       <button onclick="copiarCodigo()">📋 Copiar Código</button>
-      <a href="metodo_secante.pdf" target="_blank" class="pdf-btn">📊 Ver teoría</a>
-      <a href="secante_diapositivas.pdf" target="_blank" class="pdf-btn">📑 Ver diapositivas</a>
+      <a href="newton_teoria.pdf" target="_blank" class="pdf-btn">📊 Ver teoría</a>
+      <a href="newton_diapositivas.pdf" target="_blank" class="pdf-btn">📑 Ver diapositivas</a>
     </div>
+
     <pre id="codigo">
-# Método de la Secante
-# f(x) = x^2 - 4
+# Método de Newton-Raphson 
 
-import math
+# El usuario ingresa la función y su derivada
+funcion = input("Ingrese la función f(x): ")       
+derivada = input("Ingrese la derivada f'(x): ")    
+x0 = float(input("Ingrese el valor inicial x0: "))
 
-def f(x):
-    return x**2 - 4
-
-x0 = 1
-x1 = 3
-tolerancia = 1e-6
+tolerancia = 1e-12
 iteracion = 0
-max_iter = 100
-
-print(f"{'Iter':<6}{'x_n-1':<12}{'x_n':<12}{'x_{n+1}':<12}{'Error':<12}")
-print("-"*55)
 
 while True:
+    x = x0
+    f = eval(funcion)
+    df = eval(derivada)
+    x1 = x0 - f/df
     iteracion += 1
-    f0 = f(x0)
-    f1 = f(x1)
-    x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
-    error = abs(x2 - x1)
 
-    print(f"{iteracion:<6}{x0:<12.6f}{x1:<12.6f}{x2:<12.6f}{error:<12.6f}")
-
-    if error < tolerancia or iteracion >= max_iter:
+    if abs(x1 - x0) < tolerancia:
         break
 
-    x0, x1 = x1, x2
+    if iteracion > 1000:
+        print("No converge después de muchas iteraciones.")
+        break
 
-print("\nRaíz aproximada:", round(x2, 6))
+    x0 = x1
+
+print("Raíz aproximada:", x1)
 print("Iteraciones realizadas:", iteracion)
     </pre>
   </div>
 
-  <h2>🧮 Ejemplo de Ejecución</h2>
+  <h2>📊 Ejemplo de Ejecución</h2>
   <pre>
-Iter  x_n-1      x_n         x_{n+1}    Error       
--------------------------------------------------------
-1     1.000000    3.000000    1.750000    1.250000
-2     3.000000    1.750000    2.000000    0.250000
-3     1.750000    2.000000    2.000000    0.000000
+Ingrese la función f(x): x**2 - 10
+Ingrese la derivada f'(x): 2*x
+Ingrese el valor inicial x0: 3
 
-Raíz aproximada: 2.0
-Iteraciones realizadas: 3
+Raíz aproximada: 3.162277660168379
+Iteraciones realizadas: 5
   </pre>
 
-  <h2>✅ Resultado Final</h2>
-  <p>La raíz aproximada de <code>f(x) = x² - 4</code> es <strong>x ≈ 2.0</strong> con un error menor a <code>10⁻⁶</code>.</p>
-
-  <h2>📚 Conclusión</h2>
-  <p>El método de la secante converge rápidamente sin necesidad de derivar la función. En este caso, encontró la raíz real en solo tres iteraciones.</p>
+  <h2>✅ Conclusión</h2>
+  <p>
+    El programa implementa correctamente el método de Newton-Raphson, permitiendo encontrar raíces de ecuaciones no lineales con alta precisión.
+    El usuario puede ingresar cualquier función y su derivada, y el algoritmo determina automáticamente el número de iteraciones necesarias
+    para cumplir con la tolerancia establecida.  
+    El resultado obtenido demuestra la <strong>convergencia cuadrática</strong> del método.
+  </p>
 
   <script>
     function copiarCodigo() {
