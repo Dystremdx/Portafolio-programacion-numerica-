@@ -3,229 +3,616 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Gradiente de una Función</title>
+  <title>Gradiente de una Función | Unidad 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
-    body {
-      font-family: "Consolas", monospace;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f1f1f1;
+    :root {
+      --primary: #7209b7;
+      --primary-dark: #5a0a8c;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --tech-blue: #4cc9f0;
+      --math-green: #06d6a0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-math: linear-gradient(135deg, var(--math-green), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(114, 9, 183, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 30%);
     }
 
     .container {
-      background: rgba(30, 30, 30, 0.95);
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      padding: 30px 40px;
-      max-width: 950px;
-      width: 100%;
-      overflow: hidden;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    h1 {
+    /* Header */
+    .header {
       text-align: center;
-      color: #00eaff;
-      margin-bottom: 10px;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
     }
 
-    h2, h3 {
-      color: #00eaff;
-      text-align: center;
-      margin-top: 35px;
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
     }
 
-    p {
-      text-align: justify;
-      font-size: 17px;
-      line-height: 1.6;
-      margin: 15px auto;
-      color: #e5e5e5;
-    }
-
-    p.center {
-      text-align: center;
-    }
-
-    .code-container, pre {
-      background: #1e1e1e;
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(114, 9, 183, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
       border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      overflow-x: auto;
-      margin: 25px auto;
-      max-width: 900px;
-    }
-
-    pre {
-      color: #00ffcc;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    table {
-      width: 90%;
-      margin: 25px auto;
-      border-collapse: collapse;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      overflow: hidden;
-      font-size: 15px;
-      color: #e5e5e5;
-    }
-
-    th, td {
-      border: 1px solid #00eaff44;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background: rgba(0, 234, 255, 0.2);
-      color: #00eaff;
-    }
-
-    img {
-      display: block;
-      margin: 20px auto;
-      max-width: 90%;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    }
-
-    .small {
-      font-size: 0.9em;
-      color: #bbb;
-      text-align: center;
-    }
-
-    .header-info {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #d5faff;
-    }
-
-    .header-info b {
-      color: #00eaff;
-    }
-
-    .buttons {
+      cursor: pointer;
+      text-decoration: none;
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--tech-blue), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      text-align: center;
+    }
+
+    .author-item {
+      padding: 15px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Content Sections */
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(114, 9, 183, 0.3);
+    }
+
+    .math-formula {
+      background: rgba(26, 27, 38, 0.8);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      border-left: 4px solid var(--primary);
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--tech-blue);
+    }
+
+    .math-formula p {
+      margin: 10px 0;
+    }
+
+    /* Code Container */
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+    }
+
+    .code-container:hover {
+      transform: translateY(-5px);
+      border-color: rgba(114, 9, 183, 0.3);
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 15px;
       flex-wrap: wrap;
     }
 
-    button, a.pdf-btn {
-      background: #00eaff;
-      color: #000;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--gradient-primary);
+      color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       text-decoration: none;
-      transition: background 0.3s;
+      transition: var(--transition);
+      font-size: 0.95rem;
     }
 
-    button:hover, a.pdf-btn:hover {
-      background: #00b3cc;
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(114, 9, 183, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--text-light);
+    }
+
+    .btn-outline:hover {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    /* Code Content */
+    .code-content {
+      padding: 0;
+      background: var(--code-bg);
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      padding: 25px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Image Container */
+    .image-container {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .image-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .image-caption {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 30px 0;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th {
+      background: rgba(114, 9, 183, 0.2);
+      color: var(--tech-blue);
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      text-align: center;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Example Cards */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .example-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+    }
+
+    .example-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+
+    .example-title {
+      color: var(--tech-blue);
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+      
+      .code-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .section-title {
+        font-size: 1.6rem;
+      }
+      
+      .content-card {
+        padding: 20px;
+      }
+      
+      table {
+        font-size: 0.9rem;
+      }
+      
+      th, td {
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .header {
+        padding: 20px 10px;
+      }
+      
+      .example-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .author-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
-
-  <!-- MathJax -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <!-- Highlight.js -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
 </head>
-
 <body>
   <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-chart-line"></i> Gradiente de una Función
+      </h1>
+      <p class="subtitle">
+        Análisis del vector gradiente y su aplicación en el método de descenso de gradiente 
+        para optimización de funciones en una y dos variables.
+      </p>
+      
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Alumno</div>
+            <div class="author-value">Ronald Wilder Incacutipa Muñuico</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Docente</div>
+            <div class="author-value">Ing. Torres Cruz Fred</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Curso</div>
+            <div class="author-value">Programación Numérica - FINESI</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Institución</div>
+            <div class="author-value">Universidad Nacional del Altiplano</div>
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <h1>La Gradiente de una Función</h1>
-    <div class="header-info">
-      <b>Alumno:</b> Ronald Wilder Incacutipa Muñuico<br>
-      <b>Docente:</b> Ing. Torres Cruz Fred<br>
-      Programación Numérica – FINESI<br>
-      Universidad Nacional del Altiplano
-    </div>
+    <!-- Definition Section -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-calculator"></i> Definición del Gradiente
+      </h2>
+      
+      <div class="content-card">
+        <p style="margin-bottom: 20px;">
+          El <strong>gradiente</strong> de una función escalar \( f \) es un vector que contiene todas sus derivadas parciales.  
+          Para una función \( f: \mathbb{R}^n \rightarrow \mathbb{R} \), el gradiente se define como:
+        </p>
+        
+        <div class="math-formula">
+          <p>\[
+          \nabla f(x_1, x_2, \dots, x_n) =
+          \left(
+          \frac{\partial f}{\partial x_1},
+          \frac{\partial f}{\partial x_2},
+          \dots,
+          \frac{\partial f}{\partial x_n}
+          \right)
+          \]</p>
+        </div>
+        
+        <p style="margin-bottom: 20px;">
+          Este vector apunta en la dirección de <strong>mayor incremento</strong> de la función.  
+          En métodos numéricos, se utiliza en el <strong>descenso del gradiente</strong>, donde los valores 
+          de las variables se actualizan iterativamente:
+        </p>
+        
+        <div class="math-formula">
+          <p>\[
+          x_{i+1} = x_i - \eta \nabla f(x_i)
+          \]</p>
+          <p style="color: var(--text-gray); font-size: 1rem; margin-top: 10px;">
+            donde \( \eta \) es la <strong>tasa de aprendizaje</strong> o tamaño de paso.
+          </p>
+        </div>
+      </div>
+    </section>
 
-    <h2>Definición de la Gradiente</h2>
+    <!-- Example 1 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chart-bar"></i> Ejemplo 1: Función de Una Variable
+      </h2>
+      
+      <div class="content-card">
+        <div class="example-title">
+          <i class="fas fa-function"></i> Función: \( f(x) = x^2 \)
+        </div>
+        
+        <p style="margin-bottom: 20px;">
+          Derivada: \( f'(x) = 2x \)<br>
+          Tasa de aprendizaje: \( \eta = 0.1 \)<br>
+          Punto inicial: \( x_0 = 5 \)
+        </p>
+        
+      
+          </div>
+        </div>
 
-  <p>La <b>gradiente</b> de una función escalar \( f \) es un vector que contiene sus derivadas parciales.  
-  Si \( f: \mathbb{R}^n \rightarrow \mathbb{R} \), entonces su gradiente se define como:</p>
+        <!-- Code for Example 1 -->
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>gradiente_1d.R</span>
+            </div>
+            <div class="code-actions">
+              <button onclick="copiarCodigo('codigo1')" class="btn">
+                <i class="fas fa-copy"></i> Copiar Código
+              </button>
+              <a href="gradiente.pdf" target="_blank" class="btn btn-outline">
+                <i class="fas fa-file-pdf"></i> Ver PDF
+              </a>
+            </div>
+          </div>
+          
+          <div class="code-content">
+            <pre><code id="codigo1" class="language-r"># ======================================================
+# DESCENSO DEL GRADIENTE - f(x) = x²
+# ======================================================
 
-  <p class="center">
-  \[
-  \nabla f(x_1, x_2, \dots, x_n) =
-  \left(
-  \frac{\partial f}{\partial x_1},
-  \frac{\partial f}{\partial x_2},
-  \dots,
-  \frac{\partial f}{\partial x_n}
-  \right)
-  \]
-  </p>
-
-  <p>Este vector apunta en la dirección de <b>mayor incremento</b> de la función.  
-  En métodos numéricos, se usa para el <i>descenso del gradiente</i>, donde los valores de las variables se actualizan de la siguiente forma:</p>
-
-  <p class="center">
-  \[
-  x_{i+1} = x_i - \eta \nabla f(x_i)
-  \]
-  </p>
-
-  <p>donde \( \eta \) es la <b>tasa de aprendizaje</b> o tamaño de paso.</p>
-
-  <h2>Ejemplo 1: Función de una variable</h2>
-
-  <p>Sea la función:</p>
-  <p class="center">\[ f(x) = x^2 \]</p>
-
-  <p>Por tanto:</p>
-  <p class="center">\[ \nabla f(x_i) = x_{i-1} - \eta \, \frac{df(x_{i-1})}{dx} \]</p>
-
-  <p>Con \( \eta = 0.1 \)</p>
-
-  <img src="g1.png" alt="Gráfica f(x)">
-
-  <p>Su derivada es:</p>
-  <p class="center">\[ f'(x) = 2x \]</p>
-
-  <h3>Código en R:</h3>
-
-  <pre><code class="language-r">
 # Definimos la función y su derivada
 f <- function(x) { x^2 }
 f_deriv <- function(x) { 2*x }
 
-# Parámetros
+# Parámetros del algoritmo
 x0 <- 5
 eta <- 0.1
 n_iter <- 15
 
-# Inicializamos vectores
+# Inicializamos vectores para almacenar resultados
 x_vals <- numeric(n_iter)
 f_vals <- numeric(n_iter)
 deriv_vals <- numeric(n_iter)
 
-# Asignamos el primer valor
+# Asignamos valores iniciales
 x_vals[1] <- x0
 f_vals[1] <- f(x0)
 deriv_vals[1] <- f_deriv(x0)
 
-# Calculamos iterativamente el gradiente
+# Iteraciones del descenso de gradiente
 for (i in 2:n_iter) {
     x_new <- x_vals[i-1] - eta * f_deriv(x_vals[i-1])
     x_vals[i] <- x_new
@@ -233,65 +620,110 @@ for (i in 2:n_iter) {
     deriv_vals[i] <- f_deriv(x_new)
 }
 
-# Graficamos
+# Mostrar resultados en tabla
+resultados <- data.frame(
+  Iteracion = 1:n_iter,
+  x_i = round(x_vals, 3),
+  f_x_i = round(f_vals, 3),
+  df_dx = round(deriv_vals, 3),
+  x_i1 = c(round(x_vals[-1], 3), NA)
+)
+
+print(resultados)
+
+# Graficar la trayectoria
 plot(x_vals, f_vals, type="l", col="blue", lwd=2,
-     xlab="Valores de x", ylab="Valor")
-  </code></pre>
+     xlab="Valores de x", ylab="f(x)",
+     main="Descenso del Gradiente - f(x) = x²")
+points(x_vals, f_vals, col="red", pch=19, cex=1.2)</code></pre>
+          </div>
+        </div>
 
-  <h3>Resultados de las iteraciones:</h3>
+        <!-- Results Table -->
+        <div class="table-container">
+          <h3 class="example-title" style="margin-bottom: 20px;">
+            <i class="fas fa-table"></i> Resultados del Descenso (Primeras 10 iteraciones)
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Iteración</th>
+                <th>\(x_i\)</th>
+                <th>\(f(x_i)\)</th>
+                <th>\(df(x)/dx = 2x_i\)</th>
+                <th>\(x_{i+1}\)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>5.000</td><td>25.000</td><td>10.000</td><td>4.000</td></tr>
+              <tr><td>2</td><td>4.000</td><td>16.000</td><td>8.000</td><td>3.200</td></tr>
+              <tr><td>3</td><td>3.200</td><td>10.240</td><td>6.400</td><td>2.560</td></tr>
+              <tr><td>4</td><td>2.560</td><td>6.554</td><td>5.120</td><td>2.048</td></tr>
+              <tr><td>5</td><td>2.048</td><td>4.194</td><td>4.096</td><td>1.638</td></tr>
+              <tr><td>6</td><td>1.638</td><td>2.685</td><td>3.277</td><td>1.311</td></tr>
+              <tr><td>7</td><td>1.311</td><td>1.718</td><td>2.621</td><td>1.049</td></tr>
+              <tr><td>8</td><td>1.049</td><td>1.099</td><td>2.097</td><td>0.839</td></tr>
+              <tr><td>9</td><td>0.839</td><td>0.704</td><td>1.678</td><td>0.671</td></tr>
+              <tr><td>10</td><td>0.671</td><td>0.450</td><td>1.342</td><td>0.537</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Iteración</th><th>\(x_i\)</th><th>\(f(x_i)\)</th><th>\(df(x)/dx = 2x_i\)</th><th>\(x_{i+1}\)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>5.000</td><td>25.000</td><td>10.000</td><td>4.000</td></tr>
-      <tr><td>2</td><td>4.000</td><td>16.000</td><td>8.000</td><td>3.200</td></tr>
-      <tr><td>3</td><td>3.200</td><td>10.240</td><td>6.400</td><td>2.560</td></tr>
-      <tr><td>4</td><td>2.560</td><td>6.554</td><td>5.120</td><td>2.048</td></tr>
-      <tr><td>5</td><td>2.048</td><td>4.194</td><td>4.096</td><td>1.638</td></tr>
-      <tr><td>6</td><td>1.638</td><td>2.685</td><td>3.277</td><td>1.311</td></tr>
-      <tr><td>7</td><td>1.311</td><td>1.718</td><td>2.621</td><td>1.049</td></tr>
-      <tr><td>8</td><td>1.049</td><td>1.099</td><td>2.097</td><td>0.839</td></tr>
-      <tr><td>9</td><td>0.839</td><td>0.704</td><td>1.678</td><td>0.671</td></tr>
-      <tr><td>10</td><td>0.671</td><td>0.450</td><td>1.342</td><td>0.537</td></tr>
-    </tbody>
-  </table>
+        
+      </div>
+    </section>
 
-  <img src="gradiente1.png" alt="Descenso del gradiente f(x)=x²">
-  <p class="small center">Figura 1. Descenso del gradiente para \( f(x) = x^2 \)</p>
+    <!-- Example 2 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chart-area"></i> Ejemplo 2: Función de Dos Variables
+      </h2>
+      
+      <div class="content-card">
+        <div class="example-title">
+          <i class="fas fa-function"></i> Función: \( f(x, y) = x^2 + y^2 + 3\sin(x) + 2\cos(y) \)
+        </div>
+        
+        <p style="margin-bottom: 20px;">
+          <strong>Derivadas parciales:</strong><br>
+          \( \frac{\partial f}{\partial x} = 2x + 3\cos(x) \)<br>
+          \( \frac{\partial f}{\partial y} = 2y - 2\sin(y) \)<br><br>
+          
+          <strong>Vector gradiente:</strong><br>
+          \( \nabla f(x, y) = (2x + 3\cos(x),\; 2y - 2\sin(y)) \)<br><br>
+          
+          <strong>Parámetros:</strong><br>
+          Tasa de aprendizaje: \( \eta = 0.1 \)<br>
+          Punto inicial: \( (x_0, y_0) = (5, 3) \)<br>
+          Iteraciones: 25
+        </p>
+        
+       
 
-  <h2>Ejemplo 2: Función de dos variables</h2>
-
-  <p>Sea la función:</p>
-  <p class="center">\[ f(x, y) = x^2 + y^2 + 3\sin(x) + 2\cos(y) \]</p>
-
-  <img src="g2.png" alt="Gráfica f(x,y)">
-
-  <p>Las derivadas parciales son:</p>
-  <p class="center">\[
-  \frac{\partial f}{\partial x} = 2x + 3\cos(x), \qquad
-  \frac{\partial f}{\partial y} = 2y - 2\sin(y)
-  \]</p>
-
-  <p>Por tanto:</p>
-  <p class="center">\[
-  \nabla f(x, y) = (2x + 3\cos(x),\; 2y - 2\sin(y))
-  \]</p>
-
-  <h3>Código en R:</h3>
-
- <pre><code class="language-r">
-# ======================================================
-# 💡 DESCENSO DEL GRADIENTE EN 3D CON PLOT3D 
+        <!-- Code for Example 2 -->
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>gradiente_2d.R</span>
+            </div>
+            <div class="code-actions">
+              <button onclick="copiarCodigo('codigo2')" class="btn">
+                <i class="fas fa-copy"></i> Copiar Código
+              </button>
+              
+            </div>
+          </div>
+          
+          <div class="code-content">
+            <pre><code id="codigo2" class="language-r"># ======================================================
+# DESCENSO DEL GRADIENTE EN 3D CON PLOT3D 
 # f(x, y) = x^2 + y^2 + 3*sin(x) + 2*cos(y)
 # ======================================================
 
 library(plot3D)
 
-# Función y gradiente
+# Definición de la función y su gradiente
 f <- function(x, y) { 
   x^2 + y^2 + 3*sin(x) + 2*cos(y) 
 }
@@ -302,19 +734,20 @@ grad <- function(x, y) {
   c(df_dx, df_dy)
 }
 
-# Parámetros
+# Parámetros del algoritmo
 x0 <- 5
 y0 <- 3
 eta <- 0.1
 n_iter <- 25
 
-# Inicialización
+# Inicialización de vectores
 x_vals <- numeric(n_iter)
 y_vals <- numeric(n_iter)
 f_vals <- numeric(n_iter)
 dfx_vals <- numeric(n_iter)
 dfy_vals <- numeric(n_iter)
 
+# Valores iniciales
 x_vals[1] <- x0
 y_vals[1] <- y0
 f_vals[1] <- f(x0, y0)
@@ -322,7 +755,7 @@ g <- grad(x0, y0)
 dfx_vals[1] <- g[1]
 dfy_vals[1] <- g[2]
 
-# Descenso del gradiente
+# Iteraciones del descenso de gradiente
 for (i in 2:n_iter) {
   g <- grad(x_vals[i-1], y_vals[i-1])
   x_vals[i] <- x_vals[i-1] - eta * g[1]
@@ -332,27 +765,23 @@ for (i in 2:n_iter) {
   dfy_vals[i] <- g[2]
 }
 
-# ======================================================
-# 📊 Tabla de iteraciones
-# ======================================================
-tabla_iteraciones <- data.frame(
+# Creación de tabla de resultados
+resultados <- data.frame(
   Iteracion = 1:n_iter,
   x_i = round(x_vals, 6),
   y_i = round(y_vals, 6),
-  `f(x_i, y_i)` = round(f_vals, 6),
-  `∂f/∂x` = round(dfx_vals, 6),
-  `∂f/∂y` = round(dfy_vals, 6),
-  x_i1 = c(round(x_vals[-1], 6), NA),
-  y_i1 = c(round(y_vals[-1], 6), NA)
+  f_x_y = round(f_vals, 6),
+  df_dx = round(dfx_vals, 6),
+  df_dy = round(dfy_vals, 6)
 )
 
-print(tabla_iteraciones)
+print(resultados)
 
 # ======================================================
-# 🌄 Superficie 3D 
+# VISUALIZACIÓN 3D
 # ======================================================
 
-# Crear la malla correctamente (X, Y matrices)
+# Crear malla para la superficie
 x_seq <- seq(-6, 6, length.out = 100)
 y_seq <- seq(-6, 6, length.out = 100)
 malla <- mesh(x_seq, y_seq)
@@ -372,60 +801,113 @@ surf3D(
 )
 
 # Trayectoria del descenso
-lines3D(
-  x_vals, y_vals, f_vals,
-  col = "blue", lwd = 2, add = TRUE
-)
+lines3D(x_vals, y_vals, f_vals, col = "blue", lwd = 2, add = TRUE)
 
 # Puntos del recorrido
-points3D(
-  x_vals, y_vals, f_vals,
-  col = "red", pch = 19, cex = 1.2, add = TRUE
-)
+points3D(x_vals, y_vals, f_vals, col = "red", pch = 19, cex = 1.2, add = TRUE)
 
 # Punto inicial y final
 points3D(x_vals[1], y_vals[1], f_vals[1], col = "orange", pch = 17, cex = 2, add = TRUE)
-points3D(tail(x_vals, 1), tail(y_vals, 1), tail(f_vals, 1), col = "darkgreen", pch = 8, cex = 2, add = TRUE)
+points3D(tail(x_vals, 1), tail(y_vals, 1), tail(f_vals, 1), col = "darkgreen", pch = 8, cex = 2, add = TRUE)</code></pre>
+          </div>
+        </div>
 
-# Leyenda
-legend("topright",
-       legend = c("Trayectoria", "Puntos", "Inicio", "Final"),
-       col = c("blue", "red", "orange", "darkgreen"),
-       pch = c(NA, 19, 17, 8),
-       lwd = 2, bg = "white")
-</code></pre>
+        <!-- Results Table -->
+        <div class="table-container">
+          <h3 class="example-title" style="margin-bottom: 20px;">
+            <i class="fas fa-table"></i> Resultados del Descenso 2D (Primeras 10 iteraciones)
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Iteración</th>
+                <th>\( x_i \)</th>
+                <th>\( y_i \)</th>
+                <th>\( f(x_i, y_i) \)</th>
+                <th>\( \frac{\partial f}{\partial x} \)</th>
+                <th>\( \frac{\partial f}{\partial y} \)</th>
+                <th>\( x_{i+1}, y_{i+1} \)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>5.000</td><td>3.000</td><td>29.143</td><td>10.851</td><td>5.718</td><td>3.915, 2.428</td></tr>
+              <tr><td>2</td><td>3.915</td><td>2.428</td><td>17.615</td><td>5.683</td><td>3.548</td><td>3.347, 2.073</td></tr>
+              <tr><td>3</td><td>3.347</td><td>2.073</td><td>13.925</td><td>3.756</td><td>2.394</td><td>2.971, 1.834</td></tr>
+              <tr><td>4</td><td>2.971</td><td>1.834</td><td>12.179</td><td>2.986</td><td>1.737</td><td>2.672, 1.660</td></tr>
+              <tr><td>5</td><td>2.672</td><td>1.660</td><td>11.076</td><td>2.669</td><td>1.329</td><td>2.406, 1.527</td></tr>
+              <tr><td>6</td><td>2.406</td><td>1.527</td><td>10.221</td><td>2.588</td><td>1.057</td><td>2.147, 1.422</td></tr>
+              <tr><td>7</td><td>2.147</td><td>1.422</td><td>9.443</td><td>2.660</td><td>0.866</td><td>1.881, 1.335</td></tr>
+              <tr><td>8</td><td>1.881</td><td>1.335</td><td>8.644</td><td>2.846</td><td>0.726</td><td>1.596, 1.263</td></tr>
+              <tr><td>9</td><td>1.596</td><td>1.263</td><td>7.748</td><td>3.116</td><td>0.619</td><td>1.285, 1.201</td></tr>
+              <tr><td>10</td><td>1.285</td><td>1.201</td><td>6.693</td><td>3.416</td><td>0.537</td><td>0.943, 1.147</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-<h3>Resultados de las iteraciones:</h3>
+        
+      </div>
+    </section>
 
-<table>
-  <thead>
-    <tr>
-      <th>Iteración</th>
-      <th>\( x_i \)</th>
-      <th>\( y_i \)</th>
-      <th>\( f(x_i, y_i) \)</th>
-      <th>\( \frac{\partial f}{\partial x} \)</th>
-      <th>\( \frac{\partial f}{\partial y} \)</th>
-      <th>\( x_{i+1}, y_{i+1} \)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>5.000</td><td>3.000</td><td>29.143</td><td>10.851</td><td>5.718</td><td>3.915, 2.428</td></tr>
-    <tr><td>2</td><td>3.915</td><td>2.428</td><td>17.615</td><td>5.683</td><td>3.548</td><td>3.347, 2.073</td></tr>
-    <tr><td>3</td><td>3.347</td><td>2.073</td><td>13.925</td><td>3.756</td><td>2.394</td><td>2.971, 1.834</td></tr>
-    <tr><td>4</td><td>2.971</td><td>1.834</td><td>12.179</td><td>2.986</td><td>1.737</td><td>2.672, 1.660</td></tr>
-    <tr><td>5</td><td>2.672</td><td>1.660</td><td>11.076</td><td>2.669</td><td>1.329</td><td>2.406, 1.527</td></tr>
-    <tr><td>6</td><td>2.406</td><td>1.527</td><td>10.221</td><td>2.588</td><td>1.057</td><td>2.147, 1.422</td></tr>
-    <tr><td>7</td><td>2.147</td><td>1.422</td><td>9.443</td><td>2.660</td><td>0.866</td><td>1.881, 1.335</td></tr>
-    <tr><td>8</td><td>1.881</td><td>1.335</td><td>8.644</td><td>2.846</td><td>0.726</td><td>1.596, 1.263</td></tr>
-    <tr><td>9</td><td>1.596</td><td>1.263</td><td>7.748</td><td>3.116</td><td>0.619</td><td>1.285, 1.201</td></tr>
-    <tr><td>10</td><td>1.285</td><td>1.201</td><td>6.693</td><td>3.416</td><td>0.537</td><td>0.943, 1.147</td></tr>
-  </tbody>
-</table>
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 Ronald Incacutipa Muñuico - Gradiente de una Función | Unidad 2</p>
+      <div class="footer-links">
+        <a href="unidad2.html" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver a Unidad 2
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
+  </div>
 
+  <script>
+    // Inicializar highlight.js
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
 
-<img src="gradiente2.png" alt="Descenso del gradiente f(x,y)">
-<p class="small center">Figura 2. Descenso del gradiente para \( f(x,y) = x^2 + y^2 + 3\sin(x) + 2\cos(y) \)</p>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        // Mostrar notificación elegante
+        const buttons = document.querySelectorAll('.btn');
+        const originalTexts = [];
+        
+        buttons.forEach(btn => {
+          if (btn.querySelector('i.fa-copy')) {
+            originalTexts.push(btn.innerHTML);
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+          }
+        });
+        
+        setTimeout(() => {
+          buttons.forEach((btn, index) => {
+            if (originalTexts[index]) {
+              btn.innerHTML = originalTexts[index];
+            }
+          });
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
 
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.content-card, .image-card, .example-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
 </body>
 </html>
