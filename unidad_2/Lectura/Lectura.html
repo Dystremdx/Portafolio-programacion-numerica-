@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algoritmo de Registro de Imágenes Médicas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --secondary: #8338ec;
+      --accent: #ff006e;
+      --medical-blue: #4cc9f0;
+      --gradient-green: #06d6a0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-medical: linear-gradient(135deg, var(--medical-blue), var(--gradient-green));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(58, 134, 255, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(58, 134, 255, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--medical-blue), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .author-item {
+      padding: 10px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(58, 134, 255, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(58, 134, 255, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(58, 134, 255, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .exercise-number {
+      color: var(--medical-blue);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .task-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .task-list h4 {
+      color: var(--gradient-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .task-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      color: var(--text-gray);
+    }
+
+    .task-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    .data-table th {
+      background: rgba(58, 134, 255, 0.2);
+      color: var(--medical-blue);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(58, 134, 255, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(26, 27, 38, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--gradient-green);
+      text-align: center;
+    }
+
+    .solution-section {
+      background: rgba(6, 214, 160, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid rgba(6, 214, 160, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--gradient-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .highlight-box {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--medical-blue);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--medical-blue);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--medical-blue);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(255, 0, 110, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .image-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      width: 200px;
+    }
+
+    .image-label {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .image-placeholder {
+      background: linear-gradient(45deg, var(--primary-dark), var(--secondary));
+      height: 120px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--medical-blue);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .image-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-brain"></i> Algoritmo de Registro de Imágenes Médicas
+      </h1>
+      <p class="subtitle">
+        Mejora del algoritmo Demons para registro no rígido usando campos de orientación del gradiente
+      </p>
+
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Tema</div>
+            <div class="author-value">Registro de Imágenes Médicas</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Algoritmo Base</div>
+            <div class="author-value">Demons Algorithm</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Mejora Propuesta</div>
+            <div class="author-value">Campos de Orientación</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Introducción -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-search"></i> Introducción
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Problema del Registro</div>
+          <div class="exercise-title">Alineación de imágenes médicas deformadas</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          El registro de imágenes médicas es un proceso fundamental en el análisis de imágenes médicas que busca alinear una imagen deformada (F) con una imagen de referencia (R). El algoritmo Demons es un método popular para el registro no rígido, pero tiene limitaciones en deformaciones complejas.
+        </p>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-exclamation-triangle"></i> Limitación del algoritmo original:</strong> El algoritmo Demons tradicional usa únicamente la información del gradiente de la imagen, lo que limita su precisión en deformaciones complejas. Solo considera la magnitud del gradiente, ignorando información crucial sobre la orientación.
+        </div>
+
+        <div class="highlight-box">
+          <strong><i class="fas fa-lightbulb"></i> Mejora propuesta:</strong> Este trabajo incorpora <strong>campos de orientación</strong> que utilizan tanto la magnitud como la orientación/dirección del gradiente, logrando un modelo más preciso y eficiente para el registro no rígido.
+        </div>
+      </div>
+    </section>
+
+    <!-- Metodología -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-cogs"></i> Metodología
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Uso de Gradientes</div>
+          <div class="exercise-title">Cálculo y aplicación de gradientes</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-calculator"></i> Proceso de cálculo de gradientes:</h4>
+          <ul>
+            <li>Se calculan los gradientes de las imágenes de referencia (R) y consulta (F) usando diferencias finitas</li>
+            <li>Fórmula del gradiente: \( \Delta I = (dI_x, dI_y) \)</li>
+            <li>Los gradientes definen la magnitud de deformación</li>
+            <li>La orientación proporciona la dirección del desplazamiento</li>
+            <li>Se combinan ambos en una nueva ecuación de campos de deformación</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Campo de deformación mejorado:</strong></p>
+          <p>\[ u(x) = \frac{(R - F) \cdot \nabla F}{|\nabla F|^2 + \alpha^2(R - F)^2} \cdot \hat{O} \]</p>
+          <p>donde \( \hat{O} \) es el vector de orientación normalizado</p>
+        </div>
+
+        <div class="image-container">
+          <div class="image-box">
+            <div class="image-label">Imagen de Referencia (R)</div>
+            <div class="image-placeholder">
+              <i class="fas fa-image"></i>
+            </div>
+          </div>
+          <div class="image-box">
+            <div class="image-label">Imagen Deformada (F)</div>
+            <div class="image-placeholder">
+              <i class="fas fa-image"></i>
+            </div>
+          </div>
+          <div class="image-box">
+            <div class="image-label">Imagen Registrada</div>
+            <div class="image-placeholder">
+              <i class="fas fa-check-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Funciones del Gradiente</div>
+          <div class="exercise-title">Roles en el proceso de registro</div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-label">Fuerza del registro</div>
+            <div class="result-value">Driving Force</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Calcula la fuerza que impulsa el proceso de alineación
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Magnitud del cambio</div>
+            <div class="result-value">Displacement</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Determina cuánto debe moverse cada píxel en cada iteración
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Dirección del movimiento</div>
+            <div class="result-value">Orientation Field</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Reemplaza la dirección del gradiente en la versión original
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Implementación -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-code"></i> Implementación
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Flujo del Algoritmo</div>
+          <div class="exercise-title">Pasos del proceso de registro</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-list-ol"></i> Proceso paso a paso:</h4>
+          <ul>
+            <li>Se tienen dos imágenes: referencia (R) y deformada (F)</li>
+            <li>Para cada píxel se calculan 4 campos: intensidad, gradientes, orientación, frecuencia</li>
+            <li>Cálculo de diferencias de píxeles vecinos (diferencias finitas)</li>
+            <li>Función homogénea inversa de las derivadas del gradiente</li>
+            <li>Cálculo de diferencia d(R-F) que indica cuán distintos son R y F punto a punto</li>
+            <li>Cálculo del campo de deformación u con vector de correlación (COR)</li>
+            <li>Aplicación del campo de deformación a F para obtener imagen corregida</li>
+            <li>El proceso itera hasta que el cambio promedio entre iteraciones sea mínimo</li>
+          </ul>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-python"></i>
+              <span>demons_mejorado.py</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1">import numpy as np
+import cv2
+
+def calcular_gradiente_orientacion(imagen):
+    """Calcula gradiente y orientación de una imagen"""
+    # Gradientes en x e y usando Sobel
+    grad_x = cv2.Sobel(imagen, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(imagen, cv2.CV_64F, 0, 1, ksize=3)
+    
+    # Magnitud del gradiente
+    magnitud = np.sqrt(grad_x**2 + grad_y**2)
+    
+    # Orientación del gradiente (ángulo)
+    orientacion = np.arctan2(grad_y, grad_x)
+    
+    # Normalizar orientación a vector unitario
+    orientacion_norm_x = np.cos(orientacion)
+    orientacion_norm_y = np.sin(orientacion)
+    
+    return magnitud, orientacion_norm_x, orientacion_norm_y
+
+def demons_mejorado(R, F, max_iter=100, alpha=1.0):
+    """Algoritmo Demons mejorado con campos de orientación"""
+    # Inicializar campo de deformación
+    ux = np.zeros_like(R, dtype=np.float32)
+    uy = np.zeros_like(R, dtype=np.float32)
+    
+    for iter in range(max_iter):
+        # Calcular diferencia entre imágenes
+        diff = R - F
+        
+        # Calcular gradientes y orientación de F
+        magnitud_F, orient_x_F, orient_y_F = calcular_gradiente_orientacion(F)
+        
+        # Campo de orientación combinado
+        orientacion_campo_x = orient_x_F
+        orientacion_campo_y = orient_y_F
+        
+        # Calcular campo de deformación mejorado
+        denominador = magnitud_F**2 + alpha**2 * diff**2 + 1e-8
+        
+        # Componente x del campo
+        delta_ux = (diff * orientacion_campo_x) / denominador
+        
+        # Componente y del campo
+        delta_uy = (diff * orientacion_campo_y) / denominador
+        
+        # Suavizar el campo de deformación
+        delta_ux = cv2.GaussianBlur(delta_ux, (3, 3), 1.0)
+        delta_uy = cv2.GaussianBlur(delta_uy, (3, 3), 1.0)
+        
+        # Actualizar campo de deformación
+        ux += delta_ux
+        uy += delta_uy
+        
+        # Aplicar deformación a F
+        F = aplicar_deformacion(F, ux, uy)
+        
+        # Calcular cambio promedio
+        cambio_promedio = np.mean(np.abs(delta_ux) + np.abs(delta_uy))
+        
+        if cambio_promedio < 0.01:
+            print(f"Convergencia alcanzada en iteración {iter}")
+            break
+    
+    return F, ux, uy
+
+def aplicar_deformacion(imagen, ux, uy):
+    """Aplica campo de deformación a imagen"""
+    h, w = imagen.shape
+    x, y = np.meshgrid(np.arange(w), np.arange(h))
+    
+    # Coordenadas deformadas
+    x_new = x + ux
+    y_new = y + uy
+    
+    # Interpolación bilineal
+    imagen_deformada = cv2.remap(imagen, 
+                                 x_new.astype(np.float32), 
+                                 y_new.astype(np.float32),
+                                 cv2.INTER_LINEAR)
+    
+    return imagen_deformada
+
+# Ejemplo de uso
+# R = cv2.imread('referencia.png', cv2.IMREAD_GRAYSCALE)
+# F = cv2.imread('deformada.png', cv2.IMREAD_GRAYSCALE)
+# F_registrada, ux, uy = demons_mejorado(R, F)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evaluación -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chart-line"></i> Evaluación Experimental
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Datos de Prueba</div>
+          <div class="exercise-title">Conjuntos de imágenes médicas</div>
+        </div>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo de Imagen</th>
+                <th>Cantidad</th>
+                <th>Resolución</th>
+                <th>Aplicación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>MRI Cerebral</strong></td>
+                <td>19 pares</td>
+                <td>256×256</td>
+                <td>Neurología</td>
+              </tr>
+              <tr>
+                <td><strong>Fondo de Ojo (Fundus)</strong></td>
+                <td>34 pares</td>
+                <td>512×512</td>
+                <td>Oftalmología</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-bar"></i> Métricas de Evaluación</h4>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Error Cuadrático Medio</div>
+              <div class="result-value">MSE ↓ 15%</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Correlación Cruzada</div>
+              <div class="result-value">CC ↑ 12%</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Información Mutua</div>
+              <div class="result-value">MI ↑ 18%</div>
+            </div>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Comparación con métodos anteriores:</strong> El algoritmo mejorado supera a métodos previos como Woman's Memory, Tango's Remas y Bíblico en precisión y eficiencia, mostrando mejor desempeño en deformaciones complejas.
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ventajas del Método</div>
+          <div class="exercise-title">Beneficios de los campos de orientación</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-check-circle"></i> Ventajas clave:</h4>
+          <ul>
+            <li><strong>Mayor precisión:</strong> La orientación guía la dirección correcta del desplazamiento</li>
+            <li><strong>Registro más robusto:</strong> Mejora la geometría de la imagen resultante</li>
+            <li><strong>Mejor convergencia:</strong> Reduce el número de iteraciones necesarias</li>
+            <li><strong>Adaptabilidad:</strong> Funciona bien en deformaciones complejas</li>
+            <li><strong>Preservación de estructuras:</strong> Mantiene bordes y características importantes</li>
+          </ul>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-medal"></i> Conclusión:</strong> La incorporación de campos de orientación del gradiente en el algoritmo Demons permite un registro más preciso y eficiente de imágenes médicas. La combinación de magnitud y dirección del gradiente proporciona información más completa para guiar el proceso de deformación, resultando en mejores alineaciones especialmente en casos de deformaciones complejas.
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 - Algoritmo de Registro de Imágenes Médicas Mejorado | Campos de Orientación del Gradiente</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="#top" class="footer-link">
+          <i class="fas fa-arrow-up"></i> Inicio página
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+</body>
+</html>
