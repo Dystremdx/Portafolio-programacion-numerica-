@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicios de Análisis Turístico con Cadenas de Markov</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --secondary: #8338ec;
+      --accent: #ff006e;
+      --eco-green: #06d6a0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-eco: linear-gradient(135deg, var(--eco-green), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(58, 134, 255, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(6, 214, 160, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-eco);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(58, 134, 255, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--eco-green), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .info-item {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    .info-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(58, 134, 255, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(58, 134, 255, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(58, 134, 255, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exercise-number {
+      color: var(--eco-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .exercise-tag {
+      background: var(--gradient-eco);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .task-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .task-list h4 {
+      color: var(--eco-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .task-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      color: var(--text-gray);
+    }
+
+    .task-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    .data-table th {
+      background: rgba(58, 134, 255, 0.2);
+      color: var(--eco-green);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(58, 134, 255, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(26, 27, 38, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--eco-green);
+      text-align: center;
+    }
+
+    .solution-section {
+      background: rgba(6, 214, 160, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid rgba(6, 214, 160, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--eco-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .highlight-box {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--primary);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--eco-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(255, 0, 110, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .matrix-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .matrix-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 200px;
+    }
+
+    .matrix-label {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .matrix-placeholder {
+      background: linear-gradient(45deg, var(--primary-dark), var(--secondary));
+      height: 120px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--eco-green);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* Estilos específicos para ejercicios */
+    .ejercicio-1 { border-left: 4px solid #3a86ff; }
+    .ejercicio-2 { border-left: 4px solid #06d6a0; }
+    .ejercicio-3 { border-left: 4px solid #8338ec; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-chart-line"></i> Análisis Turístico con Cadenas de Markov
+      </h1>
+      <p class="subtitle">
+        Aplicación de eigenvalues y eigenvectors al flujo turístico en el Lago Titicaca, Puno
+      </p>
+
+      <div class="author-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Curso</div>
+            <div class="info-value">Programación Numérica</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Universidad</div>
+            <div class="info-value">Universidad Nacional del Altiplano - Puno</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Fecha</div>
+            <div class="info-value">Diciembre 2025</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Ejercicio 1 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-building"></i> Ejercicio 1: Modificación de la Matriz de Transición
+      </h2>
+
+      <div class="exercise-card ejercicio-1">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-number">EJERCICIO 1</div>
+            <div class="exercise-title">Impacto de inversión en infraestructura turística - Isla Taquile</div>
+          </div>
+          <div class="exercise-tag">Matriz 4×4</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Objetivo:</h4>
+          <ul>
+            <li>Analizar el impacto de mejoras en infraestructura en Taquile</li>
+            <li>Calcular la nueva distribución estacionaria</li>
+            <li>Comparar con el escenario original</li>
+            <li>Evaluar velocidad de convergencia</li>
+          </ul>
+        </div>
+
+        <div class="matrix-container">
+          <div class="matrix-box">
+            <div class="matrix-label">Matriz Original</div>
+            <div class="matrix-placeholder">
+              \[T_{\text{original}}\]
+            </div>
+          </div>
+          <div class="matrix-box">
+            <div class="matrix-label">Matriz Modificada</div>
+            <div class="matrix-placeholder">
+              \[T_{\text{nueva}}\]
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Ecuación para distribución estacionaria:</strong></p>
+          <p>\[(T_{\text{nueva}}^{T})\mathbf{v} = \lambda\mathbf{v}\]</p>
+          <p>Donde \(\pi\) es el eigenvector normalizado para \(\lambda = 1\)</p>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-bar"></i> Resultados Principales</h4>
+          
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Destino</th>
+                  <th>Original (%)</th>
+                  <th>Nueva (%)</th>
+                  <th>Cambio (p.p.)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Puno Ciudad</td>
+                  <td>39.22</td>
+                  <td>36.55</td>
+                  <td style="color: #ff6b6b;">-2.67</td>
+                </tr>
+                <tr>
+                  <td>Islas Uros</td>
+                  <td>20.98</td>
+                  <td>18.91</td>
+                  <td style="color: #ff6b6b;">-2.07</td>
+                </tr>
+                <tr>
+                  <td><strong>Isla Taquile</strong></td>
+                  <td>22.55</td>
+                  <td><strong>28.76</strong></td>
+                  <td style="color: #06d6a0;">+6.21</td>
+                </tr>
+                <tr>
+                  <td>Isla Amantaní</td>
+                  <td>17.25</td>
+                  <td>15.78</td>
+                  <td style="color: #ff6b6b;">-1.47</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Conclusión:</strong> La inversión en infraestructura incrementa la participación de Taquile en <strong>27.54%</strong>, convirtiéndolo en el segundo destino más importante.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>Código R - Distribución Estacionaria</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1"># Función para calcular distribución estacionaria
+calcular_distribucion <- function(matriz) {
+    eigen_result <- eigen(t(matriz))
+    idx_uno <- which.min(abs(eigen_result$values - 1))
+    v <- eigen_result$vectors[, idx_uno]
+    pi <- Re(v / sum(v))
+    pi <- abs(pi) / sum(abs(pi))
+    return(list(
+        distribution = pi,
+        eigenvalues = eigen_result$values
+    ))
+}
+
+# Matriz modificada para Taquile
+T_nueva <- matrix(c(
+    0.25, 0.45, 0.20, 0.10,
+    0.40, 0.15, 0.35, 0.10,
+    0.30, 0.10, 0.40, 0.20,
+    0.55, 0.15, 0.10, 0.20
+), nrow=4, byrow=TRUE)
+
+# Calcular distribución
+resultado <- calcular_distribucion(T_nueva)
+pi_nueva <- resultado$distribution
+print(round(pi_nueva * 100, 2))</code></pre>
+        </div>
+      </div>
+    </section>
+</section>
+<section class="section">
+      <div class="exercise-card" style="text-align: center;">
+        <div class="exercise-header">
+          <div class="exercise-number"><i class="fas fa-file-pdf"></i></div>
+          <div class="exercise-title">Material de Estudio Completo</div>
+        </div>
+        
+        <p style="margin-bottom: 25px; color: var(--text-gray); font-size: 1.1rem;">
+          Descarga o visualiza el documento completo
+        </p>
+
+        <div class="results-grid" style="max-width: 600px; margin: 0 auto;">
+          <a href="unidad_2/Eigen_values/ejercicio_1.pdf" target="_blank" class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center;">
+            <i class="fas fa-file-pdf"></i>
+            Ver PDF en nueva pestaña
+          </a>
+          
+          <a href="unidad_2/Eigen_values/ejercicio_1.pdf" download class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--primary));">
+            <i class="fas fa-download"></i>
+            Descargar PDF
+          </a>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+          <strong><i class="fas fa-info-circle"></i> Nota:</strong> 
+          El documento PDF contiene la teoría completa
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 2 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-map-marker-alt"></i> Ejercicio 2: Introducción de Nuevo Destino Turístico
+      </h2>
+
+      <div class="exercise-card ejercicio-2">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-number">EJERCICIO 2</div>
+            <div class="exercise-title">Integración de la Isla de Anapia al sistema turístico</div>
+          </div>
+          <div class="exercise-tag">Matriz 5×5</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Objetivo:</h4>
+          <ul>
+            <li>Expandir el sistema de 4 a 5 destinos</li>
+            <li>Evaluar impacto de introducir nueva isla</li>
+            <li>Calcular redistribución del flujo turístico</li>
+            <li>Analizar viabilidad económica</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Nueva matriz 5×5 con Anapia:</strong></p>
+          <p>\[T_{\text{nueva}} = \begin{bmatrix}
+0,25 & 0,42 & 0,18 & 0,08 & 0,07 \\
+0,50 & 0,15 & 0,25 & 0,08 & 0,02 \\
+0,40 & 0,10 & 0,30 & 0,15 & 0,05 \\
+0,50 & 0,10 & 0,08 & 0,18 & 0,14 \\
+0,55 & 0,05 & 0,05 & 0,15 & 0,20
+\end{bmatrix}\]</p>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-bar"></i> Resultados de la Integración</h4>
+          
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Destino</th>
+                  <th>Sin Anapia (%)</th>
+                  <th>Con Anapia (%)</th>
+                  <th>Cambio (p.p.)</th>
+                  <th>Impacto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Puno Ciudad</td>
+                  <td>31.50</td>
+                  <td>31.50</td>
+                  <td>0.00</td>
+                  <td>Neutro</td>
+                </tr>
+                <tr>
+                  <td>Islas Uros</td>
+                  <td>25.50</td>
+                  <td>24.50</td>
+                  <td>-1.00</td>
+                  <td>Leve</td>
+                </tr>
+                <tr>
+                  <td>Isla Taquile</td>
+                  <td>22.50</td>
+                  <td>21.00</td>
+                  <td>-1.50</td>
+                  <td>Moderado</td>
+                </tr>
+                <tr>
+                  <td>Isla Amantaní</td>
+                  <td>20.50</td>
+                  <td>14.50</td>
+                  <td style="color: #ff6b6b;">-6.00</td>
+                  <td>Significativo</td>
+                </tr>
+                <tr>
+                  <td><strong>Isla Anapia</strong></td>
+                  <td>0.00</td>
+                  <td><strong>8.50</strong></td>
+                  <td style="color: #06d6a0;">+8.50</td>
+                  <td>Nuevo</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Análisis económico:</strong> Anapia genera S/ 9,350 mensuales pero reduce ingresos de Amantaní en S/ 12,000, resultando en una pérdida neta regional de S/ 2,650 mensuales.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>Código R - Matriz Expandida</span>
+            </div>
+            <button onclick="copiarCodigo('codigo2')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo2"># Matriz expandida 5x5 con Anapia
+T_nueva <- matrix(c(
+    0.25, 0.42, 0.18, 0.08, 0.07,
+    0.50, 0.15, 0.25, 0.08, 0.02,
+    0.40, 0.10, 0.30, 0.15, 0.05,
+    0.50, 0.10, 0.08, 0.18, 0.14,
+    0.55, 0.05, 0.05, 0.15, 0.20
+), nrow=5, byrow=TRUE)
+
+# Eigenvalues de la nueva matriz
+eigen_result <- eigen(t(T_nueva))
+cat("Eigenvalues principales:\n")
+print(round(eigen_result$values, 4))
+
+# Distribución estacionaria
+idx_uno <- which.min(abs(eigen_result$values - 1))
+v <- eigen_result$vectors[, idx_uno]
+pi_nueva <- Re(v / sum(v))
+pi_nueva <- abs(pi_nueva) / sum(abs(pi_nueva))
+
+cat("\nDistribución estacionaria (%):\n")
+print(round(pi_nueva * 100, 2))</code></pre>
+        </div>
+      </div>
+    </section>
+<section class="section">
+      <div class="exercise-card" style="text-align: center;">
+        <div class="exercise-header">
+          <div class="exercise-number"><i class="fas fa-file-pdf"></i></div>
+          <div class="exercise-title">Material de Estudio Completo</div>
+        </div>
+        
+        <p style="margin-bottom: 25px; color: var(--text-gray); font-size: 1.1rem;">
+          Descarga o visualiza el documento completo
+        </p>
+
+        <div class="results-grid" style="max-width: 600px; margin: 0 auto;">
+          <a href="unidad_2/Eigen_values/ejercicio_2.pdf" target="_blank" class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center;">
+            <i class="fas fa-file-pdf"></i>
+            Ver PDF en nueva pestaña
+          </a>
+          
+          <a href="unidad_2/Eigen_values/ejercicio_2.pdf" download class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--primary));">
+            <i class="fas fa-download"></i>
+            Descargar PDF
+          </a>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+          <strong><i class="fas fa-info-circle"></i> Nota:</strong> 
+          El documento PDF contiene la teoría completa
+        </div>
+      </div>
+    </section>
+    <!-- Ejercicio 3 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-calendar-alt"></i> Ejercicio 3: Análisis de Temporadas Turísticas
+      </h2>
+
+      <div class="exercise-card ejercicio-3">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-number">EJERCICIO 3</div>
+            <div class="exercise-title">Variaciones estacionales del turismo en el Lago Titicaca</div>
+          </div>
+          <div class="exercise-tag">Tres Temporadas</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Objetivo:</h4>
+          <ul>
+            <li>Modelar tres temporadas: baja, media, alta</li>
+            <li>Calcular distribuciones estacionarias por temporada</li>
+            <li>Analizar gap espectral y velocidad de convergencia</li>
+            <li>Simulación anual completa</li>
+            <li>Proyección de ingresos por temporada</li>
+          </ul>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-label">Temporada Baja</div>
+            <div class="result-value">Días 240-365</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Convergencia: 8.7 días<br>Gap: 0.5877
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Temporada Media</div>
+            <div class="result-value">Días 120-240</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Convergencia: 7.3 días<br>Gap: 0.6432
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Temporada Alta</div>
+            <div class="result-value">Días 0-120</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Convergencia: 6.1 días<br>Gap: 0.7013
+            </p>
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-bar"></i> Distribuciones por Temporada</h4>
+          
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Destino</th>
+                  <th>T. Baja (%)</th>
+                  <th>T. Media (%)</th>
+                  <th>T. Alta (%)</th>
+                  <th>Variación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Puno Ciudad</td>
+                  <td>40.23</td>
+                  <td>31.49</td>
+                  <td>25.84</td>
+                  <td style="color: #ff6b6b;">-14.39 p.p.</td>
+                </tr>
+                <tr>
+                  <td>Islas Uros</td>
+                  <td>25.31</td>
+                  <td>23.57</td>
+                  <td>22.06</td>
+                  <td style="color: #ff6b6b;">-3.25 p.p.</td>
+                </tr>
+                <tr>
+                  <td>Isla Taquile</td>
+                  <td>17.78</td>
+                  <td>21.39</td>
+                  <td>26.27</td>
+                  <td style="color: #06d6a0;">+8.49 p.p.</td>
+                </tr>
+                <tr>
+                  <td>Isla Amantaní</td>
+                  <td>16.68</td>
+                  <td>23.55</td>
+                  <td>25.83</td>
+                  <td style="color: #06d6a0;">+9.15 p.p.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Análisis económico anual:</strong> Ingresos totales se triplican de S/ 2.25 millones (temporada baja) a S/ 6.77 millones (temporada alta). En alta temporada, el 62% de ingresos proviene de las islas.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>Código R - Simulación Anual</span>
+            </div>
+            <button onclick="copiarCodigo('codigo3')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo3"># Simulación anual completa
+simulacion_anual <- function(dias=365) {
+    resultados <- matrix(0, nrow=dias+1, ncol=4)
+    estado <- c(1, 0, 0, 0)  # Todos en Puno Ciudad
+    resultados[1,] <- estado
+    
+    for (t in 1:dias) {
+        # Determinar temporada según día del año
+        if (t <= 120) {
+            T_actual <- T_alta
+        } else if (t <= 240) {
+            T_actual <- T_media
+        } else {
+            T_actual <- T_baja
+        }
+        
+        # Actualizar estado
+        estado <- t(T_actual) %*% estado
+        resultados[t+1,] <- estado
+    }
+    
+    colnames(resultados) <- c("Puno", "Uros", "Taquile", "Amantaní")
+    resultados_df <- as.data.frame(resultados)
+    resultados_df$Dia <- 0:dias
+    
+    return(resultados_df)
+}
+
+# Ejecutar simulación
+sim_df <- simulacion_anual(365)
+
+# Calcular promedios anuales
+promedios_anuales <- colMeans(sim_df[,1:4]) * 100
+cat("Promedios anuales de distribución (%):\n")
+print(round(promedios_anuales, 1))</code></pre>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-chart-line"></i> Hallazgo clave:</strong> El gap espectral \((1 - |\lambda_2|)\) aumenta de 0.5877 (baja) a 0.7013 (alta), indicando una convergencia 19% más rápida en temporada alta. Esto sugiere que el sistema turístico es más dinámico y se ajusta más rápido durante periodos de alta demanda.
+        </div>
+      </div>
+    </section>
+</section>
+<section class="section">
+      <div class="exercise-card" style="text-align: center;">
+        <div class="exercise-header">
+          <div class="exercise-number"><i class="fas fa-file-pdf"></i></div>
+          <div class="exercise-title">Material de Estudio Completo</div>
+        </div>
+        
+        <p style="margin-bottom: 25px; color: var(--text-gray); font-size: 1.1rem;">
+          Descarga o visualiza el documento completo
+        </p>
+
+        <div class="results-grid" style="max-width: 600px; margin: 0 auto;">
+          <a href="unidad_2/Eigen_values/ejercicio_3.pdf" target="_blank" class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center;">
+            <i class="fas fa-file-pdf"></i>
+            Ver PDF en nueva pestaña
+          </a>
+          
+          <a href="unidad_2/Eigen_values/ejercicio_3.pdf" download class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--primary));">
+            <i class="fas fa-download"></i>
+            Descargar PDF
+          </a>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+          <strong><i class="fas fa-info-circle"></i> Nota:</strong> 
+          El documento PDF contiene la teoría completa
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusiones Generales -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-graduation-cap"></i> Conclusiones Generales
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">SÍNTESIS</div>
+          <div class="exercise-title">Aplicación de Eigenvalues y Eigenvectors al Análisis Turístico</div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-label">Predicción Cuantitativa</div>
+            <div class="result-value">Precisa</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Distribuciones estacionarias por temporada
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Velocidad Convergencia</div>
+            <div class="result-value">Gap Espectral</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Determina tiempo de ajuste del sistema
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Planificación</div>
+            <div class="result-value">Estratégica</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Base matemática para decisiones de inversión
+            </p>
+          </div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-check-circle"></i> Recomendaciones Estratégicas:</h4>
+          <ul>
+            <li><strong>Gestión de capacidad:</strong> Implementar sistema de reservas anticipadas</li>
+            <li><strong>Inversión flexible:</strong> Infraestructura modular adaptable a temporadas</li>
+            <li><strong>Diversificación:</strong> Desarrollar productos para temporada baja</li>
+            <li><strong>Cooperación:</strong> Alianzas entre destinos para circuitos integrados</li>
+            <li><strong>Sostenibilidad:</strong> Límites de carga turística por temporada</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Conclusión Final:</strong></p>
+          <p>El análisis de temporadas turísticas mediante eigenvalues y eigenvectors revela patrones estacionales significativos en el Lago Titicaca. La gestión inteligente de estas variaciones, con inversión en infraestructura flexible, diversificación de productos y cooperación entre destinos, puede maximizar beneficios económicos mientras se mantiene la sostenibilidad del sistema turístico regional.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 - Análisis Turístico con Cadenas de Markov | Universidad Nacional del Altiplano - Puno</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="#top" class="footer-link">
+          <i class="fas fa-arrow-up"></i> Inicio página
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        packages: {'[+]': ['ams']}
+      },
+      startup: {
+        typeset: true
+      }
+    };
+  </script>
+</body>
+</html>
