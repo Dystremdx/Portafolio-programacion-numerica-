@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicios de Eigenvalores y Eigenvectores</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --math-green: #06d6a0;
+      --eigen-orange: #ff9e00;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-math: linear-gradient(135deg, var(--math-green), var(--eigen-orange));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(247, 37, 133, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(67, 97, 238, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--math-green), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .author-item {
+      padding: 10px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(67, 97, 238, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(67, 97, 238, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(67, 97, 238, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .exercise-number {
+      color: var(--math-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .task-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .task-list h4 {
+      color: var(--eigen-orange);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .task-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      color: var(--text-gray);
+    }
+
+    .task-list li:before {
+      content: "λ";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    .data-table th {
+      background: rgba(67, 97, 238, 0.2);
+      color: var(--math-green);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(67, 97, 238, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(26, 27, 38, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--math-green);
+      text-align: center;
+    }
+
+    .solution-section {
+      background: rgba(6, 214, 160, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid rgba(6, 214, 160, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--math-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .highlight-box {
+      background: rgba(255, 158, 0, 0.1);
+      border-left: 4px solid var(--eigen-orange);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--eigen-orange);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--math-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(247, 37, 133, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .matrix-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .matrix-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .matrix-label {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .matrix-content {
+      font-size: 1.2rem;
+      font-family: 'Cambria Math', serif;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--math-green);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-calculator"></i> Eigenvalores y Eigenvectores
+      </h1>
+      <p class="subtitle">
+        Ejercicios resueltos de álgebra lineal aplicada - Programación Numérica UNA Puno
+      </p>
+
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Materia</div>
+            <div class="author-value">Programación Numérica</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Institución</div>
+            <div class="author-value">UNA Puno</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Año</div>
+            <div class="author-value">2025</div>
+          </div>
+        </div>
+      </div>
+    </header>
+<section class="section">
+      <div class="exercise-card" style="text-align: center;">
+        <div class="exercise-header">
+          <div class="exercise-number"><i class="fas fa-file-pdf"></i></div>
+          <div class="exercise-title">Material de Estudio Completo</div>
+        </div>
+        
+        <p style="margin-bottom: 25px; color: var(--text-gray); font-size: 1.1rem;">
+          Descarga o visualiza el documento completo con todos los conceptos teóricos y ejercicios resueltos de interpolación numérica
+        </p>
+
+        <div class="results-grid" style="max-width: 600px; margin: 0 auto;">
+          <a href="unidad_2/Eigen_values/Eigen_values.pdf" target="_blank" class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center;">
+            <i class="fas fa-file-pdf"></i>
+            Ver PDF en nueva pestaña
+          </a>
+          
+          <a href="unidad_2/Eigen_values/Eigen_values.pdf" download class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--primary));">
+            <i class="fas fa-download"></i>
+            Descargar PDF
+          </a>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+          <strong><i class="fas fa-info-circle"></i> Nota:</strong> 
+          El documento PDF contiene la teoría completa, demostraciones matemáticas y ejercicios adicionales.
+        </div>
+      </div>
+    </section>
+    <!-- Ejercicio 1 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-1"></i> Ejercicio 1: Matriz Diagonal
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Matriz A</div>
+          <div class="exercise-title">Encontrar eigenvalores y eigenvectores de matriz diagonal</div>
+        </div>
+
+        <div class="matrix-container">
+          <div class="matrix-box">
+            <div class="matrix-label">Matriz A</div>
+            <div class="matrix-content">
+              \[ A = \begin{pmatrix} 4 & 0 \\ 0 & 7 \end{pmatrix} \]
+            </div>
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="formula-box">
+            <p><strong>Propiedad de matrices diagonales:</strong></p>
+            <p>Los eigenvalores de una matriz diagonal son los elementos de su diagonal principal</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₁</div>
+              <div class="result-value">4</div>
+              <div class="matrix-content" style="font-size: 1rem; margin-top: 10px;">
+                \[ v_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix} \]
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₂</div>
+              <div class="result-value">7</div>
+              <div class="matrix-content" style="font-size: 1rem; margin-top: 10px;">
+                \[ v_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \]
+              </div>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Explicación:</strong> Para una matriz diagonal \( A = \text{diag}(a_{11}, a_{22}, \dots, a_{nn}) \), los eigenvalores son exactamente \( a_{11}, a_{22}, \dots, a_{nn} \), y los eigenvectores correspondientes son los vectores de la base estándar.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 2 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-2"></i> Ejercicio 2: Matriz Simétrica 2×2
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Matriz B</div>
+          <div class="exercise-title">Cálculo completo de eigenvalores y eigenvectores</div>
+        </div>
+
+        <div class="matrix-container">
+          <div class="matrix-box">
+            <div class="matrix-label">Matriz B</div>
+            <div class="matrix-content">
+              \[ B = \begin{pmatrix} 1 & 2 \\ 2 & 1 \end{pmatrix} \]
+            </div>
+          </div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-calculator"></i> Paso 1: Cálculo del determinante</h4>
+          <ul>
+            <li>\( \det(B - \lambda I) = \begin{vmatrix} 1-\lambda & 2 \\ 2 & 1-\lambda \end{vmatrix} \)</li>
+            <li>\( (1-\lambda)^2 - 4 = 0 \)</li>
+            <li>\( \lambda^2 - 2\lambda - 3 = 0 \)</li>
+            <li>\( (\lambda - 3)(\lambda + 1) = 0 \)</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución Completa</h4>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₁</div>
+              <div class="result-value">3</div>
+              <div class="matrix-content" style="font-size: 1rem; margin-top: 10px;">
+                Sistema: \( (B - 3I)v = 0 \)<br>
+                \[ \begin{pmatrix} -2 & 2 \\ 2 & -2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \]<br>
+                Solución: \( y = x \)<br>
+                \[ v_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \]
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₂</div>
+              <div class="result-value">-1</div>
+              <div class="matrix-content" style="font-size: 1rem; margin-top: 10px;">
+                Sistema: \( (B + I)v = 0 \)<br>
+                \[ \begin{pmatrix} 2 & 2 \\ 2 & 2 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \]<br>
+                Solución: \( y = -x \)<br>
+                \[ v_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix} \]
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <strong>Observación:</strong> La matriz B es simétrica (\( B = B^T \)), por lo tanto sus eigenvectores son ortogonales: \( v_1 \cdot v_2 = 1\cdot1 + 1\cdot(-1) = 0 \).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 3 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-3"></i> Ejercicio 3: Análisis de Función Cuadrática
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Función f(x₁, x₂)</div>
+          <div class="exercise-title">Hessiana, eigenvalores y clasificación de punto crítico</div>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Función dada:</strong></p>
+          <p>\[ f(x_1, x_2) = 2x_1^2 + x_2^2 - 2x_1x_2 \]</p>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="task-list">
+            <h4><i class="fas fa-calculator"></i> a) Cálculo de la Hessiana</h4>
+            <ul>
+              <li>\( \frac{\partial^2 f}{\partial x_1^2} = 4 \)</li>
+              <li>\( \frac{\partial^2 f}{\partial x_2^2} = 2 \)</li>
+              <li>\( \frac{\partial^2 f}{\partial x_1 \partial x_2} = -2 \)</li>
+            </ul>
+          </div>
+
+          <div class="matrix-container">
+            <div class="matrix-box">
+              <div class="matrix-label">Matriz Hessiana H</div>
+              <div class="matrix-content">
+                \[ H = \begin{pmatrix} 4 & -2 \\ -2 & 2 \end{pmatrix} \]
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list">
+            <h4><i class="fas fa-calculator"></i> b) Cálculo de eigenvalores</h4>
+            <ul>
+              <li>\( \det(H - \lambda I) = \begin{vmatrix} 4-\lambda & -2 \\ -2 & 2-\lambda \end{vmatrix} \)</li>
+              <li>\( (4-\lambda)(2-\lambda) - 4 = 0 \)</li>
+              <li>\( \lambda^2 - 6\lambda + 4 = 0 \)</li>
+              <li>\( \lambda = \frac{6 \pm \sqrt{36 - 16}}{2} = \frac{6 \pm \sqrt{20}}{2} \)</li>
+              <li>\( \lambda = 3 \pm \sqrt{5} \)</li>
+            </ul>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₁</div>
+              <div class="result-value">\( 3 + \sqrt{5} \approx 5.236 \)</div>
+              <p style="color: var(--math-green);">Positivo</p>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₂</div>
+              <div class="result-value">\( 3 - \sqrt{5} \approx 0.764 \)</div>
+              <p style="color: var(--math-green);">Positivo</p>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> c) Clasificación:</strong> Dado que ambos eigenvalores de la Hessiana son positivos (\( \lambda_1 > 0, \lambda_2 > 0 \)), la matriz Hessiana es definida positiva. Por lo tanto, el punto crítico \( (0,0) \) es un <strong>mínimo local</strong> de la función \( f \).
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-python"></i>
+              <span>ejercicio_3.py</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1">import numpy as np
+
+# Ejercicio 3: Análisis de función cuadrática
+def analizar_funcion_cuadratica():
+    # Definir la función
+    def f(x1, x2):
+        return 2*x1**2 + x2**2 - 2*x1*x2
+    
+    # Hessiana
+    H = np.array([[4, -2],
+                  [-2, 2]])
+    
+    print("Matriz Hessiana H:")
+    print(H)
+    print()
+    
+    # Calcular eigenvalores y eigenvectores
+    eigenvalores, eigenvectores = np.linalg.eig(H)
+    
+    print("Eigenvalores de H:")
+    for i, val in enumerate(eigenvalores, 1):
+        print(f"λ{i} = {val:.4f}")
+    print()
+    
+    print("Eigenvectores de H (columnas):")
+    print(eigenvectores)
+    print()
+    
+    # Clasificación
+    if all(val > 0 for val in eigenvalores):
+        print("H es definida positiva → (0,0) es MÍNIMO LOCAL")
+    elif all(val < 0 for val in eigenvalores):
+        print("H es definida negativa → (0,0) es MÁXIMO LOCAL")
+    else:
+        print("H es indefinida → (0,0) es PUNTO DE SILLA")
+    
+    return eigenvalores, eigenvectores
+
+# Ejecutar análisis
+if __name__ == "__main__":
+    eigenvalores, eigenvectores = analizar_funcion_cuadratica()</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 4 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-4"></i> Ejercicio 4: Clasificación de Punto Crítico
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Función f(x₁, x₂)</div>
+          <div class="exercise-title">Determinar si (0,0) es máximo o mínimo</div>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Función dada:</strong></p>
+          <p>\[ f(x_1, x_2) = -x_1^2 - 2x_2^2 \]</p>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="matrix-container">
+            <div class="matrix-box">
+              <div class="matrix-label">Matriz Hessiana H</div>
+              <div class="matrix-content">
+                \[ H = \begin{pmatrix} -2 & 0 \\ 0 & -4 \end{pmatrix} \]
+              </div>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₁</div>
+              <div class="result-value">-2</div>
+              <p style="color: var(--accent);">Negativo</p>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Eigenvalor λ₂</div>
+              <div class="result-value">-4</div>
+              <p style="color: var(--accent);">Negativo</p>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Conclusión:</strong> Ambos eigenvalores de la Hessiana son negativos (\( \lambda_1 = -2 < 0, \lambda_2 = -4 < 0 \)), por lo tanto la matriz Hessiana es definida negativa. Esto implica que el punto crítico \( (0,0) \) es un <strong>máximo local</strong> de la función \( f \).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 5 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-5"></i> Ejercicio 5: Verificación de Eigenvector
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Matriz C y vector v</div>
+          <div class="exercise-title">Verificar que v es eigenvector de C</div>
+        </div>
+
+        <div class="matrix-container">
+          <div class="matrix-box">
+            <div class="matrix-label">Matriz C</div>
+            <div class="matrix-content">
+              \[ C = \begin{pmatrix} 3 & 2 \\ 1 & 4 \end{pmatrix} \]
+            </div>
+          </div>
+          <div class="matrix-box">
+            <div class="matrix-label">Vector v</div>
+            <div class="matrix-content">
+              \[ v = \begin{pmatrix} 2 \\ 1 \end{pmatrix} \]
+            </div>
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="task-list">
+            <h4><i class="fas fa-calculator"></i> Cálculo de Cv</h4>
+            <ul>
+              <li>\( Cv = \begin{pmatrix} 3 & 2 \\ 1 & 4 \end{pmatrix} \begin{pmatrix} 2 \\ 1 \end{pmatrix} \)</li>
+              <li>\( = \begin{pmatrix} 3\cdot2 + 2\cdot1 \\ 1\cdot2 + 4\cdot1 \end{pmatrix} \)</li>
+              <li>\( = \begin{pmatrix} 6 + 2 \\ 2 + 4 \end{pmatrix} \)</li>
+              <li>\( = \begin{pmatrix} 8 \\ 6 \end{pmatrix} \)</li>
+            </ul>
+          </div>
+
+          <div class="task-list">
+            <h4><i class="fas fa-calculator"></i> Buscar λ tal que Cv = λv</h4>
+            <ul>
+              <li>Igualamos componentes: \( \lambda \begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 8 \\ 6 \end{pmatrix} \)</li>
+              <li>Primera componente: \( 2\lambda = 8 \Rightarrow \lambda = 4 \)</li>
+              <li>Segunda componente: \( 1\lambda = 6 \Rightarrow \lambda = 6 \)</li>
+              <li>¡Inconsistencia! Los valores no coinciden</li>
+            </ul>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-exclamation-triangle"></i> Análisis:</strong> Existe un error en el enunciado o en los cálculos. Para que \( v \) sea eigenvector de \( C \), debe existir un escalar \( \lambda \) tal que \( Cv = \lambda v \). En este caso, las componentes dan valores diferentes de \( \lambda \) (4 y 6), lo que indica que \( v \) <strong>NO es eigenvector</strong> de \( C \).<br><br>
+            
+            <strong>Posible corrección:</strong> Si tomamos \( \lambda = 4 \) para ambas componentes, tendríamos \( Cv = \begin{pmatrix} 8 \\ 6 \end{pmatrix} \neq 4\begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 8 \\ 4 \end{pmatrix} \). La discrepancia en la segunda componente muestra que \( v \) no es eigenvector.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-python"></i>
+              <span>ejercicio_5.py</span>
+            </div>
+            <button onclick="copiarCodigo('codigo2')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo2">import numpy as np
+
+# Ejercicio 5: Verificación de eigenvector
+def verificar_eigenvector():
+    # Definir matriz y vector
+    C = np.array([[3, 2],
+                  [1, 4]])
+    v = np.array([2, 1])
+    
+    print("Matriz C:")
+    print(C)
+    print()
+    
+    print("Vector v:")
+    print(v)
+    print()
+    
+    # Calcular Cv
+    Cv = C @ v  # Producto matriz-vector
+    print("C * v =")
+    print(Cv)
+    print()
+    
+    # Verificar si v es eigenvector
+    # Buscar λ tal que Cv = λv
+    # Para la primera componente: λ = Cv[0]/v[0]
+    lambda1 = Cv[0] / v[0]
+    
+    # Para la segunda componente: λ = Cv[1]/v[1]
+    lambda2 = Cv[1] / v[1]
+    
+    print(f"λ calculado de primera componente: {lambda1}")
+    print(f"λ calculado de segunda componente: {lambda2}")
+    print()
+    
+    # Verificar si son iguales (con tolerancia numérica)
+    tolerancia = 1e-10
+    if abs(lambda1 - lambda2) < tolerancia:
+        print(f"✓ v ES eigenvector de C con eigenvalor λ = {lambda1}")
+        print(f"Cv = {Cv}")
+        print(f"λv = {lambda1 * v}")
+    else:
+        print("✗ v NO es eigenvector de C")
+        print(f"Porque Cv = {Cv} no es múltiplo escalar de v = {v}")
+        print(f"Para ser múltiplo, necesitaríamos λ = {lambda1} y λ = {lambda2}")
+        print(f"Pero estos valores son diferentes")
+    
+    return Cv, lambda1, lambda2
+
+# Ejecutar verificación
+if __name__ == "__main__":
+    Cv, lambda1, lambda2 = verificar_eigenvector()</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 - Ejercicios de Eigenvalores y Eigenvectores | Programación Numérica - UNA Puno</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="#top" class="footer-link">
+          <i class="fas fa-arrow-up"></i> Inicio página
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+</body>
+</html>
