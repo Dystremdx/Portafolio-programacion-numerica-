@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicios de Diferenciación Numérica | Unidad 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #7209b7;
+      --primary-dark: #5a0a8c;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --tech-blue: #4cc9f0;
+      --math-green: #06d6a0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-math: linear-gradient(135deg, var(--math-green), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(114, 9, 183, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(114, 9, 183, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--tech-blue), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .author-item {
+      padding: 10px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(114, 9, 183, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(114, 9, 183, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .exercise-number {
+      color: var(--tech-blue);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .task-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .task-list h4 {
+      color: var(--math-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .task-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      color: var(--text-gray);
+    }
+
+    .task-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    .data-table th {
+      background: rgba(114, 9, 183, 0.2);
+      color: var(--tech-blue);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(26, 27, 38, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--math-green);
+      text-align: center;
+    }
+
+    .solution-section {
+      background: rgba(6, 214, 160, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid rgba(6, 214, 160, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--math-green);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .highlight-box {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--tech-blue);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--tech-blue);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--tech-blue);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(247, 37, 133, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-calculator"></i> Ejercicios de Diferenciación Numérica
+      </h1>
+      <p class="subtitle">
+        Aplicaciones prácticas de derivadas numéricas usando diferencias finitas en problemas reales
+      </p>
+
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Alumno</div>
+            <div class="author-value">Ronald Wilder Incacutipa Muñuico</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Docente</div>
+            <div class="author-value">Ing. Torres Cruz Fred</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Curso</div>
+            <div class="author-value">Programación Numérica - FINESI</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Universidad</div>
+            <div class="author-value">Universidad Nacional del Altiplano</div>
+          </div>
+        </div>
+      </div>
+    </header>
+<section class="section">
+      <div class="exercise-card" style="text-align: center;">
+        <div class="exercise-header">
+          <div class="exercise-number"><i class="fas fa-file-pdf"></i></div>
+          <div class="exercise-title">Material de Estudio Completo</div>
+        </div>
+        
+        <p style="margin-bottom: 25px; color: var(--text-gray); font-size: 1.1rem;">
+          Descarga o visualiza el documento completo con todos los conceptos teóricos y ejercicios resueltos de diferenciacion numérica
+        </p>
+
+        <div class="results-grid" style="max-width: 600px; margin: 0 auto;">
+          <a href="unidad 2/interpolacion/interpolacion.pdf" target="_blank" class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center;">
+            <i class="fas fa-file-pdf"></i>
+            Ver PDF en nueva pestaña
+          </a>
+          
+          <a href="unidad 2/interpolacion/interpolacion.pdf" download class="btn" style="padding: 15px 30px; font-size: 1rem; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--primary));">
+            <i class="fas fa-download"></i>
+            Descargar PDF
+          </a>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+          <strong><i class="fas fa-info-circle"></i> Nota:</strong> 
+          El documento PDF contiene la teoría completa, demostraciones matemáticas y ejercicios adicionales sobre métodos de diferenciacion.
+        </div>
+      </div>
+    </section>
+
+    <!-- Exercise 8.1 -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chart-line"></i> Ejercicios Resueltos (8.1 - 8.7)
+      </h2>
+
+      <!-- Ejercicio 8.1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.1</div>
+          <div class="exercise-title">Análisis de Crecimiento de Usuarios</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Una startup de tecnología registra el número acumulado de usuarios activos mensuales (en miles):
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Mes</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Usuarios (miles)</strong></td>
+                <td>10</td>
+                <td>15</td>
+                <td>23</td>
+                <td>34</td>
+                <td>48</td>
+                <td>65</td>
+                <td>85</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="formula-box">
+            <p style="color: var(--text-light); margin-bottom: 10px;"><strong>Fórmulas utilizadas:</strong></p>
+            <p>\[ f'(x) \approx \frac{f(x+h) - f(x-h)}{2h} \quad \text{(Centrada)} \]</p>
+            <p>\[ f'(x) \approx \frac{f(x+h) - f(x)}{h} \quad \text{(Adelante)} \]</p>
+            <p>\[ f'(x) \approx \frac{f(x) - f(x-h)}{h} \quad \text{(Atrás)} \]</p>
+            <p>\[ f''(x) \approx \frac{f(x+h) - 2f(x) + f(x-h)}{h^2} \]</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Mes 4 (centrada)</div>
+              <div class="result-value">12.5 mil/mes</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Mes 1 (adelante)</div>
+              <div class="result-value">5.0 mil/mes</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Mes 7 (atrás)</div>
+              <div class="result-value">20.0 mil/mes</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Mayor aceleración</div>
+              <div class="result-value">Mes 6</div>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> El crecimiento de usuarios es cada vez mayor. Al inicio crece lentamente (5 mil/mes), en el mes 4 crece más rápido (12.5 mil/mes) y en el mes 7 alcanza 20 mil/mes. La segunda derivada positiva y creciente indica que la startup está en una etapa de <strong>crecimiento acelerado</strong>.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_1.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1"># Ejercicio 8.1 - Análisis de Crecimiento de Usuarios
+mes <- 1:7
+usuarios <- c(10, 15, 23, 34, 48, 65, 85)
+h <- 1
+
+# 1. Diferencia centrada en mes 4
+fprima_4 <- (usuarios[5] - usuarios[3]) / (2 * h)
+
+# 2. Diferencia adelante en mes 1
+fprima_1 <- (usuarios[2] - usuarios[1]) / h
+
+# 3. Diferencia atrás en mes 7
+fprima_7 <- (usuarios[7] - usuarios[6]) / h
+
+# 4. Segunda derivada (aceleración)
+f2 <- numeric(length(usuarios))
+for (i in 2:(length(usuarios)-1)) {
+  f2[i] <- (usuarios[i+1] - 2*usuarios[i] + usuarios[i-1]) / (h^2)
+}
+
+# Resultados
+cat("1) f'(4) =", fprima_4, "mil usuarios/mes\n")
+cat("2) f'(1) =", fprima_1, "mil usuarios/mes\n")
+cat("3) f'(7) =", fprima_7, "mil usuarios/mes\n")
+cat("4) Mayor aceleración en el mes", mes[which.max(f2)], "\n")
+cat("   Aceleraciones:", f2[!is.na(f2)])</code></pre>
+        </div>
+      </div>
+
+      <!-- Ejercicio 8.2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.2</div>
+          <div class="exercise-title">Optimización de Función de Pérdida</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Durante el entrenamiento de un modelo de Machine Learning, se registra la función de pérdida (loss) en cada época:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Época</th>
+                <th>0</th>
+                <th>10</th>
+                <th>20</th>
+                <th>30</th>
+                <th>40</th>
+                <th>50</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Loss</strong></td>
+                <td>2.45</td>
+                <td>1.82</td>
+                <td>1.35</td>
+                <td>1.08</td>
+                <td>0.95</td>
+                <td>0.89</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">f'(20) con h=10</div>
+              <div class="result-value">-0.037</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">f''(30)</div>
+              <div class="result-value">0.0014</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Época de parada</div>
+              <div class="result-value">40</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Estimación f(25)</div>
+              <div class="result-value">1.165</div>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> La segunda derivada positiva y pequeña indica que la curvatura es cóncava hacia arriba; dado que la primera derivada es negativa (el loss está disminuyendo), una segunda derivada positiva indica que la magnitud de la pendiente negativa está disminuyendo — es decir, la reducción del loss se está <strong>ralentizando</strong> (convergencia que se desacelera hacia un mínimo).
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_2.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo2')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo2"># Ejercicio 8.2 - Optimización de Función de Pérdida
+epoca <- c(0, 10, 20, 30, 40, 50)
+loss <- c(2.45, 1.82, 1.35, 1.08, 0.95, 0.89)
+h <- 10
+
+# 1. Derivada centrada en época 20
+fprime_20 <- (loss[4] - loss[2]) / (2 * h)
+
+# 2. Segunda derivada en época 30
+f2_30 <- (loss[5] - 2*loss[4] + loss[3]) / (h^2)
+
+# 3. Derivadas en todos los puntos
+fprime <- numeric(length(loss))
+# adelante para época 0
+fprime[1] <- (loss[2] - loss[1]) / h
+# centradas para interiores
+for(i in 2:(length(loss)-1)) {
+  fprime[i] <- (loss[i+1] - loss[i-1]) / (2*h)
+}
+# atrás para época final
+fprime[length(loss)] <- (loss[6] - loss[5]) / h
+
+# Encontrar primera época con |f'| < 0.01
+ep_stop <- epoca[which(abs(fprime) < 0.01)[1]]
+
+# 4. Estimación en época 25 por linealización en 20
+f25_via_deriv <- loss[3] + fprime_20 * (25 - 20)
+
+cat("1) f'(20) =", fprime_20, "loss/época\n")
+cat("2) f''(30) =", f2_30, "\n")
+cat("3) Primera época con |f'| < 0.01:", ep_stop, "\n")
+cat("4) Estimación f(25) via derivada:", f25_via_deriv, "\n")</code></pre>
+        </div>
+      </div>
+
+      <!-- Ejercicio 8.3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.3</div>
+          <div class="exercise-title">Análisis de Series Temporales de Ventas</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Una empresa de e-commerce registra sus ventas diarias (en miles de dólares) durante una semana de campaña:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th>Lun</th>
+                <th>Mar</th>
+                <th>Mié</th>
+                <th>Jue</th>
+                <th>Vie</th>
+                <th>Sáb</th>
+                <th>Dom</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Ventas ($k)</strong></td>
+                <td>45</td>
+                <td>52</td>
+                <td>61</td>
+                <td>58</td>
+                <td>73</td>
+                <td>89</td>
+                <td>95</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Mayor aceleración</div>
+              <div class="result-value">Jueves (18)</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Caída Mié→Jue</div>
+              <div class="result-value">-3 $k</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Desaceleración (|f''|)</div>
+              <div class="result-value">12 $k/día²</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Predicción Lun sig.</div>
+              <div class="result-value">101 $k</div>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> La mayor aceleración positiva ocurre el jueves (valor f''(Jue) = 18), es decir, la subida desde el jueves hacia el viernes es la que muestra el mayor aumento en la pendiente. Aunque hubo una caída puntual entre miércoles y jueves (-3 $k), el sistema muestra fuerte recuperación.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_3.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo3')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo3"># Ejercicio 8.3 - Análisis de Ventas Semanales
+dias <- c("Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom")
+ventas <- c(45, 52, 61, 58, 73, 89, 95)
+h <- 1
+
+# Derivadas (velocidades)
+fprime <- numeric(length(ventas))
+# Adelante para Lunes
+fprime[1] <- ventas[2] - ventas[1]
+# Centradas para interiores
+for(i in 2:(length(ventas)-1)) {
+  fprime[i] <- (ventas[i+1] - ventas[i-1]) / (2*h)
+}
+# Atrás para Domingo
+fprime[length(ventas)] <- ventas[7] - ventas[6]
+
+# Segunda derivada (interiores)
+f2 <- rep(NA, length(ventas))
+for(i in 2:(length(ventas)-1)) {
+  f2[i] <- ventas[i+1] - 2*ventas[i] + ventas[i-1]
+}
+
+# Caída Mie->Jue
+caida_valor <- ventas[4] - ventas[3]
+
+# Extrapolación Lun siguiente (usando derivada en Domingo)
+f_lun_sig <- ventas[7] + fprime[7]
+
+# Resultados
+cat("Derivadas (velocidades):", fprime, "$k/día\n")
+cat("Mayor aceleración en:", dias[which.max(f2[!is.na(f2)])+1], "=", max(f2, na.rm=TRUE), "$k/día²\n")
+cat("Caída valor Mie->Jue:", caida_valor, "$k\n")
+cat("Estimación Lun siguiente:", f_lun_sig, "$k\n")</code></pre>
+        </div>
+      </div>
+
+      <!-- Ejercicio 8.4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.4</div>
+          <div class="exercise-title">Gradiente de Función de Activación Sigmoide</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Cálculo del gradiente de la función sigmoide σ(x) = 1/(1+e⁻ˣ) para backpropagation en redes neuronales:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>x</th>
+                <th>-3.0</th>
+                <th>-2.0</th>
+                <th>-1.0</th>
+                <th>0.0</th>
+                <th>1.0</th>
+                <th>2.0</th>
+                <th>3.0</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>σ(x)</strong></td>
+                <td>0.0474</td>
+                <td>0.1192</td>
+                <td>0.2689</td>
+                <td>0.5000</td>
+                <td>0.7311</td>
+                <td>0.8808</td>
+                <td>0.9526</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">σ'(0) numérico</div>
+              <div class="result-value">0.2311</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">σ'(0) analítico</div>
+              <div class="result-value">0.2500</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">σ'(-2) = σ'(2)</div>
+              <div class="result-value">0.11075</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Error en x=0</div>
+              <div class="result-value">-0.0189</div>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> La aproximación centrada con h=1 produce valores razonablemente cercanos a la derivada analítica. La sigmoide satisface σ(-x) = 1 - σ(x), por lo que σ'(x) es una función par (simétrica alrededor de x=0), explicando por qué las derivadas en -2 y 2 son iguales.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_4.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo4')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo4"># Ejercicio 8.4 - Gradiente de la Sigmoide
+x_vals <- c(-3, -2, -1, 0, 1, 2, 3)
+sigma <- c(0.0474, 0.1192, 0.2689, 0.5, 0.7311, 0.8808, 0.9526)
+h <- 1
+
+# Índice auxiliar
+idx <- function(x) which(x_vals == x)
+
+# 1) Derivada centrada en x=0
+sigma_p_0 <- (sigma[idx(1)] - sigma[idx(-1)]) / (2*h)
+
+# 2) Derivadas centradas en x=-2 y x=2
+sigma_p_m2 <- (sigma[idx(-1)] - sigma[idx(-3)]) / (2*h)
+sigma_p_2 <- (sigma[idx(3)] - sigma[idx(1)]) / (2*h)
+
+# 3) Derivada analítica sigma*(1-sigma)
+sigma_p_ana <- sigma * (1 - sigma)
+
+# Mostrar resultados
+cat("sigma'(0) numérico =", sigma_p_0, "\n")
+cat("sigma'(0) analítico =", sigma_p_ana[idx(0)], "\n")
+cat("Error en x=0 =", sigma_p_0 - sigma_p_ana[idx(0)], "\n")
+cat("sigma'(-2) numérico =", sigma_p_m2, "\n")
+cat("sigma'(2) numérico =", sigma_p_2, "\n")
+cat("sigma'(-2) analítico =", sigma_p_ana[idx(-2)], "\n")
+cat("sigma'(2) analítico =", sigma_p_ana[idx(2)], "\n")</code></pre>
+        </div>
+      </div>
+
+            <!-- Ejercicio 8.5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.5</div>
+          <div class="exercise-title">Detección de Anomalías en Métricas de Sistema</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Un sistema de monitoreo registra el tiempo de respuesta (en milisegundos) de una API cada hora durante un incidente:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>0</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Latencia (ms)</strong></td>
+                <td>120</td>
+                <td>125</td>
+                <td>128</td>
+                <td>135</td>
+                <td>280</td>
+                <td>290</td>
+                <td>275</td>
+                <td>155</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Tareas a resolver:</h4>
+          <ul>
+            <li>Calcula la primera derivada (tasa de cambio) para cada hora usando diferencias finitas apropiadas</li>
+            <li>Identifica el momento del "pico de anomalía", calculando dónde la segunda derivada cambia de signo</li>
+            <li>Calcula la magnitud del salto brusco entre las horas 3 y 4</li>
+            <li>Calcula la tasa de recuperación a partir de la hora 6</li>
+            <li>Determina en qué momentos se detectarían anomalías (cambio mayor a 50 ms/hora)</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="formula-box">
+            <p style="color: var(--text-light); margin-bottom: 10px;"><strong>Fórmulas utilizadas:</strong></p>
+            <p>\[ f'(x_i) \approx \begin{cases} \frac{f_{i+1} - f_i}{h}, & \text{adelante} \\ \frac{f_{i+1} - f_{i-1}}{2h}, & \text{centrada} \\ \frac{f_i - f_{i-1}}{h}, & \text{atrás} \end{cases} \]</p>
+            <p>\[ f''(x_i) \approx f_{i+1} - 2f_i + f_{i-1} \quad (h=1) \]</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Primera derivada f'(3)</div>
+              <div class="result-value">76 ms/h</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Pico de anomalía</div>
+              <div class="result-value">Hora 4</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Salto 3→4</div>
+              <div class="result-value">145 ms</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Tasa recuperación f'(6)</div>
+              <div class="result-value">-67.5 ms/h</div>
+            </div>
+          </div>
+
+          <div style="margin: 20px 0;">
+            <h5 style="color: var(--tech-blue); margin-bottom: 10px;">Derivadas Primera y Segunda:</h5>
+            <div class="data-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>f'(ms/h)</strong></td>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>76</td>
+                    <td>77.5</td>
+                    <td>-2.5</td>
+                    <td>-67.5</td>
+                    <td>-120</td>
+                  </tr>
+                  <tr>
+                    <td><strong>f''(ms/h²)</strong></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>4</td>
+                    <td>138</td>
+                    <td>-135</td>
+                    <td>-25</td>
+                    <td>-105</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <strong>Detección de anomalías (|f'| > 50 ms/h):</strong><br>
+            • Hora 3: |76| > 50 → <strong>Anomalía</strong><br>
+            • Hora 4: |77.5| > 50 → <strong>Anomalía</strong><br>
+            • Hora 6: |67.5| > 50 → <strong>Anomalía</strong><br>
+            • Hora 7: |120| > 50 → <strong>Anomalía fuerte</strong>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> El cambio de signo de la segunda derivada de positiva (+138) a negativa (-135) ocurre entre las horas 3 y 4, indicando el <strong>pico de anomalía en la hora 4</strong>. El salto abrupto de 145 ms entre las horas 3 y 4 representa una anomalía severa en la latencia. Las derivadas negativas en las horas 6 y 7 muestran que el sistema se está recuperando a tasas de entre 70 y 120 ms/hora.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_5.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo5')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo5"># Ejercicio 8.5 - Detección de Anomalías en Métricas de Sistema
+hora <- 0:7
+latencia <- c(120, 125, 128, 135, 280, 290, 275, 155)
+h <- 1
+
+# Derivadas primera (centrada donde posible)
+n <- length(latencia)
+deriv1 <- numeric(n)
+for (i in 1:n) {
+  if (i == 1) {
+    deriv1[i] <- (latencia[i+1] - latencia[i]) / h
+  } else if (i == n) {
+    deriv1[i] <- (latencia[i] - latencia[i-1]) / h
+  } else {
+    deriv1[i] <- (latencia[i+1] - latencia[i-1]) / (2*h)
+  }
+}
+
+# Segunda derivada
+deriv2 <- c(NA, diff(latencia, differences=2), NA)
+
+# Detección de anomalías (>50 ms/h)
+anomal <- abs(deriv1) > 50
+
+# Resultados
+cat("Derivadas primera (ms/h):", round(deriv1, 1), "\n")
+cat("Derivadas segunda (ms/h²):", deriv2, "\n")
+cat("Pico de anomalía (cambio signo f''): Hora 4\n")
+cat("Salto entre horas 3 y 4:", latencia[5] - latencia[4], "ms\n")
+cat("Tasa de recuperación en hora 6:", deriv1[7], "ms/h\n")
+cat("Anomalías detectadas (|f'| > 50): Horas", hora[anomal], "\n")
+
+# Mostrar tabla completa
+resultados <- data.frame(
+  Hora = hora,
+  Latencia = latencia,
+  Derivada1 = round(deriv1, 1),
+  Derivada2 = deriv2,
+  Anomalia = ifelse(anomal, "SÍ", "NO")
+)
+print(resultados)</code></pre>
+        </div>
+      </div>
+
+      <!-- Ejercicio 8.6 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.6</div>
+          <div class="exercise-title">Análisis de Tasa de Conversión (ROI Marginal)</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Campaña de marketing: tasa de conversión (%) en función del gasto en publicidad (miles de dólares):
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Gasto ($k)</th>
+                <th>0</th>
+                <th>5</th>
+                <th>10</th>
+                <th>15</th>
+                <th>20</th>
+                <th>25</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Conversión (%)</strong></td>
+                <td>2.1</td>
+                <td>3.8</td>
+                <td>5.2</td>
+                <td>6.1</td>
+                <td>6.7</td>
+                <td>7.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Tareas a resolver:</h4>
+          <ul>
+            <li>Calcula el ROI marginal (derivada de conversión respecto al gasto) en cada punto usando diferencias centradas</li>
+            <li>Determina en qué rango de gasto el ROI marginal es mayor que 0.2% por cada $1000 invertido</li>
+            <li>Calcula la segunda derivada en $15k e interpreta rendimientos decrecientes</li>
+            <li>Con base en las derivadas, ¿recomendarías aumentar el gasto más allá de $25k?</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="formula-box">
+            <p style="color: var(--text-light); margin-bottom: 10px;"><strong>Fórmulas utilizadas (h=5):</strong></p>
+            <p>\[ f'(x) \approx \frac{f(x+h) - f(x-h)}{2h} \quad \text{(Centrada)} \]</p>
+            <p>\[ f''(x) \approx \frac{f(x+h) - 2f(x) + f(x-h)}{h^2} \]</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">ROI > 0.2%/1k</div>
+              <div class="result-value">0k$ a 10k$</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">f''(15k)</div>
+              <div class="result-value">-0.012</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">ROI marginal en 25k</div>
+              <div class="result-value">0.06%/1k</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Recomendación</div>
+              <div class="result-value">No aumentar >25k</div>
+            </div>
+          </div>
+
+          <div style="margin: 20px 0;">
+            <h5 style="color: var(--tech-blue); margin-bottom: 10px;">ROI Marginal por Punto:</h5>
+            <div class="data-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Gasto ($k)</th>
+                    <th>0</th>
+                    <th>5</th>
+                    <th>10</th>
+                    <th>15</th>
+                    <th>20</th>
+                    <th>25</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>f'(%/1k$)</strong></td>
+                    <td>0.34</td>
+                    <td>0.31</td>
+                    <td>0.23</td>
+                    <td>0.15</td>
+                    <td>0.09</td>
+                    <td>0.06</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> f''(15k) ≈ -0.012 (negativo) indica <strong>rendimientos decrecientes</strong>. El ROI marginal decrece de 0.34%/1k en 0k a 0.06%/1k en 25k. No se recomienda incrementar el gasto más allá de $25k si el objetivo es maximizar conversión por dólar (ROI marginal muy bajo y decreciente). Solo se justificaría un aumento si existen razones externas (ej. objetivos de cuota de mercado).
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>ejercicio_8_6.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo6')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo6"># Ejercicio 8.6 - Análisis de ROI Marginal
+gasto <- c(0, 5, 10, 15, 20, 25)    # en miles $
+conv <- c(2.1, 3.8, 5.2, 6.1, 6.7, 7.0) # conversión en %
+h <- 5   # paso (en miles $)
+
+# Derivada primera (adelante/centrada/atras)
+n <- length(gasto)
+fprime <- numeric(n)
+fprime[1] <- (conv[2] - conv[1]) / h    # adelante en 0
+for(i in 2:(n-1)) {
+  fprime[i] <- (conv[i+1] - conv[i-1]) / (2*h) # centradas
+}
+fprime[n] <- (conv[n] - conv[n-1]) / h    # atrás en 25
+
+# Segunda derivada centrada (interiores)
+f2 <- rep(NA, n)
+for(i in 2:(n-1)) {
+  f2[i] <- (conv[i+1] - 2*conv[i] + conv[i-1]) / (h^2)
+}
+
+# Rango con ROI marginal > 0.2% por 1k
+gastos_buenos <- gasto[which(fprime > 0.2)]
+
+# Resultados
+cat("ROI marginal (% por $1k):\n")
+for(i in 1:n) {
+  cat(sprintf("  $%dk: %.3f %%\n", gasto[i], fprime[i]))
+}
+
+cat("\nRango con ROI marginal > 0.2%/1k: ", 
+    min(gastos_buenos), "k$ a ", max(gastos_buenos), "k$\n")
+
+cat("f''(15k) = ", f2[which(gasto==15)], " (% per (1k$)^2)\n")
+
+cat("\nRecomendación: ")
+if(fprime[n] < 0.1) {
+  cat("NO aumentar gasto más allá de $25k (ROI marginal muy bajo)\n")
+} else {
+  cat("Podría considerarse aumentar el gasto\n")
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Ejercicio 8.7 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Ejercicio 8.7</div>
+          <div class="exercise-title">Feature Engineering con Derivadas</div>
+        </div>
+
+        <p style="margin-bottom: 20px;">
+          Señal de temperatura de un sensor industrial medida cada segundo:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Tiempo (s)</th>
+                <th>0</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Temperatura (°C)</strong></td>
+                <td>20.1</td>
+                <td>20.3</td>
+                <td>20.8</td>
+                <td>21.5</td>
+                <td>22.6</td>
+                <td>24.2</td>
+                <td>26.1</td>
+                <td>28.5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-tasks"></i> Tareas a resolver:</h4>
+          <ul>
+            <li>Crear una nueva feature: velocidad de cambio de temperatura (primera derivada)</li>
+            <li>Crear otra feature: aceleración del cambio (segunda derivada)</li>
+            <li>Detectar momentos donde ΔT > 0.8°C/s (alerta de problema)</li>
+            <li>Normalizar las features derivadas usando min-max scaling</li>
+            <li>Explicar la utilidad de estas features para un modelo de clasificación de anomalías</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-lightbulb"></i> Solución</h4>
+
+          <div class="formula-box">
+            <p style="color: var(--text-light); margin-bottom: 10px;"><strong>Fórmulas utilizadas:</strong></p>
+            <p>\[ T'(t_i) = \frac{T_{i+1} - T_{i-1}}{2} \quad \text{(Centrada)} \]</p>
+            <p>\[ T''(t_i) = T_{i+1} - 2T_i + T_{i-1} \]</p>
+            <p>\[ X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}} \quad \text{(Min-Max)} \]</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Velocidad máx.</div>
+              <div class="result-value">2.4 °C/s</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Aceleración máx.</div>
+              <div class="result-value">0.5 °C/s²</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Alertas (>0.8 °C/s)</div>
+              <div class="result-value">t=3,4,5,6,7s</div>
+            </div>
+          </div>
+
+          <div style="margin: 20px 0;">
+            <h5 style="color: var(--tech-blue); margin-bottom: 10px;">Features Calculadas:</h5>
+            <div class="data-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tiempo (s)</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>T (°C)</strong></td>
+                    <td>20.1</td>
+                    <td>20.3</td>
+                    <td>20.8</td>
+                    <td>21.5</td>
+                    <td>22.6</td>
+                    <td>24.2</td>
+                    <td>26.1</td>
+                    <td>28.5</td>
+                  </tr>
+                  <tr>
+                    <td><strong>T' (°C/s)</strong></td>
+                    <td>0.20</td>
+                    <td>0.35</td>
+                    <td>0.60</td>
+                    <td>0.90</td>
+                    <td>1.35</td>
+                    <td>1.75</td>
+                    <td>2.15</td>
+                    <td>2.40</td>
+                  </tr>
+                  <tr>
+                    <td><strong>T'' (°C/s²)</strong></td>
+                    <td>-</td>
+                    <td>0.3</td>
+                    <td>0.2</td>
+                    <td>0.4</td>
+                    <td>0.5</td>
+                    <td>0.3</td>
+                    <td>0.5</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <strong>Features Normalizadas (Min-Max):</strong><br>
+            • <strong>Velocidad normalizada:</strong> [0.00, 0.07, 0.18, 0.32, 0.52, 0.70, 0.88, 1.00]<br>
+            • <strong>Aceleración normalizada:</strong> [-, 0.33, 0.00, 0.67, 1.00, 0.33, 1.00, -]
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-info-circle"></i> Utilidad para ML:</strong> Las derivadas ofrecen información dinámica del proceso. La primera derivada (velocidad) captura cambios rápidos que pueden indicar fallas o sobrecalentamiento. La segunda derivada (aceleración) mide cómo cambia la velocidad, detectando puntos donde el sistema empieza a descontrolarse. En un modelo de clasificación de anomalías, estas features permiten distinguir comportamientos normales (variaciones suaves) de anómalos (cambios abruptos), mejorando la capacidad predictiva del modelo.
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-python"></i>
+              <span>ejercicio_8_7.py</span>
+            </div>
+            <button onclick="copiarCodigo('codigo7')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo7"># Ejercicio 8.7 - Feature Engineering con Derivadas
+import numpy as np
+import pandas as pd
+
+# Datos
+t = np.arange(0, 8)
+temp = np.array([20.1, 20.3, 20.8, 21.5, 22.6, 24.2, 26.1, 28.5])
+
+# Primera derivada (diferencias centradas)
+vel = np.zeros_like(temp)
+vel[0] = temp[1] - temp[0]               # adelante para t=0
+vel[-1] = temp[-1] - temp[-2]            # atrás para t=7
+vel[1:-1] = (temp[2:] - temp[:-2]) / 2   # centradas
+
+# Segunda derivada
+acc = np.zeros_like(temp)
+acc[1:-1] = temp[2:] - 2*temp[1:-1] + temp[:-2]
+
+# Normalización Min-Max
+vel_norm = (vel - vel.min()) / (vel.max() - vel.min())
+acc_nonzero = acc[1:-1]
+acc_norm = (acc_nonzero - acc_nonzero.min()) / (acc_nonzero.max() - acc_nonzero.min())
+
+# Detectar alertas (>0.8 °C/s)
+alertas = t[vel > 0.8]
+
+# Crear DataFrame
+df = pd.DataFrame({
+    'Tiempo_s': t,
+    'Temp_C': temp,
+    'Velocidad_C_s': np.round(vel, 2),
+    'Aceleracion_C_s2': np.round(acc, 2),
+    'Vel_norm': np.round(vel_norm, 2)
+})
+
+print("=== DATOS Y FEATURES DERIVADAS ===")
+print(df.to_string(index=False))
+
+print(f"\n=== RESULTADOS ===")
+print(f"Velocidad máxima: {vel.max():.2f} °C/s")
+print(f"Aceleración máxima: {acc_nonzero.max():.2f} °C/s²")
+print(f"Alertas (Velocidad > 0.8 °C/s): tiempos {list(alertas)} s")
+print(f"Aceleración normalizada: {np.round(acc_norm, 2)}")
+
+print("\n=== UTILIDAD PARA ML ===")
+print("• Primera derivada: detecta cambios rápidos (fallas, sobrecalentamiento)")
+print("• Segunda derivada: identifica puntos de inflexión (descontrol del sistema)")
+print("• Features normalizadas: escaladas [0,1] para mejor entrenamiento de modelos")</code></pre>
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 Ronald Wilder Incacutipa Muñuico - Ejercicios de Diferenciación Numérica | Programación Numérica - FINESI - UNA</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+</body>
+</html>
