@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis Modal de Vibraciones | Edificio 3 Pisos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #2a9d8f;
+      --primary-dark: #1d6f65;
+      --secondary: #264653;
+      --accent: #e76f51;
+      --engineering-blue: #457b9d;
+      --vibration-orange: #e9c46a;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--engineering-blue));
+      --gradient-engineering: linear-gradient(135deg, var(--vibration-orange), var(--accent));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(42, 157, 143, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(233, 196, 106, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-engineering);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(42, 157, 143, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--vibration-orange), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .author-item {
+      padding: 10px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(42, 157, 143, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(42, 157, 143, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(42, 157, 143, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .exercise-number {
+      color: var(--vibration-orange);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .intro-box {
+      background: rgba(233, 196, 106, 0.05);
+      border-radius: 10px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 1px solid rgba(233, 196, 106, 0.2);
+    }
+
+    .intro-box h3 {
+      color: var(--vibration-orange);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .data-table th {
+      background: rgba(42, 157, 143, 0.2);
+      color: var(--vibration-orange);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(42, 157, 143, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(69, 123, 157, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--engineering-blue);
+      font-family: 'Cambria', serif;
+    }
+
+    .solution-section {
+      background: rgba(42, 157, 143, 0.05);
+      border-radius: 10px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 1px solid rgba(42, 157, 143, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(42, 157, 143, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--vibration-orange);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(231, 111, 81, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .modal-matrix {
+      background: rgba(233, 196, 106, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .modal-matrix table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    .modal-matrix td {
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'Cambria', serif;
+      font-size: 1.1rem;
+    }
+
+    .matrix-label {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .comparison-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .comparison-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th {
+      background: rgba(42, 157, 143, 0.2);
+      color: var(--vibration-orange);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .comparison-table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--vibration-orange);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-matrix td {
+        padding: 5px 8px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-building"></i> Análisis Modal de Vibraciones
+      </h1>
+      <p class="subtitle">
+        Autovalores, Frecuencias Naturales y Modos Propios en Edificio de 3 Pisos - Aplicación de Álgebra Lineal en Ingeniería Estructural
+      </p>
+
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Autor</div>
+            <div class="author-value">Ronald Wilder Incacutipa Muñuico</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Institución</div>
+            <div class="author-value">Universidad Nacional del Altiplano Puno</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Facultad</div>
+            <div class="author-value">Ingeniería Estadística e Informática</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Contacto</div>
+            <div class="author-value">ronaldincacutipamunuico@gmail.com</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-cogs"></i> Análisis Modal Estructural
+      </h2>
+
+      <!-- Introducción -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">1. Introducción y Motivación</div>
+          <div class="exercise-title">Contexto del Problema</div>
+        </div>
+
+        <div class="intro-box">
+          <h3><i class="fas fa-exclamation-triangle"></i> Importancia del Análisis Dinámico</h3>
+          <p style="margin-bottom: 15px;">
+            El análisis dinámico de estructuras es fundamental para garantizar la seguridad ante cargas sísmicas, viento y otras excitaciones dinámicas. Los autovalores y autovectores del sistema matricial (K, M) representan:
+          </p>
+          <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li><strong>Frecuencias naturales:</strong> Frecuencias propias de vibración libre</li>
+            <li><strong>Modos propios:</strong> Formas características de deformación</li>
+            <li><strong>Base para análisis sísmico y de resonancia</strong></li>
+          </ul>
+        </div>
+
+        <div class="intro-box">
+          <h3><i class="fas fa-bullseye"></i> Objetivos Específicos</h3>
+          <ol style="margin-left: 20px;">
+            <li>Desarrollar modelo matemático de edificio de 3 pisos</li>
+            <li>Calcular frecuencias naturales y periodos de vibración</li>
+            <li>Determinar y visualizar modos propios</li>
+            <li>Interpretar resultados desde perspectiva ingenieril</li>
+            <li>Proporcionar código reproducible en R</li>
+            <li>Establecer recomendaciones de diseño</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Modelo Estructural -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">2. Modelo Estructural</div>
+          <div class="exercise-title">Parámetros y Matrices</div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-ruler-combined"></i> Parámetros del Modelo</h4>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Masas por piso</div>
+              <div class="result-value">1000 kg</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Rigidez piso 1</div>
+              <div class="result-value">20,000 N/m</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Rigidez piso 2</div>
+              <div class="result-value">18,000 N/m</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Rigidez piso 3</div>
+              <div class="result-value">15,000 N/m</div>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <p><strong>Hipótesis de modelado:</strong></p>
+            <ol style="margin-left: 20px;">
+              <li>Masas concentradas (lumped masses) en cada piso</li>
+              <li>Vigas infinitamente rígidas (toda flexibilidad en columnas)</li>
+              <li>Movimiento horizontal puro (sin rotaciones)</li>
+              <li>Comportamiento lineal elástico</li>
+              <li>Sin amortiguamiento (análisis modal clásico)</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-th"></i> Matrices del Sistema</h4>
+          
+          <div style="margin: 20px 0;">
+            <p style="margin-bottom: 10px; color: var(--primary); font-weight: 600;">Matriz de Masa (diagonal):</p>
+            <div class="modal-matrix">
+              <div class="matrix-label">M</div>
+              <table>
+                <tr>
+                  <td>1000</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>1000</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1000</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div style="margin: 20px 0;">
+            <p style="margin-bottom: 10px; color: var(--primary); font-weight: 600;">Matriz de Rigidez (ensamblada):</p>
+            <div class="modal-matrix">
+              <div class="matrix-label">K</div>
+              <table>
+                <tr>
+                  <td>38,000</td>
+                  <td>-18,000</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>-18,000</td>
+                  <td>33,000</td>
+                  <td>-15,000</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>-15,000</td>
+                  <td>15,000</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solución del Problema Propio -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">3. Solución del Problema Propio</div>
+          <div class="exercise-title">Resultados Numéricos</div>
+        </div>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Modo</th>
+                <th>ω² (rad²/s²)</th>
+                <th>ω (rad/s)</th>
+                <th>f (Hz)</th>
+                <th>Periodo (s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 (Fundamental)</td>
+                <td>3.6810</td>
+                <td>1.9186</td>
+                <td>0.3054</td>
+                <td>3.274</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>26.0889</td>
+                <td>5.1077</td>
+                <td>0.8129</td>
+                <td>1.230</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>56.2300</td>
+                <td>7.4987</td>
+                <td>1.1935</td>
+                <td>0.838</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-project-diagram"></i> Matriz de Modos Normalizados</h4>
+          
+          <div class="modal-matrix">
+            <div class="matrix-label">Φ (Modos Propios Normalizados)</div>
+            <table>
+              <tr>
+                <td><strong>Piso 1</strong></td>
+                <td>0.396</td>
+                <td>0.755</td>
+                <td>1.000</td>
+              </tr>
+              <tr>
+                <td><strong>Piso 2</strong></td>
+                <td>1.000</td>
+                <td>0.662</td>
+                <td>-0.895</td>
+              </tr>
+              <tr>
+                <td><strong>Piso 3</strong></td>
+                <td>0.987</td>
+                <td>-1.000</td>
+                <td>0.364</td>
+              </tr>
+              <tr style="color: var(--primary); font-weight: 600;">
+                <td></td>
+                <td>Modo 1</td>
+                <td>Modo 2</td>
+                <td>Modo 3</td>
+              </tr>
+            </table>
+            <p style="margin-top: 10px; color: var(--text-gray); font-size: 0.9rem;">
+              Cada columna = modo propio; Cada fila = desplazamiento del piso
+            </p>
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>analisis_modal_edificio.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1"># ============================================
+# Análisis Modal - Edificio 3 Pisos
+# ============================================
+
+# --- 1. DEFINICIÓN DE PARÁMETROS ---
+m <- c(1000, 1000, 1000) # Masas (kg)
+k1 <- 20000; k2 <- 18000; k3 <- 15000 # Rigideces (N/m)
+
+# --- 2. CONSTRUCCIÓN DE MATRICES ---
+M <- diag(m) # Matriz de masa diagonal
+
+# Matriz de rigidez (ensamblaje por entrepiso)
+K <- matrix(c(
+  k1+k2, -k2, 0,
+  -k2, k2+k3, -k3,
+  0, -k3, k3
+), nrow=3, byrow=TRUE)
+
+cat("Matriz de Masa M:\n")
+print(M)
+cat("\nMatriz de Rigidez K:\n")
+print(K)
+
+# --- 3. PROBLEMA DE AUTOVALORES ---
+A <- solve(M) %*% K # M^(-1) * K
+eigen_result <- eigen(A)
+omega2 <- eigen_result$values # Autovalores = omega^2
+phi_raw <- eigen_result$vectors # Autovectores (modos)
+
+# --- 4. ORDENAR POR FRECUENCIA CRECIENTE ---
+idx <- order(omega2)
+omega2 <- omega2[idx]
+phi_raw <- phi_raw[, idx]
+
+# --- 5. CALCULAR PARÁMETROS MODALES ---
+omega <- sqrt(omega2) # Pulsación (rad/s)
+freq <- omega / (2*pi) # Frecuencia (Hz)
+periodo <- 1 / freq # Periodo (s)
+
+# --- 6. NORMALIZACIÓN DE MODOS ---
+# Normalizar: máximo valor absoluto = 1
+# Forzar primer componente positivo
+phi_norm <- phi_raw
+for(i in 1:ncol(phi_raw)) {
+  col <- phi_raw[,i]
+  col <- col / max(abs(col)) # Normalizar
+  if(col[1] < 0) col <- -col # Forzar signo
+  phi_norm[,i] <- col
+}
+
+# --- 7. PRESENTACIÓN DE RESULTADOS ---
+cat("\n=== PARÁMETROS MODALES ===\n")
+resultados <- data.frame(
+  Modo = 1:3,
+  Omega2 = round(omega2, 4),
+  Omega = round(omega, 4),
+  Freq_Hz = round(freq, 4),
+  Periodo_s = round(periodo, 4)
+)
+print(resultados)
+
+cat("\n=== MODOS PROPIOS NORMALIZADOS ===\n")
+colnames(phi_norm) <- paste0("Modo_", 1:3)
+rownames(phi_norm) <- paste0("Piso_", 1:3)
+print(round(phi_norm, 3))
+
+# --- 8. VERIFICACIÓN DE ORTOGONALIDAD ---
+cat("\n=== VERIFICACIÓN: phi^T * M * phi ===\n")
+ortog_M <- t(phi_norm) %*% M %*% phi_norm
+print(round(ortog_M, 2))
+
+cat("\n=== VERIFICACIÓN: phi^T * K * phi ===\n")
+ortog_K <- t(phi_norm) %*% K %*% phi_norm
+print(round(ortog_K, 2))</code></pre>
+        </div>
+      </div>
+
+      <!-- Interpretación de Modos -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">4. Interpretación de Modos</div>
+          <div class="exercise-title">Análisis Físico</div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-wave-square"></i> Modo 1 - Fundamental (f₁ = 0.305 Hz)</h4>
+          <div class="interpretation">
+            <strong>Características:</strong> Todos los pisos en fase (mismo sentido). Amplitud crece hacia arriba: 0.396 < 0.755 < 1.000. Mayor energía cinética. Modo más importante para sismo.
+            <br><br>
+            <strong>Interpretación física:</strong> El edificio completo se balancea como péndulo invertido. Piso superior tiene máxima amplitud. Periodo largo (3.27 s) indica estructura muy flexible.
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-wave-square"></i> Modo 2 (f₂ = 0.813 Hz)</h4>
+          <div class="interpretation">
+            <strong>Características:</strong> Piso 1: movimiento positivo (1.000). Piso 2: movimiento positivo reducido (0.662). Piso 3: movimiento negativo (-0.895). Cambio de fase entre pisos 2 y 3. Punto de inflexión entre pisos 2 y 3.
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-wave-square"></i> Modo 3 (f₃ = 1.194 Hz)</h4>
+          <div class="interpretation">
+            <strong>Características:</strong> Patrón: (+) → (-) → (+). Dos cambios de fase. Mayor frecuencia = más "local". Menor participación en respuesta sísmica pero importante para diseño de elementos locales.
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparación con Códigos Sísmicos -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">5. Comparación Normativa</div>
+          <div class="exercise-title">Código E.030 (Perú)</div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-file-contract"></i> Evaluación de Cumplimiento</h4>
+          
+          <div class="comparison-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Parámetro</th>
+                  <th>Valor Calculado</th>
+                  <th>Valor Normativo</th>
+                  <th>Cumple</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Periodo Fundamental (T₁)</td>
+                  <td>3.27 s</td>
+                  <td>≈ 0.35 s (empírico)</td>
+                  <td style="color: #ff4444;">NO</td>
+                </tr>
+                <tr>
+                  <td>Deriva Máxima</td>
+                  <td>Por calcular</td>
+                  <td>< 0.007</td>
+                  <td style="color: var(--text-gray);">Por verificar</td>
+                </tr>
+                <tr>
+                  <td>Participación Modal</td>
+                  <td>Modos 1-3</td>
+                  <td>≥ 90% masa</td>
+                  <td style="color: #06d6a0;">SÍ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="interpretation">
+            <strong><i class="fas fa-exclamation-triangle"></i> Observación Crítica:</strong> El periodo fundamental calculado (3.27 s) es mucho mayor que el periodo empírico recomendado (~0.35 s para edificio de concreto de ~10 m). Esto indica que la estructura es <strong>muy flexible</strong> y requiere reforzamiento para cumplir con el código sísmico peruano.
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-map"></i> Zona Sísmica y Espectro de Diseño</h4>
+          <ul style="margin-left: 20px; margin-top: 10px;">
+            <li><strong>Zona sísmica 3 (Lima, Puno):</strong> Alta sismicidad</li>
+            <li><strong>Periodo de esquina (Tₐ):</strong> ≈ 0.6 s</li>
+            <li><strong>Periodo largo (Tᴸ):</strong> ≈ 2.0 s</li>
+            <li><strong>Implicación:</strong> T₁ = 3.27 s > Tᴸ → zona de desplazamientos constantes en espectro</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Medidas de Mitigación -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">6. Medidas de Mitigación</div>
+          <div class="exercise-title">Recomendaciones de Diseño</div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-tools"></i> Corto Plazo</h4>
+          <ul style="margin-left: 20px;">
+            <li>Evaluación estructural detallada</li>
+            <li>Modelado 3D con masa distribuida</li>
+            <li>Inclusión de amortiguamiento (ξ = 5%)</li>
+            <li>Verificación de derivas de entrepiso</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-hard-hat"></i> Mediano Plazo</h4>
+          <ul style="margin-left: 20px;">
+            <li>Reforzar columnas de piso 1 (eliminar soft-story)</li>
+            <li>Instalar disipadores de energía</li>
+            <li>Añadir muros de corte (shear walls)</li>
+            <li>Arriostramientos diagonales (bracings)</li>
+          </ul>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-line"></i> Largo Plazo</h4>
+          <ul style="margin-left: 20px;">
+            <li>Monitoreo sísmico continuo</li>
+            <li>Actualización de modelo con datos reales</li>
+            <li>Plan de mantenimiento preventivo</li>
+            <li>Optimización de ubicación de disipadores</li>
+          </ul>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-lightbulb"></i> Conclusión General:</strong> El análisis modal revela que la estructura tiene un periodo fundamental muy largo (3.27 s), indicando flexibilidad excesiva. Se requieren medidas de reforzamiento inmediatas para cumplir con el código sísmico y garantizar la seguridad estructural ante eventos sísmicos.
+        </div>
+      </div>
+
+      <!-- Conclusiones -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">7. Conclusiones</div>
+          <div class="exercise-title">Hallazgos Principales</div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-label">Periodo Fundamental</div>
+            <div class="result-value">3.27 s</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Frecuencia Fundamental</div>
+            <div class="result-value">0.305 Hz</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Flexibilidad</div>
+            <div class="result-value">Alta</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Modos Calculados</div>
+            <div class="result-value">3</div>
+          </div>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-clipboard-check"></i> Conclusiones Principales</h4>
+          <ol style="margin-left: 20px; margin-top: 10px;">
+            <li>El edificio presenta periodo fundamental muy largo (T₁ = 3.27 s), indicando estructura muy flexible</li>
+            <li>La frecuencia fundamental baja (0.305 Hz) implica riesgo de resonancia con excitaciones de baja frecuencia</li>
+            <li>Los modos superiores muestran deformaciones locales importantes para diseño detallado</li>
+            <li>Se requiere reforzamiento estructural para cumplir códigos sísmicos</li>
+            <li>El método de autovalores es eficiente y preciso para análisis preliminar</li>
+          </ol>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-graduation-cap"></i> Extensión Académica</h4>
+          <p style="margin-top: 10px;">
+            Este trabajo demuestra la aplicación práctica del álgebra lineal (autovalores, autovectores) en ingeniería estructural, vinculando conceptos matemáticos abstractos con problemas de ingeniería reales. El código en R proporcionado permite reproducir y extender el análisis para diferentes configuraciones estructurales.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2024 Ronald Wilder Incacutipa Muñuico - Análisis Modal de Vibraciones | Universidad Nacional del Altiplano Puno</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+        <span>•</span>
+        <a href="mailto:ronaldincacutipamunuico@gmail.com" class="footer-link">
+          <i class="fas fa-envelope"></i> Contacto
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+</body>
+</html>
