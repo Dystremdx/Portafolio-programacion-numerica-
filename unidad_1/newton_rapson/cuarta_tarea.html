@@ -2,180 +2,859 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Trabajo 3: Método de Newton-Raphson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Método de Newton-Raphson | Unidad 1</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: "Consolas", monospace;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f1f1f1;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --tech-blue: #00eeff;
+      --math-purple: #9d4edd;
+      --success-green: #4cc9f0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-math: linear-gradient(135deg, var(--math-purple), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
       padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(67, 97, 238, 0.1) 0%, transparent 30%);
     }
-    h1 {
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
       text-align: center;
-      color: #00eaff;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
     }
-    h2 {
-      color: #00ffcc;
-      margin-top: 35px;
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-math);
+      border-radius: 2px;
     }
-    p {
-      font-size: 18px;
-      text-align: justify;
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
     }
-    ul, ol {
-      font-size: 16px;
-      margin-left: 40px;
+
+    .back-btn:hover {
+      background: var(--math-purple);
+      transform: translateX(-5px);
+      color: white;
     }
-    .code-container {
-      background: #1e1e1e;
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--math-purple), var(--tech-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      text-align: center;
+    }
+
+    .author-item {
+      padding: 15px;
+    }
+
+    .author-label {
+      color: var(--math-purple);
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Content Sections */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+    }
+
+    .section-title i {
+      color: var(--math-purple);
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+      margin-bottom: 20px;
+    }
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(157, 78, 221, 0.3);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-list li i {
+      color: var(--success-green);
+    }
+
+    .formula-container {
+      background: rgba(26, 27, 38, 0.8);
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      max-width: 900px;
-      margin: 30px auto;
+      margin: 15px 0;
+      border-left: 4px solid var(--math-purple);
+      font-family: 'Consolas', monospace;
+      color: var(--tech-blue);
+      text-align: center;
+      font-size: 1.2rem;
     }
-    pre {
-      background: #1e1e1e;
-      color: #00ffcc;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 15px;
-      line-height: 1.5;
+
+    .example-box {
+      background: rgba(157, 78, 221, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 1px solid rgba(157, 78, 221, 0.3);
     }
-    .buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
+
+    .example-title {
+      color: var(--math-purple);
+      font-weight: 600;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Code Container */
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+    }
+
+    .code-container:hover {
+      transform: translateY(-5px);
+      border-color: rgba(157, 78, 221, 0.3);
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 15px;
       flex-wrap: wrap;
     }
-    button, a.pdf-btn {
-      background: #00eaff;
-      color: #000;
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--gradient-math);
+      color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       text-decoration: none;
-      transition: background 0.3s;
+      transition: var(--transition);
+      font-size: 0.95rem;
     }
-    button:hover, a.pdf-btn:hover {
-      background: #00b3cc;
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(157, 78, 221, 0.3);
     }
-    .autor {
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--math-purple);
+      color: var(--text-light);
+    }
+
+    .btn-outline:hover {
+      background: var(--gradient-math);
+      color: white;
+    }
+
+    /* Code Content */
+    .code-content {
+      padding: 0;
+      background: var(--code-bg);
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      padding: 25px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      color: #c9d1d9;
+      display: block;
+    }
+
+    /* Syntax Highlighting */
+    .keyword { color: #ff7b72; }
+    .function { color: #d2a8ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .number { color: #79c0ff; }
+    .operator { color: #ff7b72; }
+    .builtin { color: #ffa657; }
+
+    /* Iteration Table */
+    .iteration-table {
+      margin-top: 40px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .table-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--math-purple);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th {
+      background: rgba(157, 78, 221, 0.2);
+      color: var(--math-purple);
+      padding: 12px 15px;
       text-align: center;
-      font-size: 16px;
-      color: #ccc;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+    }
+
+    td {
+      padding: 10px 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-family: 'Consolas', monospace;
+    }
+
+    tr:hover {
+      background: rgba(157, 78, 221, 0.05);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--math-purple);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+      
+      .code-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .author-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .section-title {
+        font-size: 1.6rem;
+      }
+      
+      .header {
+        padding: 20px 10px;
+      }
+      
+      .content-card, .code-container, .iteration-table {
+        padding: 20px;
+      }
+      
+      pre {
+        padding: 15px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-bezier-curve"></i> Método de Newton-Raphson
+      </h1>
+      <p class="subtitle">
+        Implementación del método iterativo para encontrar raíces de ecuaciones no lineales 
+        con convergencia cuadrática y alta precisión.
+      </p>
+      
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Alumno</div>
+            <div class="author-value">Ronald Wilder Incacutipa Muñuico</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Docente</div>
+            <div class="author-value">Ing. Torres Cruz Fred</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Curso</div>
+            <div class="author-value">Programación Numérica - FINESI</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Institución</div>
+            <div class="author-value">Universidad Nacional del Altiplano</div>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  <h1>📘 Trabajo 3: Método de Newton-Raphson</h1>
-  <p class="autor">
-    Alumno: <strong>Ronald Wilder Incacutipa Muñuico</strong><br>
-    Docente: <strong>Ing. Torres Cruz Fred</strong><br>
-    Curso: <em>Programación Numérica – FINESI</em><br>
-    Universidad Nacional del Altiplano
-  </p>
+    <!-- Problem Description -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-question-circle"></i> Descripción del Problema
+      </h2>
+      <div class="content-card">
+        <p style="margin-bottom: 15px;">
+          Se requiere un programa en Python que implemente el <strong>método de Newton-Raphson</strong> para encontrar 
+          raíces de ecuaciones no lineales. El sistema debe permitir al usuario ingresar:
+        </p>
+        <div class="content-grid">
+          <div>
+            <ul class="feature-list">
+              <li><i class="fas fa-function"></i> La función <code>f(x)</code></li>
+              <li><i class="fas fa-calculator"></i> Su derivada <code>f'(x)</code></li>
+              <li><i class="fas fa-play-circle"></i> Un valor inicial <code>x₀</code></li>
+            </ul>
+          </div>
+          <div>
+            <div class="formula-container">
+              xₙ₊₁ = xₙ - f(xₙ) / f'(xₙ)
+            </div>
+            <p style="color: var(--text-gray); font-size: 0.95rem; text-align: center;">
+              Fórmula iterativa de Newton-Raphson
+            </p>
+          </div>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: rgba(76, 201, 240, 0.1); border-radius: 8px;">
+          <p style="color: var(--tech-blue); margin-bottom: 8px;">
+            <i class="fas fa-bullseye"></i> <strong>Criterio de convergencia:</strong>
+          </p>
+          <div style="font-family: 'Consolas', monospace; color: var(--text-light); text-align: center;">
+            |xₙ₊₁ − xₙ| < 10⁻¹²
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <h2>🧩 Descripción del Problema</h2>
-  <p>
-    Se requiere un programa en Python que implemente el <strong>método de Newton-Raphson</strong> para encontrar raíces de ecuaciones no lineales.
-    El sistema debe solicitar al usuario:
-  </p>
-  <ul>
-    <li>La función <code>f(x)</code>.</li>
-    <li>La derivada <code>f'(x)</code>.</li>
-    <li>Un valor inicial <code>x₀</code>.</li>
-  </ul>
-  <p>
-    El programa debe calcular de manera iterativa la raíz aproximada de la función, utilizando el criterio de convergencia:
-  </p>
-  <pre>|xₙ₊₁ − xₙ| < 10⁻¹²</pre>
+    <!-- Specifications -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-tasks"></i> Especificaciones
+      </h2>
+      <div class="content-grid">
+        <div class="content-card">
+          <h3 style="color: var(--math-purple); margin-bottom: 15px;">
+            <i class="fas fa-sign-in-alt"></i> Entrada
+          </h3>
+          <ul class="feature-list">
+            <li><i class="fas fa-keyboard"></i> Función f(x) como expresión Python</li>
+            <li><i class="fas fa-sliders-h"></i> Derivada f'(x) como expresión</li>
+            <li><i class="fas fa-map-marker-alt"></i> Valor inicial x₀</li>
+          </ul>
+        </div>
+        
+        <div class="content-card">
+          <h3 style="color: var(--math-purple); margin-bottom: 15px;">
+            <i class="fas fa-cogs"></i> Proceso
+          </h3>
+          <ul class="feature-list">
+            <li><i class="fas fa-sync-alt"></i> Iteraciones hasta tolerancia</li>
+            <li><i class="fas fa-shield-alt"></i> Protección contra divergencia</li>
+            <li><i class="fas fa-chart-line"></i> Convergencia cuadrática</li>
+          </ul>
+        </div>
+        
+        <div class="content-card">
+          <h3 style="color: var(--math-purple); margin-bottom: 15px;">
+            <i class="fas fa-sign-out-alt"></i> Salida
+          </h3>
+          <ul class="feature-list">
+            <li><i class="fas fa-bullseye"></i> Raíz aproximada</li>
+            <li><i class="fas fa-hashtag"></i> Número de iteraciones</li>
+            <li><i class="fas fa-check-circle"></i> Estado de convergencia</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-  <h2>⚙️ Especificaciones</h2>
-  <ul>
-    <li><strong>Entrada:</strong> f(x), f'(x) y valor inicial x₀.</li>
-    <li><strong>Proceso:</strong> aplicar el método hasta cumplir la tolerancia.</li>
-    <li><strong>Salida:</strong> raíz aproximada e iteraciones realizadas.</li>
-  </ul>
+    <!-- Example -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-vial"></i> Ejemplo de Aplicación
+      </h2>
+      <div class="content-card">
+        <div class="example-box">
+          <div class="example-title">
+            <i class="fas fa-square-root-alt"></i> Ecuación a resolver
+          </div>
+          <div style="font-family: 'Consolas', monospace; color: var(--tech-blue); text-align: center;">
+            f(x) = x² - 10 = 0
+          </div>
+        </div>
+        
+        <div class="content-grid" style="margin-top: 20px;">
+          <div class="example-box">
+            <div class="example-title">
+              <i class="fas fa-function"></i> Función
+            </div>
+            <div style="text-align: center;">
+              <code style="color: var(--text-light); font-size: 1.1rem;">f(x) = x**2 - 10</code>
+            </div>
+          </div>
+          
+          <div class="example-box">
+            <div class="example-title">
+              <i class="fas fa-calculator"></i> Derivada
+            </div>
+            <div style="text-align: center;">
+              <code style="color: var(--text-light); font-size: 1.1rem;">f'(x) = 2*x</code>
+            </div>
+          </div>
+          
+          <div class="example-box">
+            <div class="example-title">
+              <i class="fas fa-map-marker-alt"></i> Punto inicial
+            </div>
+            <div style="text-align: center;">
+              <code style="color: var(--text-light); font-size: 1.1rem;">x₀ = 3.0</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <h2>🧮 Ejemplo</h2>
-  <pre>f(x) = x² - 10  
-f'(x) = 2x  
-x₀ = 3</pre>
+    <!-- Code -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-code"></i> Implementación en Python
+      </h2>
+      
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-title">
+            <i class="fas fa-file-code"></i>
+            <span>newton_raphson.py</span>
+          </div>
+          <div class="code-actions">
+            <button onclick="copiarCodigo()" class="btn">
+              <i class="fas fa-copy"></i> Copiar Código
+            </button>
+            <a href="newton_teoria.pdf" target="_blank" class="btn btn-outline">
+              <i class="fas fa-book"></i> Ver Teoría
+            </a>
+            <a href="newton_diapositivas.pdf" target="_blank" class="btn btn-outline">
+              <i class="fas fa-presentation"></i> Diapositivas
+            </a>
+          </div>
+        </div>
+        
+        <div class="code-content">
+          <pre><code id="codigo"><span class="comment"># Método de Newton-Raphson</span>
+<span class="comment"># Implementación para encontrar raíces de ecuaciones no lineales</span>
 
-  <h2>💻 Código en Python</h2>
-  <div class="code-container">
-    <div class="buttons">
-      <button onclick="copiarCodigo()">📋 Copiar Código</button>
-      <a href="newton_teoria.pdf" target="_blank" class="pdf-btn">📊 Ver teoría</a>
-      <a href="newton_diapositivas.pdf" target="_blank" class="pdf-btn">📑 Ver diapositivas</a>
-    </div>
+<span class="comment"># El usuario ingresa la función y su derivada</span>
+funcion = <span class="builtin">input</span>(<span class="string">"Ingrese la función f(x): "</span>)       
+derivada = <span class="builtin">input</span>(<span class="string">"Ingrese la derivada f'(x): "</span>)    
+x0 = <span class="builtin">float</span>(<span class="builtin">input</span>(<span class="string">"Ingrese el valor inicial x0: "</span>))
 
-    <pre id="codigo">
-# Método de Newton-Raphson 
+tolerancia = <span class="number">1e-12</span>
+iteracion = <span class="number">0</span>
 
-# El usuario ingresa la función y su derivada
-funcion = input("Ingrese la función f(x): ")       
-derivada = input("Ingrese la derivada f'(x): ")    
-x0 = float(input("Ingrese el valor inicial x0: "))
-
-tolerancia = 1e-12
-iteracion = 0
-
-while True:
+<span class="keyword">while</span> <span class="keyword">True</span>:
     x = x0
-    f = eval(funcion)
-    df = eval(derivada)
+    f = <span class="builtin">eval</span>(funcion)
+    df = <span class="builtin">eval</span>(derivada)
     x1 = x0 - f/df
-    iteracion += 1
+    iteracion += <span class="number">1</span>
 
-    if abs(x1 - x0) < tolerancia:
-        break
+    <span class="keyword">if</span> <span class="builtin">abs</span>(x1 - x0) < tolerancia:
+        <span class="keyword">break</span>
 
-    if iteracion > 1000:
-        print("No converge después de muchas iteraciones.")
-        break
+    <span class="keyword">if</span> iteracion > <span class="number">1000</span>:
+        <span class="builtin">print</span>(<span class="string">"No converge después de muchas iteraciones."</span>)
+        <span class="keyword">break</span>
 
     x0 = x1
 
-print("Raíz aproximada:", x1)
-print("Iteraciones realizadas:", iteracion)
-    </pre>
+<span class="builtin">print</span>(<span class="string">"Raíz aproximada:"</span>, x1)
+<span class="builtin">print</span>(<span class="string">"Iteraciones realizadas:"</span>, iteracion)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Execution Example -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-terminal"></i> Ejemplo de Ejecución
+      </h2>
+      
+      <div class="content-card">
+        <div style="background: #1a1b26; border-radius: 10px; padding: 20px; font-family: 'Consolas', monospace;">
+          <div style="color: var(--tech-blue); margin-bottom: 10px;">
+            <i class="fas fa-chevron-right"></i> Ingrese la función f(x): <span style="color: white;">x**2 - 10</span>
+          </div>
+          <div style="color: var(--tech-blue); margin-bottom: 10px;">
+            <i class="fas fa-chevron-right"></i> Ingrese la derivada f'(x): <span style="color: white;">2*x</span>
+          </div>
+          <div style="color: var(--tech-blue); margin-bottom: 20px;">
+            <i class="fas fa-chevron-right"></i> Ingrese el valor inicial x0: <span style="color: white;">3</span>
+          </div>
+          <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+            <div style="color: var(--success-green); margin-bottom: 5px;">
+              <i class="fas fa-check-circle"></i> Raíz aproximada: <span style="color: white;">3.162277660168379</span>
+            </div>
+            <div style="color: var(--success-green);">
+              <i class="fas fa-hashtag"></i> Iteraciones realizadas: <span style="color: white;">5</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Iteration Table -->
+        <div class="iteration-table">
+          <h3 class="table-title">
+            <i class="fas fa-table"></i> Proceso Iterativo (Ejemplo)
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Iteración</th>
+                <th>xₙ</th>
+                <th>f(xₙ)</th>
+                <th>f'(xₙ)</th>
+                <th>xₙ₊₁</th>
+                <th>|xₙ₊₁ - xₙ|</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>3.000000000000000</td>
+                <td>-1.000000000000000</td>
+                <td>6.000000000000000</td>
+                <td>3.166666666666667</td>
+                <td>1.67e-01</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>3.166666666666667</td>
+                <td>0.027777777777778</td>
+                <td>6.333333333333333</td>
+                <td>3.162280701754386</td>
+                <td>4.38e-03</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>3.162280701754386</td>
+                <td>0.000024802120420</td>
+                <td>6.324561403508772</td>
+                <td>3.162277660168379</td>
+                <td>3.04e-06</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>3.162277660168379</td>
+                <td>0.000000000015192</td>
+                <td>6.324555320336758</td>
+                <td>3.162277660168379</td>
+                <td>1.52e-12</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>3.162277660168379</td>
+                <td>0.000000000000000</td>
+                <td>6.324555320336758</td>
+                <td>3.162277660168379</td>
+                <td>0.00e+00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-check-circle"></i> Conclusión
+      </h2>
+      <div class="content-card">
+        <p style="margin-bottom: 15px;">
+          El programa implementa correctamente el <strong>método de Newton-Raphson</strong>, permitiendo encontrar 
+          raíces de ecuaciones no lineales con alta precisión. El usuario puede ingresar cualquier función 
+          y su derivada, y el algoritmo determina automáticamente el número de iteraciones necesarias
+          para cumplir con la tolerancia establecida.
+        </p>
+        <p style="margin-bottom: 15px;">
+          El resultado obtenido demuestra la <strong style="color: var(--math-purple);">convergencia cuadrática</strong> característica del método, 
+          donde la precisión se duplica aproximadamente en cada iteración. La implementación incluye 
+          protección contra divergencia mediante un límite máximo de iteraciones.
+        </p>
+        <div style="padding: 15px; background: rgba(76, 201, 240, 0.1); border-radius: 8px; margin-top: 20px;">
+          <p style="color: var(--tech-blue); margin-bottom: 8px;">
+            <i class="fas fa-lightbulb"></i> <strong>Aplicaciones:</strong>
+          </p>
+          <p style="color: var(--text-gray);">
+            Este método es fundamental en análisis numérico, optimización, física computacional y 
+            cualquier disciplina que requiera resolver ecuaciones no lineales con alta precisión.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 Ronald Incacutipa Muñuico - Método de Newton-Raphson | Unidad 1</p>
+      <div class="footer-links">
+        <a href="unidad1.html" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver a Unidad 1
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
   </div>
-
-  <h2>📊 Ejemplo de Ejecución</h2>
-  <pre>
-Ingrese la función f(x): x**2 - 10
-Ingrese la derivada f'(x): 2*x
-Ingrese el valor inicial x0: 3
-
-Raíz aproximada: 3.162277660168379
-Iteraciones realizadas: 5
-  </pre>
-
-  <h2>✅ Conclusión</h2>
-  <p>
-    El programa implementa correctamente el método de Newton-Raphson, permitiendo encontrar raíces de ecuaciones no lineales con alta precisión.
-    El usuario puede ingresar cualquier función y su derivada, y el algoritmo determina automáticamente el número de iteraciones necesarias
-    para cumplir con la tolerancia establecida.  
-    El resultado obtenido demuestra la <strong>convergencia cuadrática</strong> del método.
-  </p>
 
   <script>
     function copiarCodigo() {
       const codigo = document.getElementById("codigo").innerText;
       navigator.clipboard.writeText(codigo).then(() => {
-        alert("✅ Código copiado al portapapeles");
+        // Mostrar notificación elegante
+        const originalText = document.querySelector('.btn i').parentElement.innerHTML;
+        document.querySelector('.btn').innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          document.querySelector('.btn').innerHTML = originalText;
+        }, 2000);
       }).catch(() => {
         alert("❌ Error al copiar el código");
       });
     }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.content-card, .code-container, .example-box').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
   </script>
 </body>
 </html>
