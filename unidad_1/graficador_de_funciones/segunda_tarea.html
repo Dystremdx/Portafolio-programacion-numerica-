@@ -2,142 +2,657 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Graficador de funciones lineales</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graficador de Funciones Lineales | Unidad 1</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: "Consolas", monospace;
-      background: #0f2027;  /* gradiente tipo informático */
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f1f1f1;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --tech-blue: #00eeff;
+      --chart-green: #4cc9f0;
+      --chart-red: #f72585;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-tech: linear-gradient(135deg, var(--tech-blue), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
       padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 30%);
     }
-    h1 {
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
       text-align: center;
-      color: #00eaff;
-    }
-    p {
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 30px;
-    }
-    .code-container {
-      background: #1e1e1e;
-      border-radius: 10px;
-      padding: 20px;
+      margin-bottom: 40px;
+      padding: 30px 20px;
       position: relative;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      max-width: 900px;
-      margin: auto;
     }
-    pre {
-      background: #1e1e1e;
-      color: #00ffcc;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 15px;
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-tech);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(76, 201, 240, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--tech-blue);
+      transform: translateX(-5px);
+      color: var(--dark-bg);
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--chart-green), var(--tech-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Info Card */
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(76, 201, 240, 0.3);
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .info-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-tech);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    .info-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-light);
+    }
+
+    .info-details {
+      margin-top: 25px;
+    }
+
+    .detail-item {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .detail-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--chart-green);
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .detail-content {
+      color: var(--text-gray);
+      font-size: 1rem;
       line-height: 1.5;
     }
-    .buttons {
+
+    .function-example {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--chart-green);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-family: 'Consolas', monospace;
+      color: var(--tech-blue);
+    }
+
+    /* Code Container */
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+    }
+
+    .code-container:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 238, 255, 0.3);
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-light);
     }
-    button, a.pdf-btn {
-      background: #00eaff;
-      color: #000;
+
+    .code-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--gradient-tech);
+      color: var(--dark-bg);
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.95rem;
     }
-    button:hover, a.pdf-btn:hover {
-      background: #00b3cc;
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--chart-green);
+      color: var(--text-light);
+    }
+
+    .btn-outline:hover {
+      background: var(--gradient-tech);
+      color: var(--dark-bg);
+    }
+
+    /* Code Content */
+    .code-content {
+      padding: 0;
+      background: var(--code-bg);
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      padding: 25px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      color: #c9d1d9;
+      display: block;
+    }
+
+    /* Syntax Highlighting */
+    .keyword { color: #ff7b72; }
+    .function { color: #d2a8ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .number { color: #79c0ff; }
+    .operator { color: #ff7b72; }
+    .builtin { color: #ffa657; }
+
+    /* Visual Example */
+    .visual-example {
+      margin-top: 40px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .visual-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--chart-green);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .console-output {
+      background: #1a1b26;
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Consolas', monospace;
+      color: var(--tech-blue);
+      line-height: 1.4;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .console-line {
+      margin-bottom: 5px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--tech-blue);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--chart-green);
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+      
+      .code-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .info-title, .code-title {
+        font-size: 1.4rem;
+      }
+      
+      .header {
+        padding: 20px 10px;
+      }
+      
+      .info-card, .code-container, .visual-example {
+        padding: 20px;
+      }
+      
+      pre {
+        padding: 15px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>📘  Graficador de funciones lineales</h1>
-  <p>Este codigo grafica las funciones en este caso dos pero de tipo lineal</p>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-chart-line"></i> Graficador de Funciones Lineales
+      </h1>
+      <p class="subtitle">
+        Este código grafica dos funciones lineales en consola, mostrando tabla de valores 
+        y representación visual mediante caracteres ASCII.
+      </p>
+    </header>
 
-  <div class="code-container">
-    <div class="buttons">
-      <button onclick="copiarCodigo()">📋 Copiar Código</button>
-      <a href="tarea2.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Info Card -->
+      <div class="info-card">
+        <div class="info-header">
+          <div class="info-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h2 class="info-title">Información del Programa</h2>
+        </div>
+        
+        <div class="info-details">
+          <div class="detail-item">
+            <div class="detail-title">
+              <i class="fas fa-info-circle"></i>
+              <span>Descripción</span>
+            </div>
+            <p class="detail-content">
+              Graficador en consola que permite visualizar dos funciones lineales 
+              simultáneamente. Genera una tabla de valores y una representación gráfica 
+              ASCII en el rango de x = [-10, 10].
+            </p>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-title">
+              <i class="fas fa-cogs"></i>
+              <span>Características</span>
+            </div>
+            <p class="detail-content">
+              • Evalúa expresiones matemáticas en Python<br>
+              • Genera tabla de valores completa<br>
+              • Crea gráfico ASCII con ejes coordenados<br>
+              • Distingue funciones con símbolos (x, o, *)<br>
+              • Manejo de errores en evaluación
+            </p>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-title">
+              <i class="fas fa-code"></i>
+              <span>Ejemplos de Entrada</span>
+            </div>
+            <div class="function-example">
+              Función 1: 2*x + 3<br>
+              Función 2: -0.5*x - 1<br>
+              <br>
+              Función 1: x**2 - 4<br>
+              Función 2: 3*x + 2
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-title">
+              <i class="fas fa-project-diagram"></i>
+              <span>Contexto</span>
+            </div>
+            <p class="detail-content">
+              <strong>Unidad:</strong> Unidad 1 - Métodos Numéricos<br>
+              <strong>Actividad:</strong> Graficador de funciones lineales<br>
+              <strong>Tipo:</strong> Programa de visualización matemática
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Container -->
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-title">
+            <i class="fas fa-file-code"></i>
+            <span>graficador_funciones.py</span>
+          </div>
+          <div class="code-actions">
+            <button onclick="copiarCodigo()" class="btn">
+              <i class="fas fa-copy"></i> Copiar Código
+            </button>
+            <a href="tarea2.pdf" target="_blank" class="btn btn-outline">
+              <i class="fas fa-file-pdf"></i> Ver PDF
+            </a>
+          </div>
+        </div>
+        
+        <div class="code-content">
+          <pre><code id="codigo"><span class="keyword">import</span> math
+
+<span class="keyword">def</span> <span class="function">evaluar</span>(expr, x):
+    <span class="keyword">try</span>:
+        <span class="keyword">return</span> <span class="builtin">eval</span>(expr, {<span class="string">"x"</span>: x, <span class="string">"math"</span>: math})
+    <span class="keyword">except</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+<span class="keyword">def</span> <span class="function">graficar</span>(f1, f2):
+    xs = <span class="builtin">list</span>(<span class="builtin">range</span>(<span class="number">-10</span>, <span class="number">11</span>))   <span class="comment"># valores de x de -10 a 10</span>
+    ys1 = [<span class="function">evaluar</span>(f1, x) <span class="keyword">for</span> x <span class="keyword">in</span> xs]
+    ys2 = [<span class="function">evaluar</span>(f2, x) <span class="keyword">for</span> x <span class="keyword">in</span> xs]
+
+    <span class="comment"># --- Mostrar tabla de valores ---</span>
+    <span class="builtin">print</span>(<span class="string">"\nTabla de valores:"</span>)
+    <span class="builtin">print</span>(<span class="string">" x | f1(x) | f2(x)"</span>)
+    <span class="builtin">print</span>(<span class="string">"-"</span>*<span class="number">20</span>)
+    <span class="keyword">for</span> x, y1, y2 <span class="keyword">in</span> <span class="builtin">zip</span>(xs, ys1, ys2):
+        <span class="builtin">print</span>(<span class="string">f"</span>{x:<span class="number">2</span>}<span class="string"> | </span>{y1:<span class="number">6</span>}<span class="string"> | </span>{y2:<span class="number">6</span>}<span class="string">"</span>)
+
+    <span class="comment"># --- Gráfico en consola ---</span>
+    vals = [v <span class="keyword">for</span> v <span class="keyword">in</span> ys1+ys2 <span class="keyword">if</span> v <span class="keyword">is not</span> <span class="keyword">None</span>]
+    ymin, ymax = <span class="builtin">min</span>(vals), <span class="builtin">max</span>(vals)
+
+    alto = <span class="number">20</span>
+    ancho = <span class="builtin">len</span>(xs)
+
+    <span class="keyword">def</span> <span class="function">fila</span>(y):
+        <span class="keyword">return</span> <span class="builtin">int</span>((ymax-y)*(alto<span class="number">-1</span>)/(ymax-ymin))
+
+    grid = [[<span class="string">" "</span>]*ancho <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(alto)]
+
+    <span class="comment"># Ejes</span>
+    <span class="keyword">if</span> ymin <= <span class="number">0</span> <= ymax:
+        r0 = <span class="function">fila</span>(<span class="number">0</span>)
+        <span class="keyword">for</span> c <span class="keyword">in</span> <span class="builtin">range</span>(ancho): grid[r0][c] = <span class="string">"-"</span>
+    <span class="keyword">if</span> <span class="number">0</span> <span class="keyword">in</span> xs:
+        c0 = xs.<span class="function">index</span>(<span class="number">0</span>)
+        <span class="keyword">for</span> r <span class="keyword">in</span> <span class="builtin">range</span>(alto): grid[r][c0] = <span class="string">"|"</span>
+
+    <span class="comment"># Funciones</span>
+    <span class="keyword">for</span> i,(y1,y2) <span class="keyword">in</span> <span class="builtin">enumerate</span>(<span class="builtin">zip</span>(ys1,ys2)):
+        <span class="keyword">if</span> y1 <span class="keyword">is not</span> <span class="keyword">None</span>: grid[<span class="function">fila</span>(y1)][i] = <span class="string">"x"</span>
+        <span class="keyword">if</span> y2 <span class="keyword">is not</span> <span class="keyword">None</span>: grid[<span class="function">fila</span>(y2)][i] = <span class="string">"o"</span>
+        <span class="keyword">if</span> y1 <span class="keyword">is not</span> <span class="keyword">None</span> <span class="keyword">and</span> y2 <span class="keyword">is not</span> <span class="keyword">None</span> <span class="keyword">and</span> <span class="function">fila</span>(y1)==<span class="function">fila</span>(y2):
+            grid[<span class="function">fila</span>(y1)][i] = <span class="string">"*"</span>
+
+    <span class="builtin">print</span>(<span class="string">"\nGráfico:"</span>)
+    <span class="keyword">for</span> fila_ <span class="keyword">in</span> grid:
+        <span class="builtin">print</span>(<span class="string">""</span>.<span class="function">join</span>(fila_))
+
+<span class="comment"># --- Programa principal ---</span>
+f1 = <span class="builtin">input</span>(<span class="string">"Función 1: "</span>)
+f2 = <span class="builtin">input</span>(<span class="string">"Función 2: "</span>)
+<span class="function">graficar</span>(f1,f2)</code></pre>
+        </div>
+      </div>
     </div>
 
-    <pre id="codigo">
-import math
+    <!-- Visual Example -->
+    <div class="visual-example">
+      <h3 class="visual-title">
+        <i class="fas fa-eye"></i> Ejemplo de Salida
+      </h3>
+      <div class="console-output">
+        <div class="console-line">Función 1: 2*x + 1</div>
+        <div class="console-line">Función 2: -x + 5</div>
+        <div class="console-line"><br></div>
+        <div class="console-line">Tabla de valores:</div>
+        <div class="console-line"> x | f1(x) | f2(x)</div>
+        <div class="console-line">--------------------</div>
+        <div class="console-line">-10 | -19.0 | 15.0</div>
+        <div class="console-line"> -9 | -17.0 | 14.0</div>
+        <div class="console-line"> -8 | -15.0 | 13.0</div>
+        <div class="console-line">... (continúa)</div>
+        <div class="console-line"><br></div>
+        <div class="console-line">Gráfico:</div>
+        <div class="console-line">                    o</div>
+        <div class="console-line">                   o </div>
+        <div class="console-line">                  o  </div>
+        <div class="console-line">         x       o   </div>
+        <div class="console-line">        x      o     </div>
+        <div class="console-line">       x     o       </div>
+        <div class="console-line">      x    o         </div>
+        <div class="console-line">     x   o           </div>
+        <div class="console-line">    x  o             </div>
+        <div class="console-line">   x o               </div>
+        <div class="console-line">  xo-----------------</div>
+        <div class="console-line"> ox                  </div>
+        <div class="console-line">o  x                 </div>
+        <div class="console-line">   o x               </div>
+      </div>
+    </div>
 
-def evaluar(expr, x):
-    try:
-        return eval(expr, {"x": x, "math": math})
-    except:
-        return None
-
-def graficar(f1, f2):
-    xs = list(range(-10, 11))   # valores de x de -10 a 10
-    ys1 = [evaluar(f1, x) for x in xs]
-    ys2 = [evaluar(f2, x) for x in xs]
-
-    # --- Mostrar tabla de valores ---
-    print("\nTabla de valores:")
-    print(" x | f1(x) | f2(x)")
-    print("-"*20)
-    for x, y1, y2 in zip(xs, ys1, ys2):
-        print(f"{x:2} | {y1:6} | {y2:6}")
-
-    # --- Gráfico en consola ---
-    vals = [v for v in ys1+ys2 if v is not None]
-    ymin, ymax = min(vals), max(vals)
-
-    alto = 20
-    ancho = len(xs)
-
-    def fila(y):
-        return int((ymax-y)*(alto-1)/(ymax-ymin))
-
-    grid = [[" "]*ancho for _ in range(alto)]
-
-    # Ejes
-    if ymin <= 0 <= ymax:
-        r0 = fila(0)
-        for c in range(ancho): grid[r0][c] = "-"
-    if 0 in xs:
-        c0 = xs.index(0)
-        for r in range(alto): grid[r][c0] = "|"
-
-    # Funciones
-    for i,(y1,y2) in enumerate(zip(ys1,ys2)):
-        if y1 is not None: grid[fila(y1)][i] = "x"
-        if y2 is not None: grid[fila(y2)][i] = "o"
-        if y1 is not None and y2 is not None and fila(y1)==fila(y2):
-            grid[fila(y1)][i] = "*"
-
-    print("\nGráfico:")
-    for fila_ in grid:
-        print("".join(fila_))
-
-# --- Programa principal ---
-f1 = input("Función 1: ")
-f2 = input("Función 2: ")
-graficar(f1,f2)
-    </pre>
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 Ronald Incacutipa Muñuico - Graficador de Funciones Lineales | Unidad 1</p>
+      <div class="footer-links">
+        <a href="unidad1.html" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver a Unidad 1
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
   </div>
 
   <script>
     function copiarCodigo() {
       const codigo = document.getElementById("codigo").innerText;
       navigator.clipboard.writeText(codigo).then(() => {
-        alert("✅ Código copiado al portapapeles");
+        // Mostrar notificación elegante
+        const originalText = document.querySelector('.btn i').parentElement.innerHTML;
+        document.querySelector('.btn').innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          document.querySelector('.btn').innerHTML = originalText;
+        }, 2000);
       }).catch(() => {
         alert("❌ Error al copiar el código");
       });
     }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.info-card, .code-container, .visual-example').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
   </script>
 </body>
 </html>
