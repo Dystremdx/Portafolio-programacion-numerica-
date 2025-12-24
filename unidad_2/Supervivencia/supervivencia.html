@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación del Juego de los Dulces (Chupetines)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #ff6b6b;
+      --primary-dark: #ee5a52;
+      --secondary: #4ecdc4;
+      --accent: #ffd166;
+      --candy-pink: #ff9a9e;
+      --candy-blue: #a0e7e5;
+      --dark-bg: #1a1a2e;
+      --card-bg: rgba(30, 33, 58, 0.9);
+      --text-light: #f8f9fa;
+      --text-gray: #adb5bd;
+      --code-bg: #2d3047;
+      --gradient-primary: linear-gradient(135deg, var(--primary), #ff9a9e);
+      --gradient-candy: linear-gradient(135deg, var(--candy-pink), var(--candy-blue));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 30%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--candy-pink), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .author-info {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .author-item {
+      padding: 10px;
+    }
+
+    .author-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .author-value {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      margin-bottom: 30px;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .exercise-header {
+      background: rgba(255, 107, 107, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .exercise-number {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .exercise-title {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .task-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .task-list h4 {
+      color: var(--accent);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .task-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      color: var(--text-gray);
+    }
+
+    .task-list li:before {
+      content: "🍭";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    .data-table th {
+      background: rgba(255, 107, 107, 0.2);
+      color: var(--secondary);
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .formula-box {
+      background: rgba(45, 48, 71, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--secondary);
+      text-align: center;
+    }
+
+    .solution-section {
+      background: rgba(78, 205, 196, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid rgba(78, 205, 196, 0.2);
+    }
+
+    .solution-section h4 {
+      color: var(--secondary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      background: rgba(45, 48, 71, 0.8);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      overflow-x: auto;
+      margin: 0;
+      color: #c9d1d9;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .highlight-box {
+      background: rgba(255, 154, 158, 0.1);
+      border-left: 4px solid var(--candy-pink);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--candy-pink);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    .result-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .interpretation {
+      background: rgba(255, 209, 102, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .interpretation strong {
+      color: var(--accent);
+    }
+
+    .candy-icon {
+      font-size: 1.2rem;
+      margin: 0 5px;
+    }
+
+    .type-a { color: #ff6b6b; }
+    .type-b { color: #4ecdc4; }
+    .type-c { color: #ffd166; }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+      }
+
+      .exercise-card {
+        padding: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-candy-cane"></i> Simulación del Juego de los Dulces
+      </h1>
+      <p class="subtitle">
+        Modelo estocástico de intercambio de dulces y obtención de chupetines
+      </p>
+
+      <div class="author-info">
+        <div class="author-grid">
+          <div class="author-item">
+            <div class="author-label">Alumno</div>
+            <div class="author-value">Ronald Wilder Incacutipa Muñuico</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Docente</div>
+            <div class="author-value">Fred Cruz Torres</div>
+          </div>
+          <div class="author-item">
+            <div class="author-label">Institución</div>
+            <div class="author-value">Universidad Nacional del Altiplano</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Modelo Individual -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-user-friends"></i> Modelo Individual (Agentes Independientes)
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Descripción del Juego</div>
+          <div class="exercise-title">Dinámica de intercambio entre personas</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-dice"></i> Reglas del juego:</h4>
+          <ul>
+            <li>Hay N personas; cada una inicia con 2 dulces aleatorios <span class="type-a">a</span>, <span class="type-b">b</span>, <span class="type-c">c</span></li>
+            <li>En cada interacción: prestatario p₁ y prestamista p₂ (activos)</li>
+            <li>p₂ presta 1 dulce a p₁ (p₁ temporalmente tiene 3)</li>
+            <li>Si p₁ tiene <span class="type-a">{a}</span>, <span class="type-b">{b}</span>, <span class="type-c">{c}</span> → canjea por chupetín y se retira</li>
+            <li>Devuelve 1 dulce aleatorio a p₂ (puede ser diferente)</li>
+            <li>Si no consigue los 3 tipos, devuelve el dulce prestado</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Cálculo automático de iteraciones:</strong></p>
+          <p>\[ \text{max\_iter} = \left\lceil \frac{2N}{3} \right\rceil \]</p>
+          <p>Se toma el número total de dulces iniciales (2N) dividido entre 3</p>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-info-circle"></i> Observación:</strong> En la práctica, debido a la aleatoriedad, frecuentemente no todos los agentes logran canjear por chupetín. Suele quedar al menos una persona sin chupetín debido a combinaciones y secuencias de préstamos que agotan las posibilidades locales.
+        </div>
+      </div>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Código R - Modelo Individual</div>
+          <div class="exercise-title">Simulación del juego de los chupetines</div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>simular_chupetines_doc.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo1')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo1"># Simulación del juego de los dulces (chupetines)
+# Dinámica: cada persona tiene 2 dulces; puede recibir 1 prestado;
+# si consigue {a, b, c} canjea y se retira; devuelve 1 dulce aleatorio.
+
+simular_chupetines_doc <- function(N = 20, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
+  tipos <- c("a", "b", "c")
+  
+  # Cálculo automático de iteraciones según fórmula
+  max_iter <- ceiling((2 * N) / 3)
+  
+  # Inicialización: cada persona con 2 dulces aleatorios
+  personas <- replicate(N, sample(tipos, 2, replace = TRUE), simplify = FALSE)
+  obtuvo_chupetin <- rep(FALSE, N) # indicador de retiro
+  iter <- 0
+  
+  tiene_tres <- function(x) length(unique(x)) == 3
+  
+  # Bucle principal: max_iter interacciones
+  for (k in 1:max_iter) {
+    iter <- iter + 1
+    
+    # elegir prestatario y prestamista entre activos
+    activos <- which(!obtuvo_chupetin)
+    if (length(activos) <= 1) break # ya no hay pares posibles
+    
+    p1 <- sample(activos, 1) # prestatario
+    p2 <- sample(setdiff(activos, p1), 1) # prestamista
+    
+    # si prestamista no tiene dulces, saltar
+    if (length(personas[[p2]]) == 0) next
+    
+    # p2 presta 1 dulce a p1
+    dulce_prestado <- sample(personas[[p2]], 1)
+    personas[[p1]] <- c(personas[[p1]], dulce_prestado)
+    
+    # comprobar si p1 ahora tiene los 3 tipos
+    if (tiene_tres(personas[[p1]])) {
+      obtuvo_chupetin[p1] <- TRUE
+      
+      # Devuelve UN dulce aleatorio al prestamista
+      if (length(personas[[p2]]) > 0) {
+        idx <- sample(seq_along(personas[[p2]]), 1)
+        personas[[p2]][idx] <- sample(tipos, 1)
+      } else {
+        personas[[p2]] <- sample(tipos, 1)
+      }
+      
+      # p1 se retira: vector vacío
+      personas[[p1]] <- character(0)
+    } else {
+      # No consiguió completar: devuelve el dulce prestado
+      if (length(personas[[p1]]) > 2) {
+        personas[[p1]] <- sample(personas[[p1]], 2)
+      }
+    }
+  }
+  
+  # Resultados
+  total_chupetines <- sum(obtuvo_chupetin)
+  cat("Simulación terminada\n")
+  cat("Personas (N):", N, "\n")
+  cat("Iteraciones usadas (ceil(2N/3)):", max_iter, "\n")
+  cat("Chupetines obtenidos:", total_chupetines, "\n\n")
+  cat("Índices de personas que obtuvieron chupetín:\n")
+  print(which(obtuvo_chupetin))
+  
+  return(list(
+    N = N,
+    iteraciones = max_iter,
+    total_chupetines = total_chupetines,
+    quienes = which(obtuvo_chupetin),
+    personas_final = personas
+  ))
+}
+
+# Ejemplo de uso:
+# sim <- simular_chupetines_doc(20, seed = 123)</code></pre>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-bar"></i> Ejemplo de Ejecución</h4>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Personas (N)</div>
+              <div class="result-value">20</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Iteraciones</div>
+              <div class="result-value">14</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Chupetines obtenidos</div>
+              <div class="result-value">8</div>
+            </div>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Salida típica:</strong><br>
+            <code>Simulación terminada<br>
+            Personas (N): 20<br>
+            Iteraciones usadas (ceil(2N/3)): 14<br>
+            Chupetines obtenidos: 8<br><br>
+            Índices de personas que obtuvieron chupetín:<br>
+            [1] 2 3 5 7 8 11 14 19</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modelo Cooperativo -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-users"></i> Modelo Cooperativo por Grupo
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Extensión Cooperativa</div>
+          <div class="exercise-title">Grupo que comparte todos los dulces</div>
+        </div>
+
+        <div class="task-list">
+          <h4><i class="fas fa-handshake"></i> Reglas del modelo cooperativo:</h4>
+          <ul>
+            <li>Los N integrantes juntan todos sus dulces en una "bolsa común"</li>
+            <li><strong>Intercambio tipo A:</strong> 3 dulces distintos {A,B,C} → 1 chupetín</li>
+            <li><strong>Intercambio tipo B:</strong> 6 dulces (2 de cada tipo) → 2 chupetines + 1 dulce extra</li>
+            <li><strong>Conversión inversa:</strong> 1 chupetín → 3 dulces aleatorios (si no hay intercambios posibles)</li>
+            <li>El proceso continúa hasta que chupetines ≥ N (todos tienen) o max_iter</li>
+          </ul>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-lightbulb"></i> Ventaja cooperativa:</strong> El modelo demuestra que mediante el uso compartido de recursos, los grupos pueden alcanzar estados donde todos sus miembros obtienen un chupetín, aumentando la probabilidad de éxito colectivo.
+        </div>
+      </div>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Código R - Modelo Cooperativo</div>
+          <div class="exercise-title">Simulación de grupo cooperativo</div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fab fa-r-project"></i>
+              <span>simular_grupo_cooperativo.R</span>
+            </div>
+            <button onclick="copiarCodigo('codigo2')" class="btn">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+          <pre><code id="codigo2"># Modelo cooperativo del juego de los dulces
+# Un grupo trabaja junto compartiendo todos sus dulces.
+
+simular_grupo_cooperativo <- function(n_personas = 5, max_iter = 200, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
+  tipos <- c("A", "B", "C")
+  
+  # Dulces iniciales: 2 por persona
+  dulces <- sample(tipos, n_personas * 2, replace = TRUE)
+  chupetines <- 0
+  iter <- 0
+  
+  cat("Simulación cooperativa: grupo de", n_personas, "personas\n\n")
+  
+  while (iter < max_iter) {
+    iter <- iter + 1
+    tabla <- table(dulces)
+    
+    # Intercambio tipo B: 6 dulces (2 de cada tipo)
+    if (all(c("A", "B", "C") %in% names(tabla)) &&
+        all(tabla[c("A", "B", "C")] >= 2)) {
+      # Eliminar 6 dulces (2 de cada tipo)
+      quitar <- c(rep("A", 2), rep("B", 2), rep("C", 2))
+      for (q in quitar) {
+        dulces <- dulces[-match(q, dulces)]
+      }
+      chupetines <- chupetines + 2
+      # Dulce extra aleatorio
+      dulces <- c(dulces, sample(tipos, 1))
+      
+    # Intercambio tipo A: 3 dulces distintos
+    } else if (length(unique(dulces)) >= 3) {
+      dulces <- dulces[-match(unique(dulces)[1:3], dulces)]
+      chupetines <- chupetines + 1
+      dulces <- c(dulces, sample(tipos, 1))
+      
+    # Si no se puede intercambiar pero hay chupetines
+    } else if (chupetines > 0) {
+      chupetines <- chupetines - 1
+      dulces <- c(dulces, sample(tipos, 3, replace = TRUE))
+    } else {
+      break
+    }
+    
+    # Mostrar progreso cada 10 iteraciones
+    if (iter %% 10 == 0 || iter == 1) {
+      cat(sprintf("Iter %d -> Dulces: %d | Chupetines: %d\n", 
+                  iter, length(dulces), chupetines))
+    }
+    
+    # Condición de éxito
+    if (chupetines >= n_personas) {
+      cat("\nResultado final\n")
+      cat("Iteraciones:", iter, "\n")
+      cat("Dulces restantes:", length(dulces), "\n")
+      cat("Chupetines totales:", chupetines, "\n")
+      cat("El grupo logró que todos tengan su chupetín.\n")
+      return(invisible(list(iter = iter, dulces = length(dulces), 
+                            chupetines = chupetines)))
+    }
+  }
+  
+  cat("\nResultado final\n")
+  cat("Iteraciones:", iter, "\n")
+  cat("Dulces restantes:", length(dulces), "\n")
+  cat("Chupetines totales:", chupetines, "\n")
+  cat("El grupo no logró completar todos los chupetines.\n")
+  
+  invisible(list(iter = iter, dulces = length(dulces), chupetines = chupetines))
+}
+
+# Ejemplo de uso:
+# simular_grupo_cooperativo(5)</code></pre>
+        </div>
+
+        <div class="solution-section">
+          <h4><i class="fas fa-chart-line"></i> Ejemplo de Ejecución Cooperativa</h4>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Personas en grupo</div>
+              <div class="result-value">5</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Iteraciones totales</div>
+              <div class="result-value">21</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Chupetines finales</div>
+              <div class="result-value">5</div>
+            </div>
+          </div>
+          
+          <div class="highlight-box">
+            <strong>Salida típica:</strong><br>
+            <code>Simulación cooperativa: grupo de 5 personas<br><br>
+            Iter 1 -> Dulces: 10 | Chupetines: 0<br>
+            Iter 10 -> Dulces: 8 | Chupetines: 3<br>
+            Iter 20 -> Dulces: 5 | Chupetines: 5<br><br>
+            Resultado final<br>
+            Iteraciones: 21<br>
+            Dulces restantes: 5<br>
+            Chupetines totales: 5<br>
+            El grupo logró que todos tengan su chupetín.</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusiones -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-clipboard-check"></i> Conclusiones
+      </h2>
+
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-number">Análisis Comparativo</div>
+          <div class="exercise-title">Individual vs. Cooperativo</div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-label">Modelo Individual</div>
+            <div class="result-value">Competitivo</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Cada persona busca su propio chupetín. Suele dejar personas sin chupetín debido a limitaciones locales.
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Modelo Cooperativo</div>
+            <div class="result-value">Colaborativo</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Recursos compartidos. Mayor probabilidad de que todos obtengan chupetín. Sistema con redistribución estocástica.
+            </p>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Tipo de Problema</div>
+            <div class="result-value">Estocástico</div>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 10px;">
+              Ambos modelos son agent-based con aleatoriedad intrínseca. Simulación Monte Carlo para estudio de comportamiento.
+            </p>
+          </div>
+        </div>
+
+        <div class="interpretation">
+          <strong><i class="fas fa-graduation-cap"></i> Conclusión General:</strong> Hemos definido y simulado dos modelos de intercambio de dulces. El modelo individual muestra cómo la competencia por recursos limitados puede dejar participantes sin recompensa, mientras que el modelo cooperativo demuestra que el trabajo en grupo y la redistribución de recursos incrementan la probabilidad de éxito colectivo. Ambos modelos son ejemplos de sistemas estocásticos discretos útiles para estudiar dinámicas de intercambio en diversos contextos.
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 Ronald Wilder Incacutipa Muñuico - Simulación del Juego de los Dulces | Universidad Nacional del Altiplano</p>
+      <p>Fecha: 29 de octubre de 2025</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="#top" class="footer-link">
+          <i class="fas fa-arrow-up"></i> Inicio página
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Función para copiar código
+    function copiarCodigo(id) {
+      const codigo = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = event.target.closest('.btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("❌ Error al copiar el código");
+      });
+    }
+
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.exercise-card, .result-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Inicializar MathJax
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+</body>
+</html>
