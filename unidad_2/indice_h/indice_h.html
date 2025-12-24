@@ -2,230 +2,718 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Índice H – Programación Numérica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Índice H | Unidad 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: "Consolas", monospace;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f1f1f1;
+    :root {
+      --primary: #7209b7;
+      --primary-dark: #5a0a8c;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --tech-blue: #4cc9f0;
+      --research-green: #06d6a0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --table-header: rgba(114, 9, 183, 0.2);
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-research: linear-gradient(135deg, var(--research-green), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
       padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(114, 9, 183, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 30%);
     }
-    h1 {
-      text-align: center;
-      color: #00eaff;
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    p {
+
+    /* Header */
+    .header {
       text-align: center;
-      font-size: 18px;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(114, 9, 183, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      transform: translateX(-5px);
+      color: white;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--tech-blue), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pdf-btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gradient-primary);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: var(--transition);
+    }
+
+    .pdf-btn-header:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(114, 9, 183, 0.3);
+    }
+
+    /* Content Sections */
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
       margin-bottom: 30px;
     }
-    .tabs {
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(114, 9, 183, 0.3);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 25px;
+    }
+
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-item {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .info-item-title {
+      color: var(--tech-blue);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Image Container */
+    .image-container {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .image-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .image-caption {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 30px 0;
+      overflow-x: auto;
+    }
+
+    .table-title {
+      font-size: 1.4rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th {
+      background: var(--table-header);
+      color: var(--tech-blue);
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(114, 9, 183, 0.3);
+    }
+
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .h-index-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--gradient-primary);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .pub-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(76, 201, 240, 0.1);
+      color: var(--tech-blue);
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .author-link {
+      color: var(--tech-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .author-link:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    .research-link {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .research-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
+    }
+
+    /* Statistics Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--tech-blue), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
-      gap: 10px;
+      gap: 20px;
+      margin-top: 15px;
     }
-    .tab {
-      background: #00eaff;
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .tab.active {
-      background: #00b3cc;
-    }
-    .content {
-      display: none;
-    }
-    .content.active {
-      display: block;
-    }
-    .code-container {
-      background: #1e1e1e;
-      border-radius: 10px;
-      padding: 20px;
-      position: relative;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      max-width: 900px;
-      margin: auto;
-    }
-    pre {
-      background: #1e1e1e;
-      color: #00ffcc;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    .buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    button, a.pdf-btn {
-      background: #00eaff;
-      color: #000;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
+
+    .footer-link {
+      color: var(--primary);
       text-decoration: none;
+      transition: var(--transition);
     }
-    button:hover, a.pdf-btn:hover {
-      background: #00b3cc;
+
+    .footer-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
     }
-    .table-container {
-  overflow-x: auto;
-  margin: 30px auto;
-  max-width: 950px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
-}
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 15px;
-  color: #d9e6ee;
-}
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+      
+      .section-title {
+        font-size: 1.6rem;
+      }
+      
+      .content-card {
+        padding: 20px;
+      }
+      
+      table {
+        font-size: 0.9rem;
+      }
+      
+      th, td {
+        padding: 10px;
+      }
+    }
 
-th, td {
-  padding: 10px 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-th {
-  color: #81d4fa;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 14px;
-  border-bottom: 2px solid rgba(129, 212, 250, 0.6);
-}
-
-td a {
-  color: #aeeaff;
-  text-decoration: none;
-}
-
-td a:hover {
-  color: #80deea;
-  text-decoration: underline;
-}
-
-tr:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transition: background 0.3s ease;
-}
-
-    img {
-      max-width: 85%;
-      border-radius: 10px;
-      display: block;
-      margin: 25px auto;
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .header {
+        padding: 20px 10px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-chart-line"></i> Índice H - Métricas de Investigación
+      </h1>
+      <p class="subtitle">
+        Análisis del índice H como métrica de productividad científica para investigadores 
+        en métodos numéricos y docentes de la Facultad de Ingeniería Estadística e Informática.
+      </p>
+      
+      
+    </header>
 
-  <h1>Unidad II – Índice H</h1>
-  <p>Actividad del curso de Programación Numérica</p>
-  <div style="text-align: center; margin-bottom: 30px;">
-    <a href="PN_U2_Trabajo_6_Indice_H.pdf" target="_blank" class="pdf-btn">📄 Ver PDF</a>
+    <!-- CTI Vitae Section -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-user-graduate"></i> CTI Vitae - Plataforma de Investigadores
+      </h2>
+      
+      <div class="content-card">
+        <p style="margin-bottom: 20px;">
+          <strong>CTI Vitae</strong> es la plataforma oficial del <strong>CONCYTEC</strong> (Consejo Nacional de Ciencia, 
+          Tecnología e Innovación Tecnológica del Perú) que funciona como un currículum virtual integral 
+          para investigadores, docentes y profesionales vinculados a la ciencia, tecnología e innovación.
+        </p>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-bullseye"></i> Propósito Principal
+            </div>
+            <p style="color: var(--text-gray);">
+              Centralizar y estandarizar la información académica y de investigación 
+              de la comunidad científica peruana.
+            </p>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-tasks"></i> Información Registrada
+            </div>
+            <p style="color: var(--text-gray);">
+              • Publicaciones científicas<br>
+              • Proyectos de investigación<br>
+              • Experiencia profesional<br>
+              • Patentes y reconocimientos
+            </p>
+          </div>
+        </div>
+        
+        <div class="image-container">
+          <div class="image-card">
+            <img src="1.png" alt="Interfaz de CTI Vitae - Plataforma de investigadores">
+            <div class="image-caption">
+              Captura de pantalla de la plataforma CTI Vitae del CONCYTEC
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Researchers Section -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-flask"></i> Investigadores en Métodos Numéricos
+      </h2>
+      
+      <div class="content-card">
+        <div class="table-container">
+          <h3 class="table-title">
+            <i class="fas fa-microscope"></i> Autores con Investigaciones en Métodos Numéricos
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Autor</th>
+                <th>Investigación</th>
+                <th>Publicaciones</th>
+                <th>Índice H</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="https://www.scopus.com/authid/detail.uri?authorId=57191328360&origin=recordpage" 
+                     target="_blank" class="author-link">
+                    <i class="fas fa-external-link-alt"></i> Gusev, Alexander A.
+                  </a>
+                </td>
+                <td>
+                  <a href="https://www.scopus.com/pages/publications/85146635331?origin=resultslist" 
+                     target="_blank" class="research-link">
+                    ARSENY: Programa para transiciones inelásticas mediante cruces ocultos en colisiones ión-ión atómicas
+                  </a>
+                </td>
+                <td><span class="pub-badge">144</span></td>
+                <td><span class="h-index-badge">14</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://www.scopus.com/authid/detail.uri?authorId=50662263300&origin=recordpage" 
+                     target="_blank" class="author-link">
+                    <i class="fas fa-external-link-alt"></i> Tran, Loc V.
+                  </a>
+                </td>
+                <td>
+                  <a href="https://www.scopus.com/pages/publications/85053298695?origin=resultslist" 
+                     target="_blank" class="research-link">
+                    Análisis de estabilidad de placas multicapa sometidas a compresión parcial con/sin imperfección inicial
+                  </a>
+                </td>
+                <td><span class="pub-badge">28</span></td>
+                <td><span class="h-index-badge">22</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Investigadores Analizados</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">172</div>
+            <div class="stat-label">Publicaciones Totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">18</div>
+            <div class="stat-label">Índice H Promedio</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teachers Section -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chalkboard-teacher"></i> Docentes - Facultad de Ingeniería Estadística e Informática
+      </h2>
+      
+      <div class="content-card">
+        <div class="table-container">
+          <h3 class="table-title">
+            <i class="fas fa-university"></i> Índice H de Docentes Investigadores
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Docente</th>
+                <th>Índice H</th>
+                <th>Publicaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57224362115" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Apaza-Tarqui, Alejandro</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">5</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57221112735" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Carpio Vargas, Edgar Eloy</a></td><td><span class="h-index-badge">3</span></td><td><span class="pub-badge">9</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58491331500" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Choquejahua-Acero, Remo</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">2</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214094525" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Canqui-Flores, Bernabé</a></td><td><span class="h-index-badge">3</span></td><td><span class="pub-badge">8</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58930847700" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Coyla-Idme, Leonel</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">5</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59325707300" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Copari Romero, Fredy Gonzalo</a></td><td><span class="h-index-badge">0</span></td><td><span class="pub-badge">2</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58308326900" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Gonzales, Leonid Alemán</a></td><td><span class="h-index-badge">0</span></td><td><span class="pub-badge">4</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58898481200" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Herrera-Urtiaga, Alain Paul</a></td><td><span class="h-index-badge">0</span></td><td><span class="pub-badge">3</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57571711100" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Huata-Panca, Percy</a></td><td><span class="h-index-badge">2</span></td><td><span class="pub-badge">3</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57201897173" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Huamán, Beto Puma</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">1</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57223389447" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Ibañez-Quispe, Vladimiro</a></td><td><span class="h-index-badge">5</span></td><td><span class="pub-badge">21</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=55865380000" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Javier Quispe Carita, Angel</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">1</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284593600" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Laura Murillo, Ramiro</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">2</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58671914800" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> López-Cueva, Milton Antonio</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">6</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58778725100" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Melgarejo-Bolivar, Romel P.</a></td><td><span class="h-index-badge">3</span></td><td><span class="pub-badge">6</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57562709900" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Mendoza-Mollocondo, Charles Ignacio</a></td><td><span class="h-index-badge">3</span></td><td><span class="pub-badge">8</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58088282100" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Pari-Condori, Elqui Yeye</a></td><td><span class="h-index-badge">1</span></td><td><span class="pub-badge">3</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284529900" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Quispe, Juan Reynaldo Paredes</a></td><td><span class="h-index-badge">0</span></td><td><span class="pub-badge">1</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59359729500" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Tito Lipa, José Pánfilo</a></td><td><span class="h-index-badge">0</span></td><td><span class="pub-badge">3</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57003617100" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Tumi-Figueroa, Ernesto Nayer</a></td><td><span class="h-index-badge">3</span></td><td><span class="pub-badge">6</span></td></tr>
+              <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214066496" target="_blank" class="author-link"><i class="fas fa-external-link-alt"></i> Torres-Cruz, Fred</a></td><td><span class="h-index-badge">4</span></td><td><span class="pub-badge">40</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">21</div>
+            <div class="stat-label">Docentes Analizados</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">145</div>
+            <div class="stat-label">Publicaciones Totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">1.6</div>
+            <div class="stat-label">Índice H Promedio</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">40</div>
+            <div class="stat-label">Máx. Publicaciones</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-chart-bar"></i> Análisis del Índice H
+      </h2>
+      
+      <div class="content-card">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-lightbulb"></i> ¿Qué es el Índice H?
+            </div>
+            <p style="color: var(--text-gray);">
+              El índice H (o índice de Hirsch) mide la productividad e impacto de un investigador. 
+              Un investigador tiene índice H si ha publicado H trabajos con al menos H citas cada uno.
+            </p>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-balance-scale"></i> Limitaciones
+            </div>
+            <p style="color: var(--text-gray);">
+              • No considera diferencias entre disciplinas<br>
+              • Favorece investigadores de larga trayectoria<br>
+              • Ignora contribuciones como supervisión y docencia
+            </p>
+          </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: rgba(114, 9, 183, 0.1); border-radius: 15px; border-left: 4px solid var(--primary);">
+          <div class="info-item-title" style="color: var(--tech-blue); margin-bottom: 15px;">
+            <i class="fas fa-chart-pie"></i> Observaciones del Análisis
+          </div>
+          <p style="color: var(--text-gray);">
+            1. <strong>Fred Torres-Cruz</strong> lidera en publicaciones (40) entre los docentes analizados<br>
+            2. <strong>Vladimiro Ibañez-Quispe</strong> tiene el índice H más alto (5) entre docentes<br>
+            3. Los investigadores internacionales en métodos numéricos muestran índices H significativamente más altos<br>
+            4. Existe una correlación positiva entre número de publicaciones e índice H
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 Ronald Incacutipa Muñuico - Análisis del Índice H | Unidad 2</p>
+      <div class="footer-links">
+        <a href="unidad2.html" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver a Unidad 2
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
   </div>
 
-  <div class="code-container">
-    <h2>Creación de cuenta en CTI Vitae</h2>
-    <p style="text-align: justify;">
-      <strong>CTI Vitae</strong> es una plataforma del <strong>CONCYTEC</strong> (Consejo Nacional de Ciencia, Tecnología e 
-      Innovación Tecnológica del Perú) que funciona como un currículum virtual para investigadores, docentes y 
-      profesionales vinculados a la ciencia, tecnología e innovación (CTI). En esta plataforma, los usuarios pueden 
-      registrar su información académica, experiencia profesional, publicaciones, proyectos de investigación, patentes
-      y otros logros.
-    </p>
+  <script>
+    // Efecto hover en tarjetas
+    document.querySelectorAll('.content-card, .stat-card, .image-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
 
-    <img src="1.png" alt="Captura de CTI Vitae">
-
-    <h2>Autores con índice H con investigaciones en métodos numéricos</h2>
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Autor</th>
-        <th>Investigación</th>
-        <th>Número de publicaciones</th>
-        <th>Índice H</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a href="https://www.scopus.com/authid/detail.uri?authorId=57191328360&origin=recordpage" target="_blank">Gusev, Alexander A.</a></td>
-        <td><a href="https://www.scopus.com/pages/publications/85146635331?origin=resultslist" target="_blank">ARSENY: A program for computing inelastic transitions via hidden crossings in one-electron atomic ion–ion collisions with classical description of nuclear motion</a></td>
-        <td>144</td>
-        <td>14</td>
-      </tr>
-      <tr>
-        <td><a href="https://www.scopus.com/authid/detail.uri?authorId=50662263300&origin=recordpage" target="_blank">Tran, Loc V.</a></td>
-        <td><a href="https://www.scopus.com/pages/publications/85053298695?origin=resultslist
-" target="_blank">Stability analysis of multi-layered plates subjected to partial edge compression with and without initial imperfection</a></td>
-        <td>28</td>
-        <td>22</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<h2>Índice H de docentes de la Facultad de Ingeniería Estadística e Informática</h2>
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Docente</th>
-        <th>Índice H</th>
-        <th>Número de publicaciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57224362115" target="_blank">Apaza-Tarqui, Alejandro</a></td><td>1</td><td>5</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57221112735" target="_blank">Carpio Vargas, Edgar Eloy</a></td><td>3</td><td>9</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58491331500" target="_blank">Choquejahua-Acero, Remo</a></td><td>1</td><td>2</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214094525" target="_blank">Canqui-Flores, Bernabé</a></td><td>3</td><td>8</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58930847700" target="_blank">Coyla-Idme, Leonel</a></td><td>1</td><td>5</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59325707300" target="_blank">Copari Romero, Fredy Gonzalo</a></td><td>0</td><td>2</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58308326900"
-target="_blank">Gonzales, Leonid Alemán</a></td><td>0</td><td>4</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58898481200"
-target="_blank">Herrera-Urtiaga, Alain Paul</a></td><td>0</td><td>3</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57571711100" target="_blank">Huata-Panca, Percy</a></td><td>2</td><td>3</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57201897173"
-target="_blank">Huamán, Beto Puma</a></td><td>1</td><td>1</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57223389447" 
-target="_blank">Ibañez-Quispe, Vladimiro</a></td><td>5</td><td>21</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=55865380000" target="_blank">Javier Quispe Carita, Angel</a></td><td>1</td><td>1</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284593600" target="_blank">Laura Murillo, Ramiro</a></td><td>1</td><td>2</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58671914800" target="_blank">López-Cueva, Milton Antonio</a></td><td>1</td><td>6</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58778725100" target="_blank">Melgarejo-Bolivar, Romel P.</a></td><td>3</td><td>6</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57562709900" target="_blank">Mendoza-Mollocondo, Charles Ignacio</a></td><td>3</td><td>8</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58088282100"
-target="_blank">Pari-Condori, Elqui Yeye</a></td><td>1</td><td>3</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=58284529900" 
-target="_blank">Quispe, Juan Reynaldo Paredes</a></td><td>0</td><td>1</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=59359729500" 
-target="_blank">Tito Lipa, José Pánfilo</a></td><td>0</td><td>3</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57003617100" target="_blank">Tumi-Figueroa, Ernesto Nayer</a></td><td>3</td><td>6</td></tr>
-      <tr><td><a href="https://www.scopus.com/authid/detail.uri?authorId=57214066496" target="_blank">Torres-Cruz, Fred</a></td><td>4</td><td>40</td></tr>
-    </tbody>
-  </table>
-</div>
-
-
+    // Enlaces externos se abren en nueva pestaña
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+    });
+  </script>
 </body>
 </html>
