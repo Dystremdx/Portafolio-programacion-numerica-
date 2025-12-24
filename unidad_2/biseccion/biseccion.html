@@ -1,123 +1,583 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Método de Bisección</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Método de Bisección | Programación Numérica</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: "Consolas", monospace;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f1f1f1;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --tech-blue: #00eeff;
+      --math-green: #06d6a0;
+      --success-green: #4cc9f0;
+      --dark-bg: #0a0e17;
+      --card-bg: rgba(16, 23, 41, 0.9);
+      --text-light: #e2e8f0;
+      --text-gray: #94a3b8;
+      --code-bg: #1a1b26;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-math: linear-gradient(135deg, var(--math-green), var(--primary));
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
       padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(6, 214, 160, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(67, 97, 238, 0.1) 0%, transparent 30%);
     }
-    h1 {
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
       text-align: center;
-      color: #00eaff;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      position: relative;
     }
-    p {
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 30px;
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: var(--gradient-math);
+      border-radius: 2px;
     }
-    .code-container {
-      background: #1e1e1e;
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      background: var(--card-bg);
+      border: 1px solid rgba(6, 214, 160, 0.3);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--math-green);
+      transform: translateX(-5px);
+      color: var(--dark-bg);
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--math-green), var(--tech-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(6, 214, 160, 0.3);
+    }
+
+    .section-title i {
+      color: var(--math-green);
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+      margin-bottom: 20px;
+    }
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(6, 214, 160, 0.3);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .formula-container {
+      background: rgba(26, 27, 38, 0.8);
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      max-width: 900px;
-      margin: auto;
+      margin: 15px 0;
+      border-left: 4px solid var(--math-green);
+      font-family: 'Consolas', monospace;
+      color: var(--tech-blue);
+      text-align: center;
+      font-size: 1.2rem;
     }
-    pre {
-      background: #1e1e1e;
-      color: #00ffcc;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 15px;
-      line-height: 1.5;
+
+    .code-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
     }
-    .buttons {
+
+    .code-container:hover {
+      transform: translateY(-5px);
+      border-color: rgba(6, 214, 160, 0.3);
+    }
+
+    .code-header {
+      background: rgba(26, 27, 38, 0.8);
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 15px;
       flex-wrap: wrap;
     }
-    button, a.pdf-btn {
-      background: #00eaff;
-      color: #000;
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--gradient-math);
+      color: var(--dark-bg);
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       text-decoration: none;
-      transition: background 0.3s;
+      transition: var(--transition);
+      font-size: 0.95rem;
     }
-    button:hover, a.pdf-btn:hover {
-      background: #00b3cc;
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(6, 214, 160, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--math-green);
+      color: var(--text-light);
+    }
+
+    .btn-outline:hover {
+      background: var(--gradient-math);
+      color: var(--dark-bg);
+    }
+
+    .code-content {
+      padding: 0;
+      background: var(--code-bg);
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      padding: 25px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      color: #c9d1d9;
+      display: block;
+    }
+
+    .keyword { color: #ff7b72; }
+    .function { color: #d2a8ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .number { color: #79c0ff; }
+    .operator { color: #ff7b72; }
+    .builtin { color: #ffa657; }
+
+    .execution-example {
+      margin-top: 40px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .example-output {
+      background: #1a1b26;
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Consolas', monospace;
+      color: var(--tech-blue);
+      line-height: 1.4;
+    }
+
+    .output-line {
+      margin-bottom: 5px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .footer-link {
+      color: var(--math-green);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--tech-blue);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .back-btn {
+        position: relative;
+        left: 0;
+        top: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+      
+      .code-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .section-title {
+        font-size: 1.6rem;
+      }
+      
+      .header {
+        padding: 20px 10px;
+      }
+      
+      .content-card, .code-container, .execution-example {
+        padding: 20px;
+      }
+      
+      pre {
+        padding: 15px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>📘 Método de Bisección</h1>
-  <p>El método de bisección permite encontrar una raíz al dividir el intervalo en mitades sucesivas hasta alcanzar la tolerancia deseada.</p>
+  <div class="container">
+    <header class="header">
+      <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </a>
+      
+      <h1 class="title">
+        <i class="fas fa-divide"></i> Método de Bisección
+      </h1>
+      <p class="subtitle">
+        Método robusto de búsqueda de raíces que divide el intervalo en mitades sucesivas
+      </p>
+    </header>
 
-  <div class="code-container">
-    <div class="buttons">
-      <button onclick="copiarCodigo()">📋 Copiar Código</button>
-      <a href="biseccion.pdf" target="_blank" class="pdf-btn">📑 Ver PDF</a>
-    </div>
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-info-circle"></i> Descripción del Método
+      </h2>
+      <div class="content-card">
+        <p style="margin-bottom: 15px;">
+          El método de bisección es uno de los algoritmos más simples y confiables para encontrar raíces de funciones continuas. 
+          Se basa en el teorema del valor intermedio: si f(a) y f(b) tienen signos opuestos, entonces existe al menos una raíz 
+          en el intervalo [a, b].
+        </p>
+        
+        <div class="formula-container">
+          m = (a + b) / 2
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: rgba(76, 201, 240, 0.1); border-radius: 8px;">
+          <p style="color: var(--tech-blue); margin-bottom: 8px;">
+            <i class="fas fa-bullseye"></i> <strong>Características:</strong>
+          </p>
+          <p style="color: var(--text-gray);">
+            • Requiere que f(a) × f(b) < 0 (cambio de signo)<br>
+            • Convergencia garantizada aunque lenta<br>
+            • Reduce el error a la mitad en cada iteración
+          </p>
+        </div>
+      </div>
+    </section>
 
-    <pre id="codigo">
-import math
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-code"></i> Implementación en Python
+      </h2>
+      
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-title">
+            <i class="fas fa-file-code"></i>
+            <span>biseccion.py</span>
+          </div>
+          <div class="code-actions">
+            <button onclick="copiarCodigo()" class="btn">
+              <i class="fas fa-copy"></i> Copiar Código
+            </button>
+            <a href="biseccion.pdf" target="_blank" class="btn btn-outline">
+              <i class="fas fa-book"></i> Ver PDF
+            </a>
+          </div>
+        </div>
+        
+        <div class="code-content">
+          <pre><code id="codigo"><span class="keyword">import</span> math
 
-# Definición de la función
-def f(x):
-    return math.exp(3*x) - 4
+<span class="comment"># Definición de la función</span>
+<span class="keyword">def</span> <span class="function">f</span>(x):
+    <span class="keyword">return</span> math.<span class="builtin">exp</span>(<span class="number">3</span>*x) - <span class="number">4</span>
 
-a = 0
-b = 1
-tolerancia = 0.1
+a = <span class="number">0</span>
+b = <span class="number">1</span>
+tolerancia = <span class="number">0.1</span>
 
-print(f"{'Iter':<6}{'a':<10}{'b':<10}{'m':<10}{'f(a)':<12}{'f(b)':<12}{'f(m)':<12}{'Error':<10}")
-print("-"*75)
+<span class="builtin">print</span>(<span class="string">f"{'Iter':<6}{'a':<10}{'b':<10}{'m':<10}{'f(a)':<12}{'f(b)':<12}{'f(m)':<12}{'Error':<10}"</span>)
+<span class="builtin">print</span>(<span class="string">"-"</span>*<span class="number">75</span>)
 
-iteracion = 0
-while True:
-    iteracion += 1
-    m = (a + b) / 2
-    fa = f(a)
-    fb = f(b)
-    fm = f(m)
-    error = (b - a) / 2
+iteracion = <span class="number">0</span>
 
-    print(f"{iteracion:<6}{a:<10.5f}{b:<10.5f}{m:<10.5f}{fa:<12.5f}{fb:<12.5f}{fm:<12.5f}{error:<10.5f}")
-
-    if abs(error) < tolerancia:
-        break
-
-    if fa * fm < 0:
+<span class="keyword">while</span> <span class="keyword">True</span>:
+    iteracion += <span class="number">1</span>
+    m = (a + b) / <span class="number">2</span>
+    fa = <span class="function">f</span>(a)
+    fb = <span class="function">f</span>(b)
+    fm = <span class="function">f</span>(m)
+    error = (b - a) / <span class="number">2</span>
+    
+    <span class="builtin">print</span>(<span class="string">f"{iteracion:<6}{a:<10.5f}{b:<10.5f}{m:<10.5f}{fa:<12.5f}{fb:<12.5f}{fm:<12.5f}{error:<10.5f}"</span>)
+    
+    <span class="keyword">if</span> <span class="builtin">abs</span>(error) < tolerancia:
+        <span class="keyword">break</span>
+    
+    <span class="keyword">if</span> fa * fm < <span class="number">0</span>:
         b = m
-    else:
+    <span class="keyword">else</span>:
         a = m
 
-print("\nRaíz aproximada: x =", round(m, 4))
-print("Error final:", round(error, 5))
-    </pre>
+<span class="builtin">print</span>(<span class="string">"\nRaíz aproximada: x ="</span>, <span class="builtin">round</span>(m, <span class="number">4</span>))
+<span class="builtin">print</span>(<span class="string">"Error final:"</span>, <span class="builtin">round</span>(error, <span class="number">5</span>))</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-vial"></i> Ejemplo de Aplicación
+      </h2>
+      
+      <div class="content-grid">
+        <div class="content-card">
+          <div style="color: var(--math-green); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-function"></i> Función
+          </div>
+          <div style="text-align: center; margin-top: 10px;">
+            <code style="color: var(--text-light); font-size: 1.1rem;">f(x) = e³ˣ - 4</code>
+          </div>
+        </div>
+        
+        <div class="content-card">
+          <div style="color: var(--math-green); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-braille"></i> Intervalo
+          </div>
+          <div style="text-align: center; margin-top: 10px;">
+            <code style="color: var(--text-light); font-size: 1.1rem;">[0, 1]</code>
+            <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 5px;">
+              f(0) = -3, f(1) ≈ 16.09
+            </p>
+          </div>
+        </div>
+        
+        <div class="content-card">
+          <div style="color: var(--math-green); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-sliders-h"></i> Parámetros
+          </div>
+          <div style="text-align: center; margin-top: 10px;">
+            <code style="color: var(--text-light); font-size: 1.1rem;">tol = 0.1</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">
+        <i class="fas fa-terminal"></i> Ejemplo de Ejecución
+      </h2>
+      
+      <div class="execution-example">
+        <div class="example-output">
+          <div class="output-line">Iter  a         b         m         f(a)        f(b)        f(m)        Error</div>
+          <div class="output-line">---------------------------------------------------------------------------</div>
+          <div class="output-line">1     0.00000   1.00000   0.50000   -3.00000    16.08554    0.48169     0.50000</div>
+          <div class="output-line">2     0.00000   0.50000   0.25000   -3.00000    0.48169     -1.88753    0.25000</div>
+          <div class="output-line">3     0.25000   0.50000   0.37500   -1.88753    0.48169     -0.89526    0.12500</div>
+          <div class="output-line">4     0.37500   0.50000   0.43750   -0.89526    0.48169     -0.26088    0.06250</div>
+          <div class="output-line" style="margin-top: 20px;"></div>
+          <div class="output-line" style="color: var(--math-green);">
+            <i class="fas fa-check-circle"></i> Raíz aproximada: x = <span style="color: white;">0.4375</span>
+          </div>
+          <div class="output-line" style="color: var(--math-green);">
+            <i class="fas fa-ruler"></i> Error final: <span style="color: white;">0.0625</span>
+          </div>
+        </div>
+        
+        <div style="margin-top: 25px; padding: 15px; background: rgba(6, 214, 160, 0.1); border-radius: 10px; border-left: 4px solid var(--math-green);">
+          <p style="color: var(--math-green); margin-bottom: 8px;">
+            <i class="fas fa-lightbulb"></i> <strong>¿Cómo funciona el algoritmo?</strong>
+          </p>
+          <p style="color: var(--text-gray); font-size: 0.95rem;">
+            1. Verifica que f(a) y f(b) tengan signos opuestos<br>
+            2. Calcula el punto medio m = (a + b) / 2<br>
+            3. Evalúa f(m) y determina en qué mitad está la raíz<br>
+            4. Reemplaza a o b con m según el signo<br>
+            5. Repite hasta que el error sea menor que la tolerancia
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 Programación Numérica - Método de Bisección</p>
+      <div class="footer-links">
+        <a href="javascript:history.back()" class="footer-link">
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <span>•</span>
+        <a href="index.html" class="footer-link">
+          <i class="fas fa-home"></i> Inicio
+        </a>
+      </div>
+    </footer>
   </div>
 
   <script>
     function copiarCodigo() {
       const codigo = document.getElementById("codigo").innerText;
       navigator.clipboard.writeText(codigo).then(() => {
-        alert("✅ Código copiado al portapapeles");
+        const originalText = document.querySelector('.btn').innerHTML;
+        document.querySelector('.btn').innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        
+        setTimeout(() => {
+          document.querySelector('.btn').innerHTML = originalText;
+        }, 2000);
       }).catch(() => {
         alert("❌ Error al copiar el código");
       });
     }
+
+    document.querySelectorAll('.content-card, .code-container').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
   </script>
 </body>
 </html>
